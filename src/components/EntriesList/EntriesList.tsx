@@ -12,7 +12,7 @@ import TrafficViewerApi from "../TrafficViewer/TrafficViewerApi";
 import focusedEntryIdAtom from "../../recoil/focusedEntryId";
 import { toast } from "react-toastify";
 import { MAX_ENTRIES, TOAST_CONTAINER_ID } from "../../configs/Consts";
-import tappingStatusAtom from "../../recoil/tappingStatus";
+import targettingStatusAtom from "../../recoil/targettingStatus";
 import leftOffTopAtom from "../../recoil/leftOffTop";
 import Moment from "moment";
 
@@ -45,7 +45,7 @@ export const EntriesList: React.FC<EntriesListProps> = ({
   const isWsConnectionClosed = ws?.current?.readyState !== WebSocket.OPEN;
   const [focusedEntryId, setFocusedEntryId] = useRecoilState(focusedEntryIdAtom);
   const [leftOffTop, setLeftOffTop] = useRecoilState(leftOffTopAtom);
-  const setTappingStatus = useSetRecoilState(tappingStatusAtom);
+  const setTargettingStatus = useSetRecoilState(targettingStatusAtom);
 
   const trafficViewerApi = useRecoilValue(TrafficViewerApiAtom as RecoilState<TrafficViewerApi>)
 
@@ -142,7 +142,7 @@ export const EntriesList: React.FC<EntriesListProps> = ({
           setEntries(entriesState => [...entriesState,  message.data]);
           break;
         case "status":
-          setTappingStatus(message.tappingStatus);
+          setTargettingStatus(message.targettingStatus);
           break;
         case "toast":
           toast[message.data.type](message.data.text, {

@@ -31,17 +31,17 @@ export default class Api {
         return response.data;
     }
 
-    tapStatus = async () => {
-        const response = await client.get("/status/tap");
+    targetStatus = async () => {
+        const response = await client.get("/status/target");
         return response.data;
     }
-    getTapConfig = async () => {
-        const response = await this.client.get("/config/tap");
+    getWorkerConfig = async () => {
+        const response = await this.client.get("/config/worker");
         return response.data;
     }
 
-    setTapConfig = async (config) => {
-        const response = await this.client.post("/config/tap", { tappedNamespaces: config });
+    setWorkerConfig = async (config) => {
+        const response = await this.client.post("/config/worker", { targettedNamespaces: config });
         return response.data;
     }
 

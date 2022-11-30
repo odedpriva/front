@@ -16,7 +16,7 @@ import queryAtom from "../../recoil/query";
 import trafficViewerApiAtom from "../../recoil/TrafficViewerApi"
 import TrafficViewerApi from "./TrafficViewerApi";
 import { StatusBar } from "../UI/StatusBar/StatusBar";
-import tappingStatusAtom from "../../recoil/tappingStatus/atom";
+import targettingStatusAtom from "../../recoil/targettingStatus/atom";
 import { TOAST_CONTAINER_ID } from "../../configs/Consts";
 import leftOffTopAtom from "../../recoil/leftOffTop";
 import { DEFAULT_LEFTOFF, DEFAULT_FETCH, DEFAULT_FETCH_TIMEOUT_MS } from '../../hooks/useWS';
@@ -70,7 +70,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
   const setEntryDetailedConfigAtom = useSetRecoilState(entryDetailedConfigAtom)
   const query = useRecoilValue(queryAtom);
   const setTrafficViewerApiState = useSetRecoilState(trafficViewerApiAtom as RecoilState<TrafficViewerApi>)
-  const [tappingStatus, setTappingStatus] = useRecoilState(tappingStatusAtom);
+  const [targettingStatus, setTargettingStatus] = useRecoilState(targettingStatusAtom);
   const [noMoreDataTop, setNoMoreDataTop] = useState(false);
   const [isSnappedToBottom, setIsSnappedToBottom] = useState(true);
   const [wsReadyState, setWsReadyState] = useState(0);
@@ -152,13 +152,13 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
     setTrafficViewerApiState({...trafficViewerApiProp, webSocket: {close: closeWebSocket}});
     (async () => {
       try {
-        const tapStatusResponse = await trafficViewerApiProp.tapStatus();
-        setTappingStatus(tapStatusResponse);
+        const targetStatusResponse = await trafficViewerApiProp.targetStatus();
+        setTargettingStatus(targetStatusResponse);
       } catch (error) {
         console.error(error);
       }
     })()
-  }, [trafficViewerApiProp, closeWebSocket, setTappingStatus, setTrafficViewerApiState]);
+  }, [trafficViewerApiProp, closeWebSocket, setTargettingStatus, setTrafficViewerApiState]);
 
   const toggleConnection = () => {
     if (!closeWebSocket()) {
@@ -225,7 +225,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
 
   return (
     <div className={TrafficViewerStyles.TrafficPage}>
-      {tappingStatus && isShowStatusBar && <StatusBar disabled={ws?.current?.readyState !== WebSocket.OPEN} isDemoBannerView={isDemoBannerView}/>}
+      {targettingStatus && isShowStatusBar && <StatusBar disabled={ws?.current?.readyState !== WebSocket.OPEN} isDemoBannerView={isDemoBannerView}/>}
       <div className={TrafficViewerStyles.TrafficPageHeader}>
         <div className={TrafficViewerStyles.TrafficPageStreamStatus}>
           <img id="pause-icon"
