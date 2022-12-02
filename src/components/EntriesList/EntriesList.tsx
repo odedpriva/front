@@ -25,7 +25,7 @@ interface EntriesListProps {
   setNoMoreDataTop: (flag: boolean) => void;
   openWebSocket: (leftOff: string, query: string, resetEntries: boolean, fetch: number, fetchTimeoutMs: number) => void;
   scrollableRef: unknown;
-  ws: unknown;
+  ws: React.MutableRefObject<unknown>;
 }
 
 export const EntriesList: React.FC<EntriesListProps> = ({

@@ -1,4 +1,5 @@
 import './App.sass';
+import React from "react";
 import { Header } from "./components/Header/Header";
 import { TrafficPage } from "./components/Pages/TrafficPage/TrafficPage";
 import { ServiceMapModal } from './components/modals/ServiceMapModal/ServiceMapModal';

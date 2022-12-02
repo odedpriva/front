@@ -187,13 +187,13 @@ export const QueryForm: React.FC<QueryFormProps> = ({ validateQuery, reopenConne
             Filtering Guide (Cheatsheet)
           </Typography>
           <Typography component={'span'} id="modal-modal-description">
-            <p>Kubeshark has a rich filtering syntax that let's you query the results both flexibly and efficiently.</p>
+            <p>Kubeshark has a rich filtering syntax that let&apos;s you query the results both flexibly and efficiently.</p>
             <p>Here are some examples that you can try;</p>
           </Typography>
           <Grid container>
             <Grid item xs style={{ margin: "10px" }}>
               <Typography id="modal-modal-description">
-                This is a simple query that matches to HTTP packets with request path "/catalogue":
+                This is a simple query that matches to HTTP packets with request path &quot;catalogue&quot;:
               </Typography>
               <SyntaxHighlighter
                 showLineNumbers={false}
@@ -244,7 +244,7 @@ export const QueryForm: React.FC<QueryFormProps> = ({ validateQuery, reopenConne
             <Divider className={styles.divider1} orientation="vertical" flexItem />
             <Grid item xs style={{ margin: "10px" }}>
               <Typography id="modal-modal-description">
-                Since Kubeshark supports various protocols like gRPC, AMQP, Kafka and Redis. It's possible to write complex queries that match multiple protocols like this:
+                Since Kubeshark supports various protocols like gRPC, AMQP, Kafka and Redis. It&apos;s possible to write complex queries that match multiple protocols like this:
               </Typography>
               <SyntaxHighlighter
                 showLineNumbers={false}
@@ -293,7 +293,7 @@ export const QueryForm: React.FC<QueryFormProps> = ({ validateQuery, reopenConne
               </Typography>
               <br></br>
               <Typography id="modal-modal-description">
-                true if the given selector's value starts with (similarly <code style={{ fontSize: "14px" }}>endsWith</code>, <code style={{ fontSize: "14px" }}>contains</code>) the string:
+                true if the given selector&apos;s value starts with (similarly <code style={{ fontSize: "14px" }}>endsWith</code>, <code style={{ fontSize: "14px" }}>contains</code>) the string:
               </Typography>
               <SyntaxHighlighter
                 showLineNumbers={false}
@@ -317,7 +317,7 @@ export const QueryForm: React.FC<QueryFormProps> = ({ validateQuery, reopenConne
                 language="python"
               />
               <Typography id="modal-modal-description">
-                returns the UNIX timestamp which is the equivalent of the time that's provided by the string. Invalid input evaluates to false:
+                returns the UNIX timestamp which is the equivalent of the time that&apos;s provided by the string. Invalid input evaluates to false:
               </Typography>
               <SyntaxHighlighter
                 showLineNumbers={false}
