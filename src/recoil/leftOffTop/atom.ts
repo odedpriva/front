@@ -1,8 +1,8 @@
 import { atom } from "recoil"
 
 const leftOffTopAtom = atom({
-    key: "leftOffTopAtom",
-    default: ""
+  key: "leftOffTopAtom",
+  default: ""
 })
 
 export default leftOffTopAtom;

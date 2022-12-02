@@ -29,16 +29,16 @@ interface EntriesListProps {
 }
 
 export const EntriesList: React.FC<EntriesListProps> = ({
-                                                          listEntryREF,
-                                                          onSnapBrokenEvent,
-                                                          isSnappedToBottom,
-                                                          setIsSnappedToBottom,
-                                                          noMoreDataTop,
-                                                          setNoMoreDataTop,
-                                                          openWebSocket,
-                                                          scrollableRef,
-                                                          ws
-                                                        }) => {
+  listEntryREF,
+  onSnapBrokenEvent,
+  isSnappedToBottom,
+  setIsSnappedToBottom,
+  noMoreDataTop,
+  setNoMoreDataTop,
+  openWebSocket,
+  scrollableRef,
+  ws
+}) => {
 
   const [entries, setEntries] = useRecoilState(entriesAtom);
   const query = useRecoilValue(queryAtom);
@@ -98,7 +98,7 @@ export const EntriesList: React.FC<EntriesListProps> = ({
     setIsLoadingTop(false);
 
     const newEntries = [...data.data.reverse(), ...entries];
-    if(newEntries.length > MAX_ENTRIES) {
+    if (newEntries.length > MAX_ENTRIES) {
       newEntries.splice(MAX_ENTRIES, newEntries.length - MAX_ENTRIES)
     }
     setEntries(newEntries);
@@ -133,13 +133,13 @@ export const EntriesList: React.FC<EntriesListProps> = ({
     }
   }, [entries, setLeftOffTop, setNoMoreDataTop, setEntries])
 
-  if(ws.current && !ws.current.onmessage) {
+  if (ws.current && !ws.current.onmessage) {
     ws.current.onmessage = (e) => {
       if (!e?.data) return;
       const message = JSON.parse(e.data);
       switch (message.messageType) {
         case "entry":
-          setEntries(entriesState => [...entriesState,  message.data]);
+          setEntries(entriesState => [...entriesState, message.data]);
           break;
         case "status":
           setTargettingStatus(message.targettingStatus);
@@ -169,7 +169,7 @@ export const EntriesList: React.FC<EntriesListProps> = ({
     <div className={styles.list}>
       <div id="list" ref={listEntryREF} className={styles.list}>
         {isLoadingTop && <div className={styles.spinnerContainer}>
-          <img alt="spinner" src={spinner} style={{height: 25}}/>
+          <img alt="spinner" src={spinner} style={{ height: 25 }} />
         </div>}
         {noMoreDataTop && <div id="noMoreDataTop" className={styles.noMoreDataAvailable}>No more data available</div>}
         <ScrollableFeedVirtualized ref={scrollableRef} itemHeight={48} marginTop={10} onSnapBroken={onSnapBrokenEvent}>
@@ -182,25 +182,25 @@ export const EntriesList: React.FC<EntriesListProps> = ({
           />)}
         </ScrollableFeedVirtualized>
         <button type="button"
-                title="Fetch old records"
-                className={`${styles.btnOld} ${!scrollbarVisible && leftOffTop !== "" ? styles.showButton : styles.hideButton}`}
-                onClick={(_) => {
-                  trafficViewerApi.webSocket.close()
-                  getOldEntries();
-                }}>
-          <img alt="down" src={down}/>
+          title="Fetch old records"
+          className={`${styles.btnOld} ${!scrollbarVisible && leftOffTop !== "" ? styles.showButton : styles.hideButton}`}
+          onClick={(_) => {
+            trafficViewerApi.webSocket.close()
+            getOldEntries();
+          }}>
+          <img alt="down" src={down} />
         </button>
         <button type="button"
-                title="Snap to bottom"
-                className={`${styles.btnLive} ${isSnappedToBottom && !isWsConnectionClosed ? styles.hideButton : styles.showButton}`}
-                onClick={(_) => {
-                  if (isWsConnectionClosed) {
-                    openWebSocket(leftOffBottom, query, false, 0, 0);
-                  }
-                  scrollableRef.current.jumpToBottom();
-                  setIsSnappedToBottom(true);
-                }}>
-          <img alt="down" src={down}/>
+          title="Snap to bottom"
+          className={`${styles.btnLive} ${isSnappedToBottom && !isWsConnectionClosed ? styles.hideButton : styles.showButton}`}
+          onClick={(_) => {
+            if (isWsConnectionClosed) {
+              openWebSocket(leftOffBottom, query, false, 0, 0);
+            }
+            scrollableRef.current.jumpToBottom();
+            setIsSnappedToBottom(true);
+          }}>
+          <img alt="down" src={down} />
         </button>
       </div>
 

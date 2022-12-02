@@ -10,7 +10,7 @@ const useKeyPress = (eventConfigs, callback, node = null) => {
   // handle what happens on key press
   const handleKeyPress = useCallback(
     (event) => {
-      
+
       // check if one of the key is part of the ones we want
       if (eventConfigs.some((eventConfig) => Object.keys(eventConfig).every(nameKey => eventConfig[nameKey] === event[nameKey]))) {
         event.stopPropagation()
@@ -31,7 +31,7 @@ const useKeyPress = (eventConfigs, callback, node = null) => {
     // remove the event listener
     return () =>
       targetNode &&
-        targetNode.removeEventListener("keydown", handleKeyPress);
+      targetNode.removeEventListener("keydown", handleKeyPress);
   }, [handleKeyPress, node]);
 };
 

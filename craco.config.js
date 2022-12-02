@@ -4,19 +4,19 @@
 const path = require("path")
 
 module.exports = {
-    webpack: {
-        configure: (webpackConfig) => {
-            const instanceOfMiniCssExtractPlugin = webpackConfig.plugins.find(
-                (plugin) => plugin.options && plugin.options.ignoreOrder != null,
-            );
-            if(instanceOfMiniCssExtractPlugin)
-                instanceOfMiniCssExtractPlugin.options.ignoreOrder = true;
+  webpack: {
+    configure: (webpackConfig) => {
+      const instanceOfMiniCssExtractPlugin = webpackConfig.plugins.find(
+        (plugin) => plugin.options && plugin.options.ignoreOrder != null,
+      );
+      if (instanceOfMiniCssExtractPlugin)
+        instanceOfMiniCssExtractPlugin.options.ignoreOrder = true;
 
-            webpackConfig.resolve.alias['react']= path.resolve(__dirname, 'node_modules/react'); // solve 2  react instances
-            webpackConfig.resolve.alias['@emotion/react']= path.resolve("node_modules", "@emotion/react");
-            webpackConfig.resolve.alias['@mui/styles']= path.resolve("node_modules", "@mui/styles");
+      webpackConfig.resolve.alias['react'] = path.resolve(__dirname, 'node_modules/react'); // solve 2  react instances
+      webpackConfig.resolve.alias['@emotion/react'] = path.resolve("node_modules", "@emotion/react");
+      webpackConfig.resolve.alias['@mui/styles'] = path.resolve("node_modules", "@mui/styles");
 
-            return webpackConfig;
-        }
+      return webpackConfig;
     }
+  }
 }

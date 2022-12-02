@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Filters } from "../Filters/Filters";
 import { EntriesList } from "../EntriesList/EntriesList";
 import makeStyles from '@mui/styles/makeStyles';
@@ -89,7 +89,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
   }, [])
 
   useEffect(() => {
-    if(shouldCloseWebSocket){
+    if (shouldCloseWebSocket) {
       closeWebSocket()
       setShouldCloseWebSocket(false);
     }
@@ -149,7 +149,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
   }, [openWebSocket, query])
 
   useEffect(() => {
-    setTrafficViewerApiState({...trafficViewerApiProp, webSocket: {close: closeWebSocket}});
+    setTrafficViewerApiState({ ...trafficViewerApiProp, webSocket: { close: closeWebSocket } });
     (async () => {
       try {
         const targetStatusResponse = await trafficViewerApiProp.targetStatus();
@@ -197,12 +197,12 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
       case WebSocket.OPEN:
         return <div
           className={`${TrafficViewerStyles.indicatorContainer} ${TrafficViewerStyles.greenIndicatorContainer}`}>
-          <div className={`${TrafficViewerStyles.indicator} ${TrafficViewerStyles.greenIndicator}`}/>
+          <div className={`${TrafficViewerStyles.indicator} ${TrafficViewerStyles.greenIndicator}`} />
         </div>
       default:
         return <div
           className={`${TrafficViewerStyles.indicatorContainer} ${TrafficViewerStyles.redIndicatorContainer}`}>
-          <div className={`${TrafficViewerStyles.indicator} ${TrafficViewerStyles.redIndicator}`}/>
+          <div className={`${TrafficViewerStyles.indicator} ${TrafficViewerStyles.redIndicator}`} />
         </div>
     }
   }
@@ -225,21 +225,21 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
 
   return (
     <div className={TrafficViewerStyles.TrafficPage}>
-      {targettingStatus && isShowStatusBar && <StatusBar disabled={ws?.current?.readyState !== WebSocket.OPEN} isDemoBannerView={isDemoBannerView}/>}
+      {targettingStatus && isShowStatusBar && <StatusBar disabled={ws?.current?.readyState !== WebSocket.OPEN} isDemoBannerView={isDemoBannerView} />}
       <div className={TrafficViewerStyles.TrafficPageHeader}>
         <div className={TrafficViewerStyles.TrafficPageStreamStatus}>
           <img id="pause-icon"
-               className={TrafficViewerStyles.playPauseIcon}
-               style={{visibility: wsReadyState === WebSocket.OPEN ? "visible" : "hidden"}}
-               alt="pause"
-               src={pauseIcon}
-               onClick={toggleConnection}/>
+            className={TrafficViewerStyles.playPauseIcon}
+            style={{ visibility: wsReadyState === WebSocket.OPEN ? "visible" : "hidden" }}
+            alt="pause"
+            src={pauseIcon}
+            onClick={toggleConnection} />
           <img id="play-icon"
-               className={TrafficViewerStyles.playPauseIcon}
-               style={{position: "absolute", visibility: wsReadyState === WebSocket.OPEN ? "hidden" : "visible"}}
-               alt="play"
-               src={playIcon}
-               onClick={toggleConnection}/>
+            className={TrafficViewerStyles.playPauseIcon}
+            style={{ position: "absolute", visibility: wsReadyState === WebSocket.OPEN ? "hidden" : "visible" }}
+            alt="play"
+            src={playIcon}
+            onClick={toggleConnection} />
           <div className={TrafficViewerStyles.connectionText}>
             {getConnectionTitle()}
             {getConnectionIndicator()}

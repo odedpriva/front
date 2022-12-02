@@ -13,37 +13,37 @@ import "ace-builds/src-noconflict/mode-html";
 
 
 config.set(
-    "basePath",
-    "https://cdn.jsdelivr.net/npm/ace-builds@1.4.6/src-noconflict/"
+  "basePath",
+  "https://cdn.jsdelivr.net/npm/ace-builds@1.4.6/src-noconflict/"
 );
 config.setModuleUrl(
-    "ace/mode/javascript_worker",
-    "https://cdn.jsdelivr.net/npm/ace-builds@1.4.6/src-noconflict/worker-javascript.js"
+  "ace/mode/javascript_worker",
+  "https://cdn.jsdelivr.net/npm/ace-builds@1.4.6/src-noconflict/worker-javascript.js"
 );
 
 export interface CodeEditorProps {
-    code: string,
-    onChange?: (code: string) => void,
-    language?: string
+  code: string,
+  onChange?: (code: string) => void,
+  language?: string
 }
 const CodeEditor: React.FC<CodeEditorProps> = ({
-    language,
-    onChange,
-    code
+  language,
+  onChange,
+  code
 }) => {
-    return (
-        <AceEditor
-            mode={language}
-            theme="github"
-            onChange={onChange}
-            editorProps={{ $blockScrolling: true }}
-            showPrintMargin={false}
-            value={code}
-            width="100%"
-            height="100%"
-            style={{ borderRadius: "inherit" }}
-        />
-    );
+  return (
+    <AceEditor
+      mode={language}
+      theme="github"
+      onChange={onChange}
+      editorProps={{ $blockScrolling: true }}
+      showPrintMargin={false}
+      value={code}
+      width="100%"
+      height="100%"
+      style={{ borderRadius: "inherit" }}
+    />
+  );
 }
 
 export default CodeEditor

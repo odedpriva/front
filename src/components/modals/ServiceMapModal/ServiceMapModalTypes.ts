@@ -1,60 +1,60 @@
 export interface GraphData {
-    nodes: Node[];
-    edges: Edge[];
+  nodes: Node[];
+  edges: Edge[];
 }
 
 export interface Node {
-    id: number;
-    value: number;
-    label: string;
-    title?: string;
-    color?: object;
+  id: number;
+  value: number;
+  label: string;
+  title?: string;
+  color?: object;
 }
 
 export interface Edge {
-    from: number;
-    to: number;
-    value: number;
-    label: string;
-    title?: string;
-    color?: object;
+  from: number;
+  to: number;
+  value: number;
+  label: string;
+  title?: string;
+  color?: object;
 }
 
 export interface ServiceMapNode {
-    id: number;
-    name: string;
-    entry: Entry;
-    count: number;
-    resolved: boolean;
+  id: number;
+  name: string;
+  entry: Entry;
+  count: number;
+  resolved: boolean;
 }
 
 export interface ServiceMapEdge {
-    source: ServiceMapNode;
-    destination: ServiceMapNode;
-    count: number;
-    protocol: Protocol;
+  source: ServiceMapNode;
+  destination: ServiceMapNode;
+  count: number;
+  protocol: Protocol;
 }
 
 export interface ServiceMapGraph {
-    nodes: ServiceMapNode[];
-    edges: ServiceMapEdge[];
+  nodes: ServiceMapNode[];
+  edges: ServiceMapEdge[];
 }
 
 export interface Entry {
-    ip: string;
-    port: string;
-    name: string;
+  ip: string;
+  port: string;
+  name: string;
 }
 
 export interface Protocol {
-    name: string;
-    abbr: string;
-    macro: string;
-    version: string;
-    backgroundColor: string;
-    foregroundColor: string;
-    fontSize: number;
-    referenceLink: string;
-    ports: string[];
-    priority: number;
+  name: string;
+  abbr: string;
+  macro: string;
+  version: string;
+  backgroundColor: string;
+  foregroundColor: string;
+  fontSize: number;
+  referenceLink: string;
+  ports: string[];
+  priority: number;
 }

@@ -15,33 +15,33 @@ const api = Api.getInstance()
 
 const App = () => {
 
-    const [serviceMapModalOpen, setServiceMapModalOpen] = useRecoilState(serviceMapModalOpenAtom);
-    const [oasModalOpen, setOasModalOpen] = useRecoilState(oasModalOpenAtom)
-    const [trafficStatsModalOpen, setTrafficStatsModalOpen] = useRecoilState(trafficStatsModalOpenAtom);
+  const [serviceMapModalOpen, setServiceMapModalOpen] = useRecoilState(serviceMapModalOpenAtom);
+  const [oasModalOpen, setOasModalOpen] = useRecoilState(oasModalOpenAtom)
+  const [trafficStatsModalOpen, setTrafficStatsModalOpen] = useRecoilState(trafficStatsModalOpenAtom);
 
-    return (
-        <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={createTheme(({}))}>
-                <div className="kubesharkApp">
-                    <Header />
-                    <TrafficPage />
-                    <ServiceMapModal
-                        isOpen={serviceMapModalOpen}
-                        onOpen={() => setServiceMapModalOpen(true)}
-                        onClose={() => setServiceMapModalOpen(false)}
-                        getServiceMapDataApi={api.serviceMapData}
-										/>
-                    <OasModal
-                        getOasServices={api.getOasServices}
-                        getOasByService={api.getOasByService}
-                        openModal={oasModalOpen}
-                        handleCloseModal={() => setOasModalOpen(false)}
-                    />
-                    <TrafficStatsModal isOpen={trafficStatsModalOpen} onClose={() => setTrafficStatsModalOpen(false)} getTrafficStatsDataApi={api.getTrafficStats} />
-                </div>
-            </ThemeProvider>
-        </StyledEngineProvider>
-    );
+  return (
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={createTheme(({}))}>
+        <div className="kubesharkApp">
+          <Header />
+          <TrafficPage />
+          <ServiceMapModal
+            isOpen={serviceMapModalOpen}
+            onOpen={() => setServiceMapModalOpen(true)}
+            onClose={() => setServiceMapModalOpen(false)}
+            getServiceMapDataApi={api.serviceMapData}
+          />
+          <OasModal
+            getOasServices={api.getOasServices}
+            getOasByService={api.getOasByService}
+            openModal={oasModalOpen}
+            handleCloseModal={() => setOasModalOpen(false)}
+          />
+          <TrafficStatsModal isOpen={trafficStatsModalOpen} onClose={() => setTrafficStatsModalOpen(false)} getTrafficStatsDataApi={api.getTrafficStats} />
+        </div>
+      </ThemeProvider>
+    </StyledEngineProvider>
+  );
 }
 
 export default App;

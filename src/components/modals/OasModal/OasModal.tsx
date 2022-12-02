@@ -33,7 +33,7 @@ export const OasModal = ({ openModal, handleCloseModal, getOasServices, getOasBy
 
   const classes = { root: style.root }
 
-  const onSelectedOASService = useCallback (async (selectedService) => {
+  const onSelectedOASService = useCallback(async (selectedService) => {
     if (oasServices.length === 0) {
       setSelectedServiceSpec(null);
       setSelectedServiceName("");
@@ -50,7 +50,7 @@ export const OasModal = ({ openModal, handleCloseModal, getOasServices, getOasBy
       console.error(e);
     }
     // eslint-disable-next-line
-  },[oasServices]);
+  }, [oasServices]);
 
   useEffect(() => {
     (async () => {

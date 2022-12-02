@@ -43,7 +43,7 @@ const useWS = (wsUrl: string) => {
   const sendQueryWhenWsOpen = (query) => {
     setTimeout(() => {
       if (ws?.current?.readyState === WebSocket.OPEN) {
-        ws.current.send(JSON.stringify({"query": query, "enableFullEntries": false}));
+        ws.current.send(JSON.stringify({ "query": query, "enableFullEntries": false }));
       } else {
         sendQueryWhenWsOpen(query);
       }

@@ -24,29 +24,29 @@ Lowlight.registerLanguage('wasm', wasm);
 Lowlight.registerLanguage('handlebars', handlebars);
 
 interface Props {
-    code: string;
-    showLineNumbers?: boolean;
-    language?: string;
+  code: string;
+  showLineNumbers?: boolean;
+  language?: string;
 }
 
 export const SyntaxHighlighter: React.FC<Props> = ({
-    code,
-    showLineNumbers = false,
-    language = null,
+  code,
+  showLineNumbers = false,
+  language = null,
 }) => {
-    const [markers, setMarkers] = useState([])
+  const [markers, setMarkers] = useState([])
 
-    useEffect(() => {
-        const newMarkers = code.split("\n").map((item, i) => {
-            return {
-                line: i + 1,
-                className: styles.hljsMarkerLine
-            }
-        });
-        setMarkers(showLineNumbers ? newMarkers : []);
-    }, [showLineNumbers, code])
+  useEffect(() => {
+    const newMarkers = code.split("\n").map((item, i) => {
+      return {
+        line: i + 1,
+        className: styles.hljsMarkerLine
+      }
+    });
+    setMarkers(showLineNumbers ? newMarkers : []);
+  }, [showLineNumbers, code])
 
-    return <div style={{ fontSize: ".75rem" }} className={styles.highlighterContainer}><Lowlight language={language ? language : ""} value={code} markers={markers} /></div>;
+  return <div style={{ fontSize: ".75rem" }} className={styles.highlighterContainer}><Lowlight language={language ? language : ""} value={code} markers={markers} /></div>;
 };
 
 export default SyntaxHighlighter;
