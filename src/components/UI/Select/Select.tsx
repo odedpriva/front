@@ -5,7 +5,7 @@ import styles from './Select.module.sass';
 
 export const ALL_KEY = 'All';
 
-const menuProps: any = {
+const menuProps: unknown = {
   anchorOrigin: {
     vertical: "bottom",
     horizontal: "left"
@@ -52,7 +52,7 @@ export const Select: React.FC<SelectProps> = ({
 }) => {
   let _value = value;
 
-  const _onChange = (item: { props: { value: any; }; }) => {
+  const _onChange = (item: { props: { value: unknown; }; }) => {
     const value = item.props.value;
     value === ALL_KEY ? onChangeCb(ALL_KEY) : onChangeCb(value);
   }
@@ -62,7 +62,7 @@ export const Select: React.FC<SelectProps> = ({
   const transformItem: (i: string) => string = transformDisplay ? transformDisplay : i => i;
 
   const renderValue = multiple
-    ? (item: any[]) => <span className={ellipsis ? 'ellipsis' : ''}>{
+    ? (item: unknown[]) => <span className={ellipsis ? 'ellipsis' : ''}>{
       trimItemsWhenMultiple && item.length > 1 ?
         transformItem(`${item[item.length - 1]} (+${item.length - 1})`) :
         item?.map(transformItem).join(",")

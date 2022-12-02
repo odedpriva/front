@@ -45,7 +45,7 @@ const useLayoutStyles = makeStyles(() => ({
 }));
 
 interface TrafficViewerProps {
-  api?: any
+  api?: unknown
   trafficViewerApiProp: TrafficViewerApi,
   actionButtons?: JSX.Element,
   isShowStatusBar?: boolean,
@@ -141,6 +141,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
         }
       }
     } catch (e) {
+      console.error(e);
     }
   }, [setFocusedEntryId, setEntries, setLeftOffTop, setNoMoreDataTop, ws, sendQueryWhenWsOpen, webSocketUrl])
 
@@ -194,25 +195,25 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
 
   const getConnectionIndicator = () => {
     switch (wsReadyState) {
-      case WebSocket.OPEN:
-        return <div
-          className={`${TrafficViewerStyles.indicatorContainer} ${TrafficViewerStyles.greenIndicatorContainer}`}>
-          <div className={`${TrafficViewerStyles.indicator} ${TrafficViewerStyles.greenIndicator}`} />
-        </div>
-      default:
-        return <div
-          className={`${TrafficViewerStyles.indicatorContainer} ${TrafficViewerStyles.redIndicatorContainer}`}>
-          <div className={`${TrafficViewerStyles.indicator} ${TrafficViewerStyles.redIndicator}`} />
-        </div>
+    case WebSocket.OPEN:
+      return <div
+        className={`${TrafficViewerStyles.indicatorContainer} ${TrafficViewerStyles.greenIndicatorContainer}`}>
+        <div className={`${TrafficViewerStyles.indicator} ${TrafficViewerStyles.greenIndicator}`} />
+      </div>
+    default:
+      return <div
+        className={`${TrafficViewerStyles.indicatorContainer} ${TrafficViewerStyles.redIndicatorContainer}`}>
+        <div className={`${TrafficViewerStyles.indicator} ${TrafficViewerStyles.redIndicator}`} />
+      </div>
     }
   }
 
   const getConnectionTitle = () => {
     switch (wsReadyState) {
-      case WebSocket.OPEN:
-        return "streaming live traffic"
-      default:
-        return "streaming paused";
+    case WebSocket.OPEN:
+      return "streaming live traffic"
+    default:
+      return "streaming paused";
     }
   }
 

@@ -11,7 +11,7 @@ export const DEFAULT_LEFTOFF = `latest`;
 export const DEFAULT_FETCH = 50;
 export const DEFAULT_FETCH_TIMEOUT_MS = 3000;
 
-const useWS = (wsUrl: string) => {
+const useWS = (wsUrl: string): unknown => {
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
   const [isOpen, setisOpen] = useState(false);

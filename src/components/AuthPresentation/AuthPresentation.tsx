@@ -4,9 +4,14 @@ import './AuthPresentation.sass';
 
 const api = Api.getInstance();
 
-export const AuthPresentation = () => {
+export interface IStatusAuth {
+  email: string;
+  model: unknown;
+}
 
-  const [statusAuth, setStatusAuth] = useState(null);
+export const AuthPresentation: React.FC = () => {
+
+  const [statusAuth, setStatusAuth] = useState<IStatusAuth>(null);
 
   useEffect(() => {
     (async () => {
@@ -20,7 +25,7 @@ export const AuthPresentation = () => {
   }, []);
 
   return <>
-    {statusAuth?.email && <div className="authPresentationContainer">
+    {(statusAuth?.email as unknown as boolean) && <div className="authPresentationContainer">
       <div>
         <div className="authEmail">{statusAuth.email}</div>
         <div className="authModel">{statusAuth.model}</div>

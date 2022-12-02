@@ -13,7 +13,7 @@ import { TrafficStatsModal } from './components/modals/TrafficStatsModal/Traffic
 
 const api = Api.getInstance()
 
-const App = () => {
+const App: React.FC = () => {
 
   const [serviceMapModalOpen, setServiceMapModalOpen] = useRecoilState(serviceMapModalOpenAtom);
   const [oasModalOpen, setOasModalOpen] = useRecoilState(oasModalOpenAtom)

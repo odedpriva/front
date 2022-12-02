@@ -51,7 +51,7 @@ enum RequestTabs {
 const HTTP_METHODS = ["get", "post", "put", "head", "options", "delete"]
 const TABS = [{ tab: RequestTabs.Headers }, { tab: RequestTabs.Params }, { tab: RequestTabs.Body }];
 
-const getQueryStringParams = (link: String) => {
+const getQueryStringParams = (link: string) => {
 
   if (link) {
     const decodedURL = decodeQueryParam(link)
@@ -121,7 +121,6 @@ const ReplayRequestModal: React.FC<ReplayRequestModalProps> = ({ isOpen, onClose
   useEffect(() => {
     const params = convertParamsToArr(getQueryStringParams(debouncedPath));
     setRequestData({ ...requestDataModel, params })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedPath])
 
   const onModalClose = () => {
@@ -184,27 +183,28 @@ const ReplayRequestModal: React.FC<ReplayRequestModalProps> = ({ isOpen, onClose
 
   let innerComponent
   switch (currentTab) {
-    case RequestTabs.Params:
-      innerComponent = <div className={styles.keyValueContainer}><KeyValueTable data={requestDataModel.params} onDataChange={onParamsChange} key={"params"} valuePlaceholder="New Param Value" keyPlaceholder="New param Key" /></div>
-      break;
-    case RequestTabs.Headers:
-      innerComponent = <Fragment>
-        <div className={styles.keyValueContainer}><KeyValueTable data={requestDataModel.headers} onDataChange={(headers) => setRequestData({ ...requestDataModel, headers: headers })} key={"Header"} valuePlaceholder="New Headers Value" keyPlaceholder="New Headers Key" />
-        </div>
-        <span className={styles.note}><b>* </b> X-Kubeshark Header added to requests</span>
-      </Fragment>
-      break;
-    case RequestTabs.Body:
-      const formattedCode = formatRequestWithOutError(requestDataModel.postData || "", request?.postData?.mimeType)
-      innerComponent = <div className={styles.codeEditor}>
-        <CodeEditor language={request?.postData?.mimeType.split("/")[1]}
-          code={Utils.isJson(formattedCode) ? JSON.stringify(JSON.parse(formattedCode || "{}"), null, 2) : formattedCode}
-          onChange={(postData) => setRequestData({ ...requestDataModel, postData })} />
+  case RequestTabs.Params:
+    innerComponent = <div className={styles.keyValueContainer}><KeyValueTable data={requestDataModel.params} onDataChange={onParamsChange} key={"params"} valuePlaceholder="New Param Value" keyPlaceholder="New param Key" /></div>
+    break;
+  case RequestTabs.Headers:
+    innerComponent = <Fragment>
+      <div className={styles.keyValueContainer}><KeyValueTable data={requestDataModel.headers} onDataChange={(headers) => setRequestData({ ...requestDataModel, headers: headers })} key={"Header"} valuePlaceholder="New Headers Value" keyPlaceholder="New Headers Key" />
       </div>
-      break;
-    default:
-      innerComponent = null
-      break;
+      <span className={styles.note}><b>* </b> X-Kubeshark Header added to requests</span>
+    </Fragment>
+    break;
+  case RequestTabs.Body: {
+    const formattedCode = formatRequestWithOutError(requestDataModel.postData || "", request?.postData?.mimeType)
+    innerComponent = <div className={styles.codeEditor}>
+      <CodeEditor language={request?.postData?.mimeType.split("/")[1]}
+        code={Utils.isJson(formattedCode) ? JSON.stringify(JSON.parse(formattedCode || "{}"), null, 2) : formattedCode}
+        onChange={(postData) => setRequestData({ ...requestDataModel, postData })} />
+    </div>
+    break;
+  }
+  default:
+    innerComponent = null
+    break;
   }
 
   return (
@@ -296,9 +296,9 @@ const ReplayRequestModal: React.FC<ReplayRequestModalProps> = ({ isOpen, onClose
   );
 }
 
-const ReplayRequestModalContainer = () => {
+const ReplayRequestModalContainer: React.FC = () => {
   const [isOpenRequestModal, setIsOpenRequestModal] = useRecoilState(replayRequestModalOpenAtom)
-  return isOpenRequestModal && < ReplayRequestModal isOpen={isOpenRequestModal} onClose={() => setIsOpenRequestModal(false)} />
+  return isOpenRequestModal && <ReplayRequestModal isOpen={isOpenRequestModal} onClose={() => setIsOpenRequestModal(false)} />
 }
 
 export default ReplayRequestModalContainer

@@ -2,7 +2,7 @@ import React from 'react';
 import { AutoRepresentation } from './AutoRepresentation';
 
 interface Props {
-  representation: any;
+  representation: unknown;
   color: string;
 }
 

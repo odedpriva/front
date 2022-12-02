@@ -52,7 +52,7 @@ export const TimeRangePicker: React.FC<TimeRangePickerProps> = ({ refreshStats }
     startLoading();
   };
 
-  const onRefresh = ({ start, end, refreshInterval }) => {
+  const onRefresh = ({ start, end }) => {
     return new Promise(resolve => {
       setTimeout(resolve, 100);
     }).then(() => {

@@ -5,7 +5,7 @@ import React from "react";
 export interface TooltipProps extends MUITooltipProps {
   variant?: 'default' | 'wide' | 'fit';
   isSimple?: boolean;
-  classes?: any;
+  classes?: unknown;
 }
 
 export type TooltipPlacement = 'bottom-end' | 'bottom-start' | 'bottom' | 'left-end' | 'left-start' | 'left' | 'right-end' | 'right-start' | 'right' | 'top-end' | 'top-start' | 'top';
@@ -22,7 +22,7 @@ const styles = {
   }
 };
 
-const useStyles = makeStyles((theme) => styles);
+const useStyles = makeStyles(() => styles);
 
 const Tooltip: React.FC<TooltipProps> = (props) => {
 

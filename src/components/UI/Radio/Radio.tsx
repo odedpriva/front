@@ -2,7 +2,7 @@ import React from "react";
 
 export interface Props {
   checked: boolean;
-  onToggle: (checked: boolean) => any;
+  onToggle: (checked: boolean) => unknown;
   disabled?: boolean;
 }
 

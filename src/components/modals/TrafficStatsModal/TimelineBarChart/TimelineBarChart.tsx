@@ -12,7 +12,7 @@ import { ALL_PROTOCOLS, StatsMode } from "../consts";
 
 interface TimelineBarChartProps {
   timeLineBarChartMode: string;
-  data: any;
+  data: unknown;
   selectedProtocol: string;
 }
 
@@ -27,7 +27,7 @@ export const TimelineBarChart: React.FC<TimelineBarChartProps> = ({ timeLineBarC
     const protocolsBarsData = [];
     const prtcNames = [];
     data.sort((a, b) => a.timestamp < b.timestamp ? -1 : 1).forEach(protocolObj => {
-      let newProtocolObj: { [k: string]: any } = {};
+      const newProtocolObj: { [k: string]: unknown } = {};
       newProtocolObj.timestamp = Utils.formatDate(protocolObj.timestamp);
       protocolObj.protocols.forEach(protocol => {
         newProtocolObj[`${protocol.name}`] = protocol[StatsMode[timeLineBarChartMode]];
@@ -49,7 +49,7 @@ export const TimelineBarChart: React.FC<TimelineBarChartProps> = ({ timeLineBarC
     const protocolsMethodsNamesAndColors = [];
     const protocolsMethods = [];
     data.sort((a, b) => a.timestamp < b.timestamp ? -1 : 1).forEach(protocolObj => {
-      let newMethodObj: { [k: string]: any } = {};
+      const newMethodObj: { [k: string]: unknown } = {};
       newMethodObj.timestamp = Utils.formatDate(protocolObj.timestamp);
       protocolObj.protocols.find(protocol => protocol.name === selectedProtocol)?.methods.forEach(method => {
         newMethodObj[`${method.name}`] = method[StatsMode[timeLineBarChartMode]]

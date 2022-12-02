@@ -26,7 +26,7 @@ const modalStyle = {
 };
 
 
-export const OasModal = ({ openModal, handleCloseModal, getOasServices, getOasByService }) => {
+export const OasModal: React.FC = ({ openModal, handleCloseModal, getOasServices, getOasByService }) => {
   const [oasServices, setOasServices] = useState([] as string[])
   const [selectedServiceName, setSelectedServiceName] = useState("");
   const [selectedServiceSpec, setSelectedServiceSpec] = useState(null);

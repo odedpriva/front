@@ -13,16 +13,14 @@ const Loader = ({ loaderMargin = 20, loaderHeight = 35 }: Omit<WithLoadingProps,
   </div>
 }
 
-const withLoading = <P extends object>(
-  Component: React.ComponentType<P>
-): React.FC<P & WithLoadingProps> => ({
+const withLoading = <P extends unknown>(Component: React.ComponentType<P>): React.FC<P & WithLoadingProps> => ({
   isLoading,
   loaderMargin,
   loaderHeight,
   ...props
 }: WithLoadingProps) => isLoading ?
-      <Loader loaderMargin={loaderMargin} loaderHeight={loaderHeight} /> :
-      <Component {...props as P} />;
+  <Loader loaderMargin={loaderMargin} loaderHeight={loaderHeight} /> :
+  <Component {...props as P} />;
 
 export const LoadingWrapper: React.FC<WithLoadingProps> = ({ loaderMargin, loaderHeight, isLoading, children }) => {
   return isLoading ?

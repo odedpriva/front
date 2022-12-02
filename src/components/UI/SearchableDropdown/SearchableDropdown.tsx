@@ -9,13 +9,12 @@ import styles from "./SearchableDropdown.module.sass";
 
 interface SearchableDropdownProps {
   options: string[],
-  selectedValues?: any,
+  selectedValues?: unknown,
   onChange: (string) => void,
   isLoading?: boolean,
   label?: string,
   multiple?: boolean,
-  inputWidth?: string
-  freeSolo?: boolean
+  freeSolo?: boolean,
 }
 
 const useStyles = makeStyles(() => ({
@@ -38,7 +37,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options, selectedValues, onChange, isLoading, label, multiple, inputWidth, freeSolo }) => {
+const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options, selectedValues, onChange, isLoading, label, multiple, freeSolo }) => {
 
   const classes = useStyles();
 

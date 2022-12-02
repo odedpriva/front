@@ -15,7 +15,7 @@ export enum TabsEnum {
   Response = 1
 }
 
-export const AutoRepresentation: React.FC<any> = ({ representation, color, openedTab = TabsEnum.Request, isDisplayReplay = false }) => {
+export const AutoRepresentation: React.FC = ({ representation, color, openedTab = TabsEnum.Request, isDisplayReplay = false }) => {
   const entryData = useRecoilValue(entryDataAtom)
   const { isReplayEnabled } = useRecoilValue<EntryDetailedConfig>(entryDetailedConfigAtom)
   const setIsOpenRequestModal = useSetRecoilState(replayRequestModalOpenAtom)
@@ -53,8 +53,6 @@ export const AutoRepresentation: React.FC<any> = ({ representation, color, opene
     if (openedTab) {
       setCurrentTab(TABS[openedTab].tab)
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Don't fail even if `representation` is an empty string

@@ -17,15 +17,15 @@ import leftOffTopAtom from "../../recoil/leftOffTop";
 import Moment from "moment";
 
 interface EntriesListProps {
-  listEntryREF: any;
+  listEntryREF: unknown;
   onSnapBrokenEvent: () => void;
   isSnappedToBottom: boolean;
-  setIsSnappedToBottom: any;
+  setIsSnappedToBottom: unknown;
   noMoreDataTop: boolean;
   setNoMoreDataTop: (flag: boolean) => void;
   openWebSocket: (leftOff: string, query: string, resetEntries: boolean, fetch: number, fetchTimeoutMs: number) => void;
-  scrollableRef: any;
-  ws: any;
+  scrollableRef: unknown;
+  ws: unknown;
 }
 
 export const EntriesList: React.FC<EntriesListProps> = ({
@@ -58,9 +58,9 @@ export const EntriesList: React.FC<EntriesListProps> = ({
   const leftOffBottom = entries.length > 0 ? entries[entries.length - 1].id : "latest";
 
   useEffect(() => {
-    const list = document.getElementById('list').firstElementChild;
-    list.addEventListener('scroll', (e) => {
-      const el: any = e.target;
+    const list = document.getElementById('list')?.firstElementChild;
+    list?.addEventListener('scroll', (e) => {
+      const el: unknown = e.target;
       if (el.scrollTop === 0) {
         setLoadMoreTop(true);
       } else {
@@ -81,7 +81,7 @@ export const EntriesList: React.FC<EntriesListProps> = ({
     }
     setIsLoadingTop(true);
     const data = await trafficViewerApi.fetchEntries(leftOffTop, -1, query, 100, 3000);
-    if (!data || data.data === null || data.meta === null) {
+    if (!(data as boolean) || data.data === null || data.meta === null) {
       setNoMoreDataTop(true);
       setIsLoadingTop(false);
       return;
@@ -89,7 +89,7 @@ export const EntriesList: React.FC<EntriesListProps> = ({
     setLeftOffTop(data.meta.leftOff);
 
     let scrollTo: boolean;
-    if (data.meta.noMoreData) {
+    if (data.meta.noMoreData as boolean) {
       setNoMoreDataTop(true);
       scrollTo = false;
     } else {
@@ -138,29 +138,29 @@ export const EntriesList: React.FC<EntriesListProps> = ({
       if (!e?.data) return;
       const message = JSON.parse(e.data);
       switch (message.messageType) {
-        case "entry":
-          setEntries(entriesState => [...entriesState, message.data]);
-          break;
-        case "status":
-          setTargettingStatus(message.targettingStatus);
-          break;
-        case "toast":
-          toast[message.data.type](message.data.text, {
-            theme: "colored",
-            autoClose: message.data.autoClose,
-            pauseOnHover: true,
-            progress: undefined,
-            containerId: TOAST_CONTAINER_ID
-          });
-          break;
-        case "queryMetadata":
-          setTruncatedTimestamp(message.data.truncatedTimestamp);
-          setQueriedTotal(message.data.total);
-          setLeftOffTop(leftOffState => leftOffState === "" ? message.data.leftOff : leftOffState);
-          break;
-        case "startTime":
-          setStartTime(message.data);
-          break;
+      case "entry":
+        setEntries(entriesState => [...entriesState, message.data]);
+        break;
+      case "status":
+        setTargettingStatus(message.targettingStatus);
+        break;
+      case "toast":
+        toast[message.data.type](message.data.text, {
+          theme: "colored",
+          autoClose: message.data.autoClose,
+          pauseOnHover: true,
+          progress: undefined,
+          containerId: TOAST_CONTAINER_ID
+        });
+        break;
+      case "queryMetadata":
+        setTruncatedTimestamp(message.data.truncatedTimestamp);
+        setQueriedTotal(message.data.total);
+        setLeftOffTop(leftOffState => leftOffState === "" ? message.data.leftOff : leftOffState);
+        break;
+      case "startTime":
+        setStartTime(message.data);
+        break;
       }
     }
   }
@@ -184,7 +184,7 @@ export const EntriesList: React.FC<EntriesListProps> = ({
         <button type="button"
           title="Fetch old records"
           className={`${styles.btnOld} ${!scrollbarVisible && leftOffTop !== "" ? styles.showButton : styles.hideButton}`}
-          onClick={(_) => {
+          onClick={() => {
             trafficViewerApi.webSocket.close()
             getOldEntries();
           }}>
@@ -193,7 +193,7 @@ export const EntriesList: React.FC<EntriesListProps> = ({
         <button type="button"
           title="Snap to bottom"
           className={`${styles.btnLive} ${isSnappedToBottom && !isWsConnectionClosed ? styles.hideButton : styles.showButton}`}
-          onClick={(_) => {
+          onClick={() => {
             if (isWsConnectionClosed) {
               openWebSocket(leftOffBottom, query, false, 0, 0);
             }

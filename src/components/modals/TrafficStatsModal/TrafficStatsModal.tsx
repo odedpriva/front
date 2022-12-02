@@ -25,7 +25,7 @@ const modalStyle = {
 interface TrafficStatsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  getTrafficStatsDataApi: (start?, end?) => Promise<any>
+  getTrafficStatsDataApi: (start?, end?) => Promise<unknown>
 }
 
 export const TrafficStatsModal: React.FC<TrafficStatsModalProps> = ({ isOpen, onClose, getTrafficStatsDataApi }) => {

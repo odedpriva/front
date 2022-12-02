@@ -7,11 +7,11 @@ import queryAtom from "../../../recoil/query";
 
 interface Props {
   query: string,
-  style?: object,
-  iconStyle?: object,
+  style?: uknown,
+  iconStyle?: uknown,
   className?: string,
   useTooltip?: boolean,
-  tooltipStyle?: object,
+  tooltipStyle?: uknown,
   displayIconOnMouseOver?: boolean,
   flipped?: boolean,
 }
@@ -50,7 +50,7 @@ const Queryable: React.FC<Props> = ({ query, style, iconStyle, className, useToo
 
   return (
     <div className={`${QueryableStyle.QueryableContainer} ${QueryableStyle.displayIconOnMouseOver} ${className ? className : ''} ${displayIconOnMouseOver ? QueryableStyle.displayIconOnMouseOver : ''}`}
-      style={style} onMouseOver={e => setShowTooltip(true)} onMouseLeave={e => setShowTooltip(false)}>
+      style={style} onMouseOver={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)}>
       {flipped && addButton}
       {children}
       {!flipped && addButton}

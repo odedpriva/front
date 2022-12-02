@@ -12,8 +12,7 @@ const renderCustomizedLabel = ({
   innerRadius,
   outerRadius,
   percent,
-  index
-}: any) => {
+}: unknown) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -35,7 +34,7 @@ const renderCustomizedLabel = ({
 
 interface TrafficPieChartProps {
   pieChartMode: string;
-  data: any;
+  data: unknown;
   selectedProtocol: string;
 }
 

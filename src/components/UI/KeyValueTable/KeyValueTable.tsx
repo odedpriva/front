@@ -6,8 +6,8 @@ import deleteIconActive from "./assets/delete-active.svg"
 import HoverImage from "../HoverImage/HoverImage";
 
 interface KeyValueTableProps {
-  data: any
-  onDataChange: (data: any) => void
+  data: unknown
+  onDataChange: (data: unknown) => void
   keyPlaceholder?: string
   valuePlaceholder?: string
 }
@@ -75,6 +75,6 @@ const KeyValueTable: React.FC<KeyValueTableProps> = ({ data, onDataChange, keyPl
     })}
   </div>
 }
-export const convertParamsToArr = (paramsObj) => Object.entries(paramsObj).map(([key, value]) => { return { key, value } })
-export const convertArrToKeyValueObject = (arr) => arr.reduce((acc, curr) => { acc[curr.key] = curr.value; return acc }, {})
+export const convertParamsToArr: unknown = (paramsObj: unknown) => Object.entries(paramsObj).map(([key, value]) => { return { key, value } })
+export const convertArrToKeyValueObject: unknown = (arr: unknown) => arr.reduce((acc, curr) => { acc[curr.key] = curr.value; return acc }, {})
 export default KeyValueTable

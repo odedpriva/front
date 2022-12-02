@@ -5,10 +5,10 @@ import { FileContent } from 'use-file-picker/dist/interfaces';
 
 interface IFilePickerProps {
   onLoadingComplete: (file: FileContent) => void;
-  elem: any
+  elem: unknown
 }
 
-const FilePicker = ({ elem, onLoadingComplete }: IFilePickerProps) => {
+const FilePicker: React.ReactFragment = ({ elem, onLoadingComplete }: IFilePickerProps) => {
   const [openFileSelector, { filesContent }] = useFilePicker({
     accept: ['.json'],
     limitFilesConfig: { max: 1 },

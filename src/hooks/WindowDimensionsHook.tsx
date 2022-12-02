@@ -8,7 +8,7 @@ function getWindowDimensions() {
   };
 }
 
-export function useRequestTextByWidth(windowWidth) {
+export function useRequestTextByWidth(windowWidth: number): unknown {
 
   let requestText = "Request: "
   let responseText = "Response: "
@@ -27,7 +27,7 @@ export function useRequestTextByWidth(windowWidth) {
   return { requestText, responseText, elapsedTimeText }
 }
 
-export default function useWindowDimensions() {
+export default function useWindowDimensions(): Record<string, number> {
   const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
 
   useEffect(() => {

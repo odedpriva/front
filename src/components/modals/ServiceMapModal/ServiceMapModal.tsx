@@ -62,7 +62,7 @@ interface ServiceMapModalProps {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
-  getServiceMapDataApi: () => Promise<any>
+  getServiceMapDataApi: () => Promise<unknown>
 }
 
 export const ServiceMapModal: React.FC<ServiceMapModalProps> = ({ isOpen, onClose, getServiceMapDataApi }) => {
@@ -121,7 +121,7 @@ export const ServiceMapModal: React.FC<ServiceMapModalProps> = ({ isOpen, onClos
     .sort((a, b) => { return a.key.localeCompare(b.key) }), [])
 
   const getProtocolsForFilter = useMemo(() => {
-    return serviceMapApiData.edges.reduce<ProtocolType[]>((returnArr, currentValue, currentIndex, array) => {
+    return serviceMapApiData.edges.reduce<ProtocolType[]>((returnArr, currentValue) => {
       if (!returnArr.find(prot => prot.key === currentValue.protocol.abbr))
         returnArr.push({
           key: currentValue.protocol.abbr, value: currentValue.protocol.abbr,
@@ -159,14 +159,12 @@ export const ServiceMapModal: React.FC<ServiceMapModalProps> = ({ isOpen, onClos
   useEffect(() => {
     if (checkedServices.length === 0)
       setCheckedServices(getServicesForFilter.map(x => x.key).filter(serviceName => !Utils.isIpAddress(serviceName)))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getServicesForFilter])
 
   useEffect(() => {
     if (checkedProtocols.length === 0) {
       setCheckedProtocols(getProtocolsForFilter.map(x => x.key))
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getProtocolsForFilter])
 
   useEffect(() => {
@@ -175,7 +173,7 @@ export const ServiceMapModal: React.FC<ServiceMapModalProps> = ({ isOpen, onClos
 
   useEffect(() => {
     if (graphData?.nodes?.length === 0) return;
-    let options = { ...graphOptions };
+    const options = { ...graphOptions };
     options.physics.barnesHut.avoidOverlap = graphData?.nodes?.length > 10 ? 0 : 1;
     setGraphOptions(options);
     // eslint-disable-next-line

@@ -6,24 +6,24 @@ enum SectionTypes {
   SectionBody = "body",
 }
 
-const SectionsRepresentation: React.FC<any> = ({ data, color }) => {
+const SectionsRepresentation: React.FC = ({ data, color }) => {
   const sections = []
 
   if (data) {
     for (const [i, row] of data.entries()) {
       switch (row.type) {
-        case SectionTypes.SectionTable:
-          sections.push(
-            <EntryTableSection key={i} title={row.title} color={color} arrayToIterate={JSON.parse(row.data)} />
-          )
-          break;
-        case SectionTypes.SectionBody:
-          sections.push(
-            <EntryBodySection key={i} title={row.title} color={color} content={row.data} encoding={row.encoding} contentType={row.mimeType} selector={row.selector} />
-          )
-          break;
-        default:
-          break;
+      case SectionTypes.SectionTable:
+        sections.push(
+          <EntryTableSection key={i} title={row.title} color={color} arrayToIterate={JSON.parse(row.data)} />
+        )
+        break;
+      case SectionTypes.SectionBody:
+        sections.push(
+          <EntryBodySection key={i} title={row.title} color={color} content={row.data} encoding={row.encoding} contentType={row.mimeType} selector={row.selector} />
+        )
+        break;
+      default:
+        break;
       }
     }
   }

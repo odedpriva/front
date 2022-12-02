@@ -6,14 +6,14 @@ type JSONValue =
   | string
   | number
   | boolean
-  | Object
+  | unknown
 
 
 export class Utils {
   static isIpAddress = (address: string): boolean => IP_ADDRESS_REGEX.test(address)
   static lineNumbersInString = (code: string): number => code.split("\n").length;
 
-  static humanFileSize(bytes, si = false, dp = 1) {
+  static humanFileSize(bytes: number, si = false, dp = 1): string {
     const thresh = si ? 1000 : 1024;
 
     if (Math.abs(bytes) < thresh) {
@@ -35,36 +35,39 @@ export class Utils {
     return bytes.toFixed(dp) + ' ' + units[u];
   }
 
-  static padTo2Digits = (num) => {
+  static padTo2Digits = (num: number): string => {
     return String(num).padStart(2, '0');
   }
 
-  static getHoursAndMinutes = (protocolTimeKey) => {
+  static getHoursAndMinutes = (protocolTimeKey: string): string => {
     const time = new Date(protocolTimeKey)
     const hoursAndMinutes = Utils.padTo2Digits(time.getHours()) + ':' + Utils.padTo2Digits(time.getMinutes());
     return hoursAndMinutes;
   }
 
-  static formatDate = (date) => {
-    let d = new Date(date),
-      month = '' + (d.getMonth() + 1),
-      day = '' + d.getDate(),
+  static formatDate = (date: string): string => {
+    const d = new Date(date),
       year = d.getFullYear();
+
+    let month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate();
+
     const hoursAndMinutes = Utils.getHoursAndMinutes(date);
     if (month.length < 2)
       month = '0' + month;
     if (day.length < 2)
       day = '0' + day;
+
     const newDate = [year, month, day].join('-');
     return [hoursAndMinutes, newDate].join(' ');
   }
 
-  static createUniqueObjArrayByProp = (objArray, prop) => {
+  static createUniqueObjArrayByProp = (objArray: unknown, prop: unknown): unknown => {
     const map = new Map(objArray.map((item) => [item[prop], item])).values()
     return Array.from(map);
   }
 
-  static isJson = (str) => {
+  static isJson = (str: string): boolean => {
     try {
       JSON.parse(str);
     } catch (e) {
@@ -73,7 +76,7 @@ export class Utils {
     return true;
   }
 
-  static downloadFile = (data: string, filename: string, fileType: string) => {
+  static downloadFile = (data: string, filename: string, fileType: string): void => {
     const blob = new Blob([data], { type: fileType })
     const a = document.createElement('a');
     a.href = window.URL.createObjectURL(blob);
@@ -82,15 +85,15 @@ export class Utils {
     a.remove();
   }
 
-  static exportToJson = (data: JSONValue, name) => {
+  static exportToJson = (data: JSONValue, name: string): void => {
     Utils.downloadFile(JSON.stringify(data), `${name}.json`, 'text/json')
   }
 
-  static getTimeFormatted = (time: Moment.MomentInput) => {
+  static getTimeFormatted = (time: Moment.MomentInput): string => {
     return Moment(time).utc().format('MM/DD/YYYY, h:mm:ss.SSS A')
   }
 
-  static getNow = (format: string = 'MM/DD/YYYY, HH:mm:ss.SSS') => {
+  static getNow = (format = 'MM/DD/YYYY, HH:mm:ss.SSS'): string => {
     return Moment().format(format)
   }
 }

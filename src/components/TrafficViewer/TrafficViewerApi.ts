@@ -1,9 +1,9 @@
 type TrafficViewerApi = {
-  validateQuery: (query: any) => any
-  targetStatus: () => any
-  fetchEntries: (leftOff: any, direction: number, query: any, limit: number, timeoutMs: number) => any
-  getEntry: (entryId: any, query: string) => any,
-  replayRequest: (request: { method: string, url: string, data: string, headers: {} }) => Promise<any>,
+  validateQuery: (query: unknown) => unknown
+  targetStatus: () => unknown
+  fetchEntries: (leftOff: unknown, direction: number, query: unknown, limit: number, timeoutMs: number) => unknown
+  getEntry: (entryId: unknown, query: string) => unknown,
+  replayRequest: (request: { method: string, url: string, data: string, headers: unknown }) => Promise<unknown>,
   webSocket: {
     close: () => void
   }

@@ -41,7 +41,7 @@ interface Entry {
 
 interface EntryProps {
   entry: Entry;
-  style: object;
+  style: unknown;
   headingMode: boolean;
   namespace?: string;
 }
@@ -63,21 +63,21 @@ export const EntryItem: React.FC<EntryProps> = ({ entry, style, headingMode, nam
   let ingoingIcon;
   let outgoingIcon;
   switch (classification) {
-    case StatusCodeClassification.SUCCESS: {
-      ingoingIcon = ingoingIconSuccess;
-      outgoingIcon = outgoingIconSuccess;
-      break;
-    }
-    case StatusCodeClassification.FAILURE: {
-      ingoingIcon = ingoingIconFailure;
-      outgoingIcon = outgoingIconFailure;
-      break;
-    }
-    case StatusCodeClassification.NEUTRAL: {
-      ingoingIcon = ingoingIconNeutral;
-      outgoingIcon = outgoingIconNeutral;
-      break;
-    }
+  case StatusCodeClassification.SUCCESS: {
+    ingoingIcon = ingoingIconSuccess;
+    outgoingIcon = outgoingIconSuccess;
+    break;
+  }
+  case StatusCodeClassification.FAILURE: {
+    ingoingIcon = ingoingIconFailure;
+    outgoingIcon = outgoingIconFailure;
+    break;
+  }
+  case StatusCodeClassification.NEUTRAL: {
+    ingoingIcon = ingoingIconNeutral;
+    outgoingIcon = outgoingIconNeutral;
+    break;
+  }
   }
 
   const isStatusCodeEnabled = ((entry.proto.name === "http" && "status" in entry) || entry.status !== 0);

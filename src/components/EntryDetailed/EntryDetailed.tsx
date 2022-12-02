@@ -37,9 +37,9 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-export const formatSize = (n: number) => n > 1000 ? `${Math.round(n / 1000)}KB` : `${n} B`;
+export const formatSize = (n: number): string => n > 1000 ? `${Math.round(n / 1000)}KB` : `${n} B`;
 const minSizeDisplayRequestSize = 880;
-const EntryTitle: React.FC<any> = ({ protocol, data, elapsedTime }) => {
+const EntryTitle: React.FC = ({ protocol, data, elapsedTime }) => {
   const classes = useStyles();
   const request = data.request;
   const response = data.response;
@@ -90,7 +90,7 @@ const EntryTitle: React.FC<any> = ({ protocol, data, elapsedTime }) => {
   </div>;
 };
 
-const EntrySummary: React.FC<any> = ({ entry, namespace }) => {
+const EntrySummary: React.FC = ({ entry, namespace }) => {
   return <EntryItem
     key={`entry-${entry.id}`}
     entry={entry}
@@ -102,7 +102,7 @@ const EntrySummary: React.FC<any> = ({ entry, namespace }) => {
 
 
 
-export const EntryDetailed = () => {
+export const EntryDetailed: React.FC = () => {
 
   const focusedEntryId = useRecoilValue(focusedEntryIdAtom);
   const trafficViewerApi = useRecoilValue(TrafficViewerApiAtom as RecoilState<TrafficViewerApi>)

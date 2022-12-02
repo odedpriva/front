@@ -10,11 +10,11 @@ interface Tab {
   disabled?: boolean,
   disabledMessage?: string,
   highlight?: boolean,
-  badge?: any,
+  badge?: unknown,
 }
 
 interface Props {
-  classes?: any,
+  classes?: unknown,
   tabs: Tab[],
   currentTab: string,
   color?: string,

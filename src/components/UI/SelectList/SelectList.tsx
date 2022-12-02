@@ -41,7 +41,7 @@ const SelectList: React.FC<Props> = ({ items, tableName, checkedValues = [], mul
     }
     else {
       const newCheckedValues = [...checkedValues];
-      let index = newCheckedValues.indexOf(checkedKey);
+      const index = newCheckedValues.indexOf(checkedKey);
 
       if (index > -1)
         newCheckedValues.splice(index, 1);

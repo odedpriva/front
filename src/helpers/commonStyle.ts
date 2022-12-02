@@ -1,6 +1,5 @@
 import makeStyles from '@mui/styles/makeStyles';
 
-// @ts-ignore
 export const useCommonStyles = makeStyles(() => ({
   button: {
     backgroundColor: "#326de6",

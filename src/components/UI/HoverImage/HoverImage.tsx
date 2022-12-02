@@ -5,7 +5,7 @@ export type HoverImageProps = {
   hoverSrc: string;
   disabled?: boolean;
   className?: string;
-  style?: any;
+  style?: unknown;
   onClick?: React.MouseEventHandler;
   alt?: string
 };

@@ -8,7 +8,7 @@ export interface Node {
   value: number;
   label: string;
   title?: string;
-  color?: object;
+  color?: unknown;
 }
 
 export interface Edge {
@@ -17,7 +17,7 @@ export interface Edge {
   value: number;
   label: string;
   title?: string;
-  color?: object;
+  color?: unknown;
 }
 
 export interface ServiceMapNode {

@@ -15,12 +15,12 @@ import TrafficViewerApiAtom from "../../recoil/TrafficViewerApi/atom";
 
 
 interface FiltersProps {
-  reopenConnection: any;
+  reopenConnection: unknown;
 }
 
 export const Filters: React.FC<FiltersProps> = ({ reopenConnection }) => {
   const [query, setQuery] = useRecoilState(queryAtom);
-  const api: any = useRecoilValue(TrafficViewerApiAtom)
+  const api: unknown = useRecoilValue(TrafficViewerApiAtom)
 
   return <div className={styles.container}>
     <QueryForm
@@ -33,7 +33,7 @@ export const Filters: React.FC<FiltersProps> = ({ reopenConnection }) => {
 type OnQueryChange = { valid: boolean, message: string, query: string }
 
 interface QueryFormProps {
-  reopenConnection?: any;
+  reopenConnection?: unknown;
   query: string
   onQueryChange?: (query: string) => void
   validateQuery: (query: string) => Promise<{ valid: boolean, message: string }>;
