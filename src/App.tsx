@@ -25,17 +25,18 @@ const App = () => {
                 <div className="kubesharkApp">
                     <Header />
                     <TrafficPage />
-                    {window["isServiceMapEnabled"] && <ServiceMapModal
+                    <ServiceMapModal
                         isOpen={serviceMapModalOpen}
                         onOpen={() => setServiceMapModalOpen(true)}
                         onClose={() => setServiceMapModalOpen(false)}
-                        getServiceMapDataApi={api.serviceMapData} />}
-                    {window["isOasEnabled"] && <OasModal
+                        getServiceMapDataApi={api.serviceMapData}
+										/>
+                    <OasModal
                         getOasServices={api.getOasServices}
                         getOasByService={api.getOasByService}
                         openModal={oasModalOpen}
                         handleCloseModal={() => setOasModalOpen(false)}
-                    />}
+                    />
                     <TrafficStatsModal isOpen={trafficStatsModalOpen} onClose={() => setTrafficStatsModalOpen(false)} getTrafficStatsDataApi={api.getTrafficStats} />
                 </div>
             </ThemeProvider>

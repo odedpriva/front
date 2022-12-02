@@ -41,7 +41,7 @@ export const TrafficPage: React.FC = () => {
   }, 500);
 
   const actionButtons = <div style={{ display: 'flex', height: "100%" }}>
-    {window["isOasEnabled"] && <Button
+    <Button
       startIcon={<img className="custom" src={services} alt="services" />}
       size="large"
       variant="contained"
@@ -49,8 +49,8 @@ export const TrafficPage: React.FC = () => {
       style={{ marginRight: 25, textTransform: 'unset' }}
       onClick={handleOpenOasModal}>
       Service Catalog
-    </Button>}
-    {window["isServiceMapEnabled"] && <Button
+    </Button>
+    <Button
       startIcon={<img src={serviceMap} className="custom" alt="service-map" style={{ marginRight: "8%" }} />}
       size="large"
       variant="contained"
@@ -58,7 +58,7 @@ export const TrafficPage: React.FC = () => {
       onClick={openServiceMapModalDebounce}
       style={{ marginRight: 25, textTransform: 'unset' }}>
       Service Map
-    </Button>}
+    </Button>
     <Button
       startIcon={<img className="custom" src={trafficStatsIcon} alt="services" />}
       size="large"
