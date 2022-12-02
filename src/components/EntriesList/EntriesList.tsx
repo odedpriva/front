@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styles from './EntriesList.module.sass';
 import ScrollableFeedVirtualized from "react-scrollable-feed-virtualized";
-import { EntryItem } from "../EntryListItem/EntryListItem";
+import { Entry, EntryItem } from "../EntryListItem/EntryListItem";
 import down from "./assets/downImg.svg";
 import spinner from "./assets/spinner.svg";
 import { RecoilState, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -17,15 +17,36 @@ import leftOffTopAtom from "../../recoil/leftOffTop";
 import Moment from "moment";
 
 interface EntriesListProps {
-  listEntryREF: unknown;
+  listEntryREF: React.LegacyRef<HTMLDivElement>;
   onSnapBrokenEvent: () => void;
   isSnappedToBottom: boolean;
-  setIsSnappedToBottom: unknown;
+  setIsSnappedToBottom: (state: boolean) => void;
   noMoreDataTop: boolean;
   setNoMoreDataTop: (flag: boolean) => void;
   openWebSocket: (leftOff: string, query: string, resetEntries: boolean, fetch: number, fetchTimeoutMs: number) => void;
-  scrollableRef: unknown;
-  ws: React.MutableRefObject<unknown>;
+  scrollableRef: React.MutableRefObject<ScrollableFeedVirtualized>;
+  ws: React.MutableRefObject<WebSocket>;
+}
+
+interface ScrollerElement {
+  scrollTop?: number;
+}
+
+interface DataModel {
+  length: number;
+  reverse: () => unknown[];
+}
+
+interface MetaModel {
+  leftOff: string;
+  noMoreData: boolean;
+  total: number;
+  truncatedTimestamp: number;
+}
+
+export interface FetchModel {
+  data: DataModel;
+  meta: MetaModel;
 }
 
 export const EntriesList: React.FC<EntriesListProps> = ({
@@ -60,7 +81,7 @@ export const EntriesList: React.FC<EntriesListProps> = ({
   useEffect(() => {
     const list = document.getElementById('list')?.firstElementChild;
     list?.addEventListener('scroll', (e) => {
-      const el: unknown = e.target;
+      const el: ScrollerElement = e.target as ScrollerElement;
       if (el.scrollTop === 0) {
         setLoadMoreTop(true);
       } else {
@@ -70,7 +91,7 @@ export const EntriesList: React.FC<EntriesListProps> = ({
     });
   }, [setLoadMoreTop, setNoMoreDataTop]);
 
-  const memoizedEntries = useMemo(() => {
+  const memoizedEntries: Entry[] = useMemo(() => {
     return entries;
   }, [entries]);
 
@@ -80,8 +101,8 @@ export const EntriesList: React.FC<EntriesListProps> = ({
       return;
     }
     setIsLoadingTop(true);
-    const data = await trafficViewerApi.fetchEntries(leftOffTop, -1, query, 100, 3000);
-    if (!(data as boolean) || data.data === null || data.meta === null) {
+    const data: FetchModel = await trafficViewerApi.fetchEntries(leftOffTop, -1, query, 100, 3000);
+    if (!data || data.data === null || data.meta === null) {
       setNoMoreDataTop(true);
       setIsLoadingTop(false);
       return;
@@ -89,7 +110,7 @@ export const EntriesList: React.FC<EntriesListProps> = ({
     setLeftOffTop(data.meta.leftOff);
 
     let scrollTo: boolean;
-    if (data.meta.noMoreData as boolean) {
+    if (data.meta.noMoreData) {
       setNoMoreDataTop(true);
       scrollTo = false;
     } else {
@@ -116,6 +137,7 @@ export const EntriesList: React.FC<EntriesListProps> = ({
     getOldEntries();
   }, [loadMoreTop, noMoreDataTop, getOldEntries, isWsConnectionClosed]);
 
+  // @ts-expect-error: Fields are private in the NPM package
   const scrollbarVisible = scrollableRef.current?.childWrapperRef.current.clientHeight > scrollableRef.current?.wrapperRef.current.clientHeight;
 
   useEffect(() => {

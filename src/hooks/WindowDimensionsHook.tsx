@@ -8,7 +8,13 @@ function getWindowDimensions() {
   };
 }
 
-export function useRequestTextByWidth(windowWidth: number): unknown {
+interface InfoBannerTexts {
+  requestText: string;
+  responseText: string;
+  elapsedTimeText: string;
+}
+
+export function useRequestTextByWidth(windowWidth: number): InfoBannerTexts {
 
   let requestText = "Request: "
   let responseText = "Response: "

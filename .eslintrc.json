@@ -24,5 +24,10 @@
       "react/jsx-key": "off",
       "indent": ["error", 2]
     },
-    "ignorePatterns": ["src/**/*.test.ts", "*.js"]
+    "ignorePatterns": ["src/**/*.test.ts", "*.js"],
+    "settings": {
+      "react": {
+        "version": "detect"
+      }
+    }
 }

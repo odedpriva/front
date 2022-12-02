@@ -62,7 +62,7 @@ interface ServiceMapModalProps {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
-  getServiceMapDataApi: () => Promise<unknown>
+  getServiceMapDataApi: () => Promise<ServiceMapGraph>
 }
 
 export const ServiceMapModal: React.FC<ServiceMapModalProps> = ({ isOpen, onClose, getServiceMapDataApi }) => {

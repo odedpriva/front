@@ -6,11 +6,17 @@ import styles from "./TrafficPieChart.module.sass";
 
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({
+  // @ts-expect-error: TrafficPie?
   cx,
+  // @ts-expect-error: TrafficPie?
   cy,
+  // @ts-expect-error: TrafficPie?
   midAngle,
+  // @ts-expect-error: TrafficPie?
   innerRadius,
+  // @ts-expect-error: TrafficPie?
   outerRadius,
+  // @ts-expect-error: TrafficPie?
   percent,
 }: unknown) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
@@ -45,6 +51,7 @@ export const TrafficPieChart: React.FC<TrafficPieChartProps> = ({ pieChartMode, 
 
   useEffect(() => {
     if (!data) return;
+    // @ts-expect-error: TrafficPie?
     const protocolsPieData = data.map(protocol => {
       return {
         name: protocol.name,
@@ -60,6 +67,7 @@ export const TrafficPieChart: React.FC<TrafficPieChartProps> = ({ pieChartMode, 
       setMethodsStats(null);
       return;
     }
+    // @ts-expect-error: TrafficPie?
     const methodsPieData = data.find(protocol => protocol.name === selectedProtocol)?.methods.map(method => {
       return {
         name: method.name,
@@ -74,6 +82,7 @@ export const TrafficPieChart: React.FC<TrafficPieChartProps> = ({ pieChartMode, 
     if (!data) return;
     let legend;
     if (selectedProtocol === ALL_PROTOCOLS) {
+      // @ts-expect-error: TrafficPie?
       legend = data.map(protocol => <div style={{ marginBottom: 5, display: "flex" }}>
         <div style={{ height: 15, width: 30, background: protocol?.color }} />
         <span className={styles.entryName}>
@@ -81,6 +90,7 @@ export const TrafficPieChart: React.FC<TrafficPieChartProps> = ({ pieChartMode, 
         </span>
       </div>)
     } else {
+      // @ts-expect-error: TrafficPie?
       legend = data.find(protocol => protocol.name === selectedProtocol)?.methods.map((method) => <div
         style={{ marginBottom: 5, display: "flex" }}>
         <div style={{ height: 15, width: 30, background: method.color }} />

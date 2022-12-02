@@ -43,8 +43,11 @@ export const TrafficStatsModal: React.FC<TrafficStatsModalProps> = ({ isOpen, on
         try {
           setIsLoading(true);
           const statsData = await getTrafficStatsDataApi(startTime, endTime);
+          // @ts-expect-error: TrafficPie?
           setPieStatsData(statsData.pie);
+          // @ts-expect-error: TrafficPie?
           setTimelineStatsData(statsData.timeline);
+          // @ts-expect-error: TrafficPie?
           setProtocols(statsData.protocols)
         } catch (e) {
           console.error(e)

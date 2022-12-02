@@ -15,7 +15,14 @@ export enum TabsEnum {
   Response = 1
 }
 
-export const AutoRepresentation: React.FC = ({ representation, color, openedTab = TabsEnum.Request, isDisplayReplay = false }) => {
+interface AutoRepresentationProps {
+  representation: string;
+  color: string;
+  openedTab?: TabsEnum;
+  isDisplayReplay?: boolean;
+}
+
+export const AutoRepresentation: React.FC<AutoRepresentationProps> = ({ representation, color, openedTab = TabsEnum.Request, isDisplayReplay = false }) => {
   const entryData = useRecoilValue(entryDataAtom)
   const { isReplayEnabled } = useRecoilValue<EntryDetailedConfig>(entryDetailedConfigAtom)
   const setIsOpenRequestModal = useSetRecoilState(replayRequestModalOpenAtom)
@@ -67,7 +74,7 @@ export const AutoRepresentation: React.FC = ({ representation, color, openedTab 
         {isReplayDisplayed() && <span title="Replay Request"><ReplayIcon fill={color} stroke={color} style={{ marginLeft: "10px", cursor: "pointer", height: "22px" }} onClick={() => setIsOpenRequestModal(true)} /></span>}
       </div>
       {getOpenedTabIndex() === TabsEnum.Request && <React.Fragment>
-        <SectionsRepresentation data={request} color={color} requestRepresentation={request} />
+        <SectionsRepresentation data={request} color={color} />
       </React.Fragment>}
       {response && response.length > 0 && getOpenedTabIndex() === TabsEnum.Response && <React.Fragment>
         <SectionsRepresentation data={response} color={color} />

@@ -25,8 +25,15 @@ const modalStyle = {
   color: '#000',
 };
 
+interface Props {
+  openModal: boolean;
+  handleCloseModal: () => void;
+  getOasServices: () => string[];
+  getOasByService: (service: string) => void;
+}
 
-export const OasModal: React.FC = ({ openModal, handleCloseModal, getOasServices, getOasByService }) => {
+
+export const OasModal: React.FC<Props> = ({ openModal, handleCloseModal, getOasServices, getOasByService }) => {
   const [oasServices, setOasServices] = useState([] as string[])
   const [selectedServiceName, setSelectedServiceName] = useState("");
   const [selectedServiceSpec, setSelectedServiceSpec] = useState(null);

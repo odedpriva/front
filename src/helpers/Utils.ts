@@ -62,7 +62,7 @@ export class Utils {
     return [hoursAndMinutes, newDate].join(' ');
   }
 
-  static createUniqueObjArrayByProp = (objArray: unknown, prop: unknown): unknown => {
+  static createUniqueObjArrayByProp = (objArray: unknown[], prop: string): unknown => {
     const map = new Map(objArray.map((item) => [item[prop], item])).values()
     return Array.from(map);
   }

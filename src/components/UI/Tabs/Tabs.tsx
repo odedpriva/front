@@ -14,7 +14,7 @@ interface Tab {
 }
 
 interface Props {
-  classes?: unknown,
+  classes?: Record<string, unknown>,
   tabs: Tab[],
   currentTab: string,
   color?: string,

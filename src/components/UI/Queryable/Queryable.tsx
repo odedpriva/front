@@ -7,11 +7,11 @@ import queryAtom from "../../../recoil/query";
 
 interface Props {
   query: string,
-  style?: uknown,
-  iconStyle?: uknown,
+  style?: unknown,
+  iconStyle?: unknown,
   className?: string,
   useTooltip?: boolean,
-  tooltipStyle?: uknown,
+  tooltipStyle?: unknown,
   displayIconOnMouseOver?: boolean,
   flipped?: boolean,
 }

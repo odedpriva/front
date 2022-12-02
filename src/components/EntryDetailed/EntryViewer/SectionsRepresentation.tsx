@@ -6,7 +6,25 @@ enum SectionTypes {
   SectionBody = "body",
 }
 
-const SectionsRepresentation: React.FC = ({ data, color }) => {
+interface RowModel {
+  title: string;
+  data: string;
+  mimeType: string;
+  encoding: string;
+  selector: string;
+  type: SectionTypes;
+}
+
+interface TableModel {
+  entries: () => [number, RowModel][];
+}
+
+interface SectionsRepresentationProps {
+  data: TableModel;
+  color: string;
+}
+
+const SectionsRepresentation: React.FC<SectionsRepresentationProps> = ({ data, color }) => {
   const sections = []
 
   if (data) {

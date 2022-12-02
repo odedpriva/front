@@ -1,5 +1,6 @@
 import makeStyles from '@mui/styles/makeStyles';
 
+// @ts-expect-error: BoxShadow?
 export const useCommonStyles = makeStyles(() => ({
   button: {
     backgroundColor: "#326de6",

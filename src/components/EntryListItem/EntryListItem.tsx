@@ -22,7 +22,7 @@ interface TCPInterface {
   name: string
 }
 
-interface Entry {
+export interface Entry {
   proto: ProtocolInterface,
   capture: string,
   method?: string,

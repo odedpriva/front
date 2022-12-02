@@ -51,12 +51,14 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options, select
     fullWidth={false}
     disableClearable
     value={selectedValues ? selectedValues : (multiple ? [] : null)}
+    // @ts-expect-error: freeSolo?
     getOptionLabel={(option) => option}
     onChange={(event, val) => onChange(val)}
     size={"small"}
     popupIcon={<img style={{ padding: 7 }} alt="iconDown" src={DefaultIconDown} />}
     renderOption={(props, option, { selected }) => (
       <li {...props}>
+        {/* @ts-expect-error: freeSolo? */}
         <div id={`option-${option}`} className={styles.optionItem} key={option}>
           {multiple && <Checkbox
             icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
@@ -64,14 +66,18 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options, select
             style={{ marginRight: 8 }}
             checked={selected}
           />}
+          {/* @ts-expect-error: freeSolo? */}
           <div title={option} className={styles.title}>{option}</div>
         </div>
       </li>
     )}
     renderTags={() => <div className={styles.optionListItem}>
+      {/* @ts-expect-error: freeSolo? */}
       <div title={selectedValues?.length > 0 ? `${selectedValues[0]} (+${selectedValues.length - 1})` : ""} className={styles.optionListItemTitle}>
+        {/* @ts-expect-error: freeSolo? */}
         {selectedValues?.length > 0 ? `${selectedValues[0]}` : ""}
       </div>
+      {/* @ts-expect-error: freeSolo? */}
       {selectedValues?.length > 1 && <div style={{ marginLeft: 5 }}>{`(+${selectedValues.length - 1})`}</div>}
     </div>}
     renderInput={(params) => <TextField

@@ -12,28 +12,31 @@ import queryAtom from "../../recoil/query";
 import useKeyPress from "../../hooks/useKeyPress"
 import shortcutsKeyboard from "../../configs/shortcutsKeyboard"
 import TrafficViewerApiAtom from "../../recoil/TrafficViewerApi/atom";
+import TrafficViewerApi from "../TrafficViewer/TrafficViewerApi";
 
 
 interface FiltersProps {
-  reopenConnection: unknown;
+  reopenConnection: () => void;
 }
 
 export const Filters: React.FC<FiltersProps> = ({ reopenConnection }) => {
   const [query, setQuery] = useRecoilState(queryAtom);
-  const api: unknown = useRecoilValue(TrafficViewerApiAtom)
+  // @ts-expect-error: TODO: Recoild how to type?
+  const api: TrafficViewerApi = useRecoilValue(TrafficViewerApiAtom)
 
   return <div className={styles.container}>
     <QueryForm
       query={query}
       reopenConnection={reopenConnection}
-      onQueryChange={(query) => { setQuery(query?.trim()); }} validateQuery={api?.validateQuery} />
+      onQueryChange={(query) => { setQuery(query?.trim()); }}
+      validateQuery={api?.validateQuery} />
   </div>;
 };
 
 type OnQueryChange = { valid: boolean, message: string, query: string }
 
 interface QueryFormProps {
-  reopenConnection?: unknown;
+  reopenConnection?: () => void;
   query: string
   onQueryChange?: (query: string) => void
   validateQuery: (query: string) => Promise<{ valid: boolean, message: string }>;

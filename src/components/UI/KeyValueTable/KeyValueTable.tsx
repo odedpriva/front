@@ -4,9 +4,10 @@ import styles from "./KeyValueTable.module.sass"
 import deleteIcon from "./assets/delete.svg"
 import deleteIconActive from "./assets/delete-active.svg"
 import HoverImage from "../HoverImage/HoverImage";
+import { KeyValuePair } from '../../modals/ReplayRequestModal/interfaces';
 
 interface KeyValueTableProps {
-  data: unknown
+  data: Row[]
   onDataChange: (data: unknown) => void
   keyPlaceholder?: string
   valuePlaceholder?: string
@@ -75,6 +76,6 @@ const KeyValueTable: React.FC<KeyValueTableProps> = ({ data, onDataChange, keyPl
     })}
   </div>
 }
-export const convertParamsToArr: unknown = (paramsObj: unknown) => Object.entries(paramsObj).map(([key, value]) => { return { key, value } })
-export const convertArrToKeyValueObject: unknown = (arr: unknown) => arr.reduce((acc, curr) => { acc[curr.key] = curr.value; return acc }, {})
+export const convertParamsToArr: (paramsObj: "" | { [k: string]: string; }) => KeyValuePair[] = (paramsObj: unknown) => Object.entries(paramsObj).map(([key, value]) => { return { key, value } })
+export const convertArrToKeyValueObject: (arr: KeyValuePair[]) => { [k: string]: string; } = (arr: KeyValuePair[]) => arr.reduce((acc, curr) => { acc[curr.key] = curr.value; return acc }, {})
 export default KeyValueTable

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import EntryViewer from "./EntryViewer/EntryViewer";
-import { EntryItem } from "../EntryListItem/EntryListItem";
+import { Entry, EntryItem } from "../EntryListItem/EntryListItem";
 import makeStyles from '@mui/styles/makeStyles';
-import Protocol from "../UI/Protocol/Protocol"
+import Protocol, { ProtocolInterface } from "../UI/Protocol/Protocol"
 import Queryable from "../UI/Queryable/Queryable";
 import { toast } from "react-toastify";
 import { RecoilState, useRecoilState, useRecoilValue } from "recoil";
@@ -37,9 +37,22 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+interface DataModel {
+  request: unknown;
+  response: unknown;
+  requestSize: number;
+  responseSize: number;
+}
+
+interface EntryTitleProps {
+  protocol: ProtocolInterface;
+  data: DataModel;
+  elapsedTime: number;
+}
+
 export const formatSize = (n: number): string => n > 1000 ? `${Math.round(n / 1000)}KB` : `${n} B`;
 const minSizeDisplayRequestSize = 880;
-const EntryTitle: React.FC = ({ protocol, data, elapsedTime }) => {
+const EntryTitle: React.FC<EntryTitleProps> = ({ protocol, data, elapsedTime }) => {
   const classes = useStyles();
   const request = data.request;
   const response = data.response;
@@ -90,7 +103,12 @@ const EntryTitle: React.FC = ({ protocol, data, elapsedTime }) => {
   </div>;
 };
 
-const EntrySummary: React.FC = ({ entry, namespace }) => {
+interface EntrySummaryProps {
+  entry: Entry;
+  namespace: string;
+}
+
+const EntrySummary: React.FC<EntrySummaryProps> = ({ entry, namespace }) => {
   return <EntryItem
     key={`entry-${entry.id}`}
     entry={entry}

@@ -1,9 +1,21 @@
+import { FetchModel } from "../EntriesList/EntriesList";
+import { TargettingStatusPod } from "../../recoil/targettingStatus/index";
+
+interface DataModel {
+  representation: string;
+}
+
+export interface ResponseModel {
+  data: DataModel;
+  errorMessage: string;
+}
+
 type TrafficViewerApi = {
-  validateQuery: (query: unknown) => unknown
-  targetStatus: () => unknown
-  fetchEntries: (leftOff: unknown, direction: number, query: unknown, limit: number, timeoutMs: number) => unknown
+  validateQuery: (query: string) => Promise<{ valid: boolean, message: string }>
+  targetStatus: () => TargettingStatusPod[]
+  fetchEntries: (leftOff: unknown, direction: number, query: unknown, limit: number, timeoutMs: number) => FetchModel
   getEntry: (entryId: unknown, query: string) => unknown,
-  replayRequest: (request: { method: string, url: string, data: string, headers: unknown }) => Promise<unknown>,
+  replayRequest: (request: { method: string, url: string, data: string, headers: unknown }) => Promise<ResponseModel>,
   webSocket: {
     close: () => void
   }

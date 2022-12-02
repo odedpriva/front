@@ -12,9 +12,11 @@ const useKeyPress = (eventConfigs: unknown, callback: unknown, node = null): voi
     (event) => {
 
       // check if one of the key is part of the ones we want
+      // @ts-expect-error: Some?
       if (eventConfigs.some((eventConfig) => Object.keys(eventConfig).every(nameKey => eventConfig[nameKey] === event[nameKey]))) {
         event.stopPropagation()
         event.preventDefault();
+        // @ts-expect-error: Some?
         callbackRef.current(event);
       }
     },

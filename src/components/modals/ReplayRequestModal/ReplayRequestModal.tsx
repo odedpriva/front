@@ -72,6 +72,7 @@ interface ReplayRequestModalProps {
   onClose: () => void;
 }
 
+
 const ReplayRequestModal: React.FC<ReplayRequestModalProps> = ({ isOpen, onClose }) => {
   const entryData = useRecoilValue(entryDataAtom)
   const request = entryData.data.request
@@ -184,11 +185,13 @@ const ReplayRequestModal: React.FC<ReplayRequestModalProps> = ({ isOpen, onClose
   let innerComponent
   switch (currentTab) {
   case RequestTabs.Params:
+    // @ts-expect-error: Replay?
     innerComponent = <div className={styles.keyValueContainer}><KeyValueTable data={requestDataModel.params} onDataChange={onParamsChange} key={"params"} valuePlaceholder="New Param Value" keyPlaceholder="New param Key" /></div>
     break;
   case RequestTabs.Headers:
     innerComponent = <Fragment>
-      <div className={styles.keyValueContainer}><KeyValueTable data={requestDataModel.headers} onDataChange={(headers) => setRequestData({ ...requestDataModel, headers: headers })} key={"Header"} valuePlaceholder="New Headers Value" keyPlaceholder="New Headers Key" />
+      {/* @ts-expect-error: Replay? */}
+      <div className={styles.keyValueContainer}><KeyValueTable data={requestDataModel.headers} onDataChange={(headers: KeyValuePair[]) => setRequestData({ ...requestDataModel, headers: headers })} key={"Header"} valuePlaceholder="New Headers Value" keyPlaceholder="New Headers Key" />
       </div>
       <span className={styles.note}><b>* </b> X-Kubeshark Header added to requests</span>
     </Fragment>

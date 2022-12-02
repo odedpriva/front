@@ -8,7 +8,7 @@ interface IFilePickerProps {
   elem: unknown
 }
 
-const FilePicker: React.ReactFragment = ({ elem, onLoadingComplete }: IFilePickerProps) => {
+const FilePicker: React.ElementType = ({ elem, onLoadingComplete }: IFilePickerProps) => {
   const [openFileSelector, { filesContent }] = useFilePicker({
     accept: ['.json'],
     limitFilesConfig: { max: 1 },
@@ -26,6 +26,7 @@ const FilePicker: React.ReactFragment = ({ elem, onLoadingComplete }: IFilePicke
   }, [filesContent, onLoadingComplete]);
 
   return (<React.Fragment>
+    {/* @ts-expect-error: FilePicker? */}
     {React.cloneElement(elem, { onClick: onFileSelectorClick })}
   </React.Fragment>)
 }

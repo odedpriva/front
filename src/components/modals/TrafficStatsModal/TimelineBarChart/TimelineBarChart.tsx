@@ -26,6 +26,7 @@ export const TimelineBarChart: React.FC<TimelineBarChartProps> = ({ timeLineBarC
     if (!data) return;
     const protocolsBarsData = [];
     const prtcNames = [];
+    // @ts-expect-error: Timeline?
     data.sort((a, b) => a.timestamp < b.timestamp ? -1 : 1).forEach(protocolObj => {
       const newProtocolObj: { [k: string]: unknown } = {};
       newProtocolObj.timestamp = Utils.formatDate(protocolObj.timestamp);
@@ -37,6 +38,7 @@ export const TimelineBarChart: React.FC<TimelineBarChartProps> = ({ timeLineBarC
     })
     const uniqueObjArray = Utils.createUniqueObjArrayByProp(prtcNames, "name")
     setProtocolStats(protocolsBarsData);
+    // @ts-expect-error: Timeline?
     setProtocolsNamesAndColors(uniqueObjArray);
   }, [data, timeLineBarChartMode])
 
@@ -48,6 +50,7 @@ export const TimelineBarChart: React.FC<TimelineBarChartProps> = ({ timeLineBarC
     }
     const protocolsMethodsNamesAndColors = [];
     const protocolsMethods = [];
+    // @ts-expect-error: Timeline?
     data.sort((a, b) => a.timestamp < b.timestamp ? -1 : 1).forEach(protocolObj => {
       const newMethodObj: { [k: string]: unknown } = {};
       newMethodObj.timestamp = Utils.formatDate(protocolObj.timestamp);

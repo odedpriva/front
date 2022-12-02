@@ -52,7 +52,7 @@ export const Select: React.FC<SelectProps> = ({
 }) => {
   let _value = value;
 
-  const _onChange = (item: { props: { value: unknown; }; }) => {
+  const _onChange = (item: { props: { value: string; }; }) => {
     const value = item.props.value;
     value === ALL_KEY ? onChangeCb(ALL_KEY) : onChangeCb(value);
   }

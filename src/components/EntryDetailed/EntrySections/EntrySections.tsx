@@ -60,7 +60,7 @@ interface EntrySectionCollapsibleTitleProps {
   title: string,
   color: string,
   expanded: boolean,
-  setExpanded: unknown,
+  setExpanded: (state: boolean) => void,
   query?: string,
 }
 
@@ -108,16 +108,20 @@ const xmlLikeFormats = ['xml', 'html'];
 const protobufFormats = ['application/grpc'];
 const supportedFormats = jsonLikeFormats.concat(xmlLikeFormats, protobufFormats);
 
+interface TypeBodyRef {
+  body: string;
+}
+
 interface EntryBodySectionProps {
   title: string,
-  content: unkown,
+  content: string,
   color: string,
   encoding?: string,
   contentType?: string,
   selector?: string,
 }
 
-export const formatRequest = (bodyRef: unknown, contentType: string, decodeBase64 = true, isBase64Encoding = false, isPretty = true): string => {
+export const formatRequest = (bodyRef: TypeBodyRef, contentType: string, decodeBase64 = true, isBase64Encoding = false, isPretty = true): string => {
   const { body } = bodyRef
   if (!decodeBase64 || !body) return body;
 
@@ -152,7 +156,7 @@ export const formatRequest = (bodyRef: unknown, contentType: string, decodeBase6
   return bodyBuf;
 }
 
-export const formatRequestWithOutError = (body: unknown, contentType: string, decodeBase64 = true, isBase64Encoding = false, isPretty = true): string => {
+export const formatRequestWithOutError = (body: string, contentType: string, decodeBase64 = true, isBase64Encoding = false, isPretty = true): string => {
   const bodyRef = { body }
   try {
     return formatRequest(bodyRef, contentType, decodeBase64, isBase64Encoding, isPretty)
@@ -241,15 +245,20 @@ export const EntryBodySection: React.FC<EntryBodySectionProps> = ({
   </React.Fragment>
 }
 
+interface ViewLine {
+  name: string;
+  value: string | number;
+  selector: string;
+}
 
 interface EntrySectionProps {
   title: string,
   color: string,
-  arrayToIterate: unknown[],
+  arrayToIterate: ViewLine[],
 }
 
 export const EntryTableSection: React.FC<EntrySectionProps> = ({ title, color, arrayToIterate }) => {
-  let arrayToIterateSorted: unknown[];
+  let arrayToIterateSorted: ViewLine[];
   if (arrayToIterate) {
     arrayToIterateSorted = arrayToIterate.sort((a, b) => {
       if (a.name > b.name) {
