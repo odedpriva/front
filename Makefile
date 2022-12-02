@@ -13,6 +13,9 @@ build: ## Build the React app.
 install: ## Install NPM dependencies
 	npm install
 
+lint: ## Lint the source code.
+	npm run eslint
+
 run: ## Run the app
 	npm run start
 
