@@ -52,14 +52,6 @@ export default class Api {
     return response.data;
   }
 
-  fetchEntries = async (leftOff, direction, query, limit, timeoutMs) => {
-    const response = await client.get(`/entries/?leftOff=${leftOff}&direction=${direction}&query=${encodeURIComponent(query)}&limit=${limit}&timeoutMs=${timeoutMs}`).catch(function (thrown) {
-      console.error(thrown.message);
-      return {};
-    });
-    return response.data;
-  }
-
   replayRequest = async (requestData) => {
     const response = await client.post(`/replay/`, requestData);
     return response.data;

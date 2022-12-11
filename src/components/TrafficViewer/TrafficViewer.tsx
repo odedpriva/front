@@ -11,6 +11,7 @@ import variables from '../../variables.module.scss';
 import { ToastContainer } from 'react-toastify';
 import { RecoilRoot, RecoilState, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import entriesAtom from "../../recoil/entries";
+import entriesBufferAtom from "../../recoil/entriesBuffer";
 import focusedEntryIdAtom from "../../recoil/focusedEntryId";
 import focusedEntryWorkerAtom from "../../recoil/focusedEntryWorker";
 import queryAtom from "../../recoil/query";
@@ -19,7 +20,6 @@ import TrafficViewerApi from "./TrafficViewerApi";
 import { StatusBar } from "../UI/StatusBar/StatusBar";
 import targettingStatusAtom from "../../recoil/targettingStatus/atom";
 import { TOAST_CONTAINER_ID } from "../../configs/Consts";
-import leftOffTopAtom from "../../recoil/leftOffTop";
 import { DEFAULT_LEFTOFF, DEFAULT_FETCH, DEFAULT_FETCH_TIMEOUT_MS } from '../../hooks/useWS';
 import ReplayRequestModalContainer from "../modals/ReplayRequestModal/ReplayRequestModal";
 import replayRequestModalOpenAtom from "../../recoil/replayRequestModalOpen";
@@ -67,16 +67,15 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
 
   const classes = useLayoutStyles();
   const setEntries = useSetRecoilState(entriesAtom);
+  const setEntriesBuffer = useSetRecoilState(entriesBufferAtom);
   const setFocusedEntryId = useSetRecoilState(focusedEntryIdAtom);
   const setFocusedEntryWorker = useSetRecoilState(focusedEntryWorkerAtom);
   const setEntryDetailedConfigAtom = useSetRecoilState(entryDetailedConfigAtom)
   const query = useRecoilValue(queryAtom);
   const setTrafficViewerApiState = useSetRecoilState(trafficViewerApiAtom as RecoilState<TrafficViewerApi>)
   const [targettingStatus, setTargettingStatus] = useRecoilState(targettingStatusAtom);
-  const [noMoreDataTop, setNoMoreDataTop] = useState(false);
   const [isSnappedToBottom, setIsSnappedToBottom] = useState(true);
   const [wsReadyState, setWsReadyState] = useState(0);
-  const setLeftOffTop = useSetRecoilState(leftOffTopAtom);
   const scrollableRef = useRef(null);
   const isOpenReplayModal = useRecoilValue(replayRequestModalOpenAtom)
 
@@ -116,9 +115,8 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
     if (resetEntries) {
       setFocusedEntryId(null);
       setFocusedEntryWorker(null);
+      setEntriesBuffer([]);
       setEntries([]);
-      setLeftOffTop("");
-      setNoMoreDataTop(false);
     }
     try {
       ws.current = new WebSocket(webSocketUrl);
@@ -140,7 +138,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
     } catch (e) {
       console.error(e);
     }
-  }, [setFocusedEntryId, setEntries, setLeftOffTop, setNoMoreDataTop, ws, sendQueryWhenWsOpen, webSocketUrl])
+  }, [setFocusedEntryId, setEntries, ws, sendQueryWhenWsOpen, webSocketUrl])
 
   const openEmptyWebSocket = useCallback(() => {
     openWebSocket(DEFAULT_LEFTOFF, query, true, DEFAULT_FETCH, DEFAULT_FETCH_TIMEOUT_MS);
@@ -256,8 +254,6 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
               onSnapBrokenEvent={onSnapBrokenEvent}
               isSnappedToBottom={isSnappedToBottom}
               setIsSnappedToBottom={setIsSnappedToBottom}
-              noMoreDataTop={noMoreDataTop}
-              setNoMoreDataTop={setNoMoreDataTop}
               openWebSocket={openWebSocket}
               scrollableRef={scrollableRef}
               ws={ws}
