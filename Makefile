@@ -19,14 +19,29 @@ lint: ## Lint the source code.
 run: ## Run the app
 	npm run start
 
-docker-repo:
-	export DOCKER_REPO='kubeshark/front'
-
 docker: ## Build the Docker image.
-	docker build . -t ${DOCKER_REPO}:latest --build-arg TARGETARCH=amd64
-
-docker-dev: ## Build the dev Docker image. (layer caching works, faster)
-	docker -f Dockerfile.dev build . -t ${DOCKER_REPO}:dev
+	docker build . -t ${DOCKER_REPO}:${DOCKER_TAG} --build-arg TARGETARCH=amd64
 
 docker-push: ## Push the Docker image into Docker Hub.
-	docker build . -t ${DOCKER_REPO}:latest
+	docker push ${DOCKER_REPO}:${DOCKER_TAG}
+
+docker-dev-build: ## Build the dev Docker image. (layer caching works, faster)
+	docker build -f Dockerfile.dev . -t ${DOCKER_REPO}:${DOCKER_TAG}
+
+docker-latest: ## Build and push the Docker image with 'latest' tag
+	export DOCKER_REPO='kubeshark/front' && \
+	export DOCKER_TAG='latest' && \
+	${MAKE} docker && \
+	${MAKE} docker-push
+
+docker-canary: ## Build and push the Docker image with 'canary' tag
+	export DOCKER_REPO='kubeshark/front' && \
+	export DOCKER_TAG='canary' && \
+	${MAKE} docker && \
+	${MAKE} docker-push
+
+docker-dev: ## Build and push the Docker image with 'dev' tag
+	export DOCKER_REPO='kubeshark/front' && \
+	export DOCKER_TAG='dev' && \
+	${MAKE} docker-dev-build && \
+	${MAKE} docker-push
