@@ -12,7 +12,7 @@ export interface ResponseModel {
 type TrafficViewerApi = {
   validateQuery: (query: string) => Promise<{ valid: boolean, message: string }>
   targetStatus: () => TargettingStatusPod[]
-  getItem: (worker: string, id: string, query: string) => unknown,
+  getItem: (id: string, query: string) => unknown,
   replayRequest: (request: { method: string, url: string, data: string, headers: unknown }) => Promise<ResponseModel>,
   webSocket: {
     close: () => void

@@ -10,10 +10,7 @@ import pauseIcon from "./assets/pause.svg";
 import variables from '../../variables.module.scss';
 import { ToastContainer } from 'react-toastify';
 import { RecoilRoot, RecoilState, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import entriesAtom from "../../recoil/entries";
-import entriesBufferAtom from "../../recoil/entriesBuffer";
 import focusedEntryIdAtom from "../../recoil/focusedEntryId";
-import focusedEntryWorkerAtom from "../../recoil/focusedEntryWorker";
 import queryAtom from "../../recoil/query";
 import trafficViewerApiAtom from "../../recoil/TrafficViewerApi"
 import TrafficViewerApi from "./TrafficViewerApi";
@@ -24,6 +21,8 @@ import { DEFAULT_LEFTOFF, DEFAULT_FETCH, DEFAULT_FETCH_TIMEOUT_MS } from '../../
 import ReplayRequestModalContainer from "../modals/ReplayRequestModal/ReplayRequestModal";
 import replayRequestModalOpenAtom from "../../recoil/replayRequestModalOpen";
 import entryDetailedConfigAtom, { EntryDetailedConfig } from "../../recoil/entryDetailedConfig";
+import { EntryItem } from "../EntryListItem/EntryListItem";
+import { useInterval } from "../../helpers/interval";
 
 const useLayoutStyles = makeStyles(() => ({
   details: {
@@ -66,10 +65,9 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
   entryDetailedConfig }) => {
 
   const classes = useLayoutStyles();
-  const setEntries = useSetRecoilState(entriesAtom);
-  const setEntriesBuffer = useSetRecoilState(entriesBufferAtom);
-  const setFocusedEntryId = useSetRecoilState(focusedEntryIdAtom);
-  const setFocusedEntryWorker = useSetRecoilState(focusedEntryWorkerAtom);
+  const [entries, setEntries] = useState([] as any);
+  const [entriesBuffer, setEntriesBuffer] = useState([] as any);
+  const [focusedEntryId, setFocusedEntryId] = useRecoilState(focusedEntryIdAtom);
   const setEntryDetailedConfigAtom = useSetRecoilState(entryDetailedConfigAtom)
   const query = useRecoilValue(queryAtom);
   const setTrafficViewerApiState = useSetRecoilState(trafficViewerApiAtom as RecoilState<TrafficViewerApi>)
@@ -114,7 +112,6 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
   const openWebSocket = useCallback((leftOff: string, query: string, resetEntries: boolean, fetch: number, fetchTimeoutMs: number) => {
     if (resetEntries) {
       setFocusedEntryId(null);
-      setFocusedEntryWorker(null);
       setEntriesBuffer([]);
       setEntries([]);
     }
@@ -219,6 +216,32 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
     }
   }
 
+  if (ws.current && !ws.current.onmessage) {
+    ws.current.onmessage = (e) => {
+      if (!e?.data) return;
+      const entry = JSON.parse(e.data);
+      const key = `${entry.worker}/${entry.id}`;
+      setEntriesBuffer(
+        entriesState => [...entriesState,
+          <EntryItem
+            key={key}
+            id={key}
+            entry={entry}
+            style={{}}
+            headingMode={false}
+          />
+        ]
+      );
+    }
+  }
+
+  useInterval(async () => {
+    setEntries(entriesBuffer);
+    if (!focusedEntryId && entries.length > 0) {
+      setFocusedEntryId(entries[0].id);
+    }
+  }, 1000, true);
+
   return (
     <div className={TrafficViewerStyles.TrafficPage}>
       {targettingStatus && isShowStatusBar && <StatusBar disabled={ws?.current?.readyState !== WebSocket.OPEN} isDemoBannerView={isDemoBannerView} />}
@@ -250,6 +273,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
           />
           <div className={styles.container}>
             <EntriesList
+              entries={entries}
               listEntryREF={listEntry}
               onSnapBrokenEvent={onSnapBrokenEvent}
               isSnappedToBottom={isSnappedToBottom}

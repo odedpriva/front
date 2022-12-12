@@ -15,7 +15,6 @@ import outgoingIconFailure from "./assets/outgoing-traffic-failure.svg"
 import outgoingIconNeutral from "./assets/outgoing-traffic-neutral.svg"
 import { useRecoilState } from "recoil";
 import focusedEntryIdAtom from "../../recoil/focusedEntryId";
-import focusedEntryWorkerAtom from "../../recoil/focusedEntryWorker";
 
 interface TCPInterface {
   ip: string
@@ -42,6 +41,7 @@ export interface Entry {
 }
 
 interface EntryProps {
+  id: string;
   entry: Entry;
   style: unknown;
   headingMode: boolean;
@@ -56,11 +56,9 @@ enum CaptureTypes {
   Ebpf = "ebpf",
 }
 
-export const EntryItem: React.FC<EntryProps> = ({ entry, style, headingMode, namespace }) => {
-
+export const EntryItem: React.FC<EntryProps> = ({ id, entry, style, headingMode, namespace }) => {
   const [focusedEntryId, setFocusedEntryId] = useRecoilState(focusedEntryIdAtom);
-  const [focusedEntryWorker, setFocusedEntryWorker] = useRecoilState(focusedEntryWorkerAtom);
-  const isSelected = focusedEntryId === entry.id && focusedEntryWorker == entry.worker;
+  const isSelected = focusedEntryId === id
 
   const classification = getClassification(entry.status)
   let ingoingIcon;
@@ -87,13 +85,12 @@ export const EntryItem: React.FC<EntryProps> = ({ entry, style, headingMode, nam
 
   return <React.Fragment>
     <div
-      id={`item-${entry.worker}-${entry.id}`}
+      id={id}
       className={`${styles.row}
             ${isSelected ? styles.rowSelected : ""}`}
       onClick={() => {
         if (!setFocusedEntryId) return;
-        setFocusedEntryId(entry.id);
-        setFocusedEntryWorker(entry.worker);
+        setFocusedEntryId(id);
       }}
       style={{
         border: isSelected && !headingMode ? `1px ${entry.proto.backgroundColor} solid` : "1px transparent solid",
