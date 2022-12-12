@@ -109,10 +109,6 @@ export const QueryForm: React.FC<QueryFormProps> = ({ validateQuery, reopenConne
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
 
-  const downloadPcap = () => {
-    fetch('http://localhost:8898/pcaps/merge')
-  }
-
   const handleSubmit = (e) => {
     reopenConnection();
     e.preventDefault();

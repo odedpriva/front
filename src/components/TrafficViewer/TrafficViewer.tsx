@@ -65,8 +65,8 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
   entryDetailedConfig }) => {
 
   const classes = useLayoutStyles();
-  const [entries, setEntries] = useState([] as any);
-  const [entriesBuffer, setEntriesBuffer] = useState([] as any);
+  const [entries, setEntries] = useState([] as typeof EntryItem[]);
+  const [entriesBuffer, setEntriesBuffer] = useState([] as typeof EntryItem[]);
   const [focusedEntryId, setFocusedEntryId] = useRecoilState(focusedEntryIdAtom);
   const setEntryDetailedConfigAtom = useSetRecoilState(entryDetailedConfigAtom)
   const query = useRecoilValue(queryAtom);
@@ -223,6 +223,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
       const key = `${entry.worker}/${entry.id}`;
 
       setEntriesBuffer(
+        // @ts-expect-error: Type?
         entriesState => [...entriesState,
           <EntryItem
             key={key}
@@ -239,6 +240,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
   useInterval(async () => {
     setEntries(entriesBuffer);
     if (!focusedEntryId && entriesBuffer.length > 0) {
+      // @ts-expect-error: Type?
       setFocusedEntryId(entriesBuffer[0].key);
     }
   }, 1000, true);

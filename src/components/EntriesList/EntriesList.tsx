@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from './EntriesList.module.sass';
 import ScrollableFeedVirtualized from "react-scrollable-feed-virtualized";
 import down from "./assets/downImg.svg";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import queryAtom from "../../recoil/query";
-import focusedEntryIdAtom from "../../recoil/focusedEntryId";
 import Moment from "moment";
 import { useInterval } from "../../helpers/interval";
+import { EntryItem } from "../EntryListItem/EntryListItem";
 
 interface EntriesListProps {
-  entries: any[];
+  entries: typeof EntryItem[];
   listEntryREF: React.LegacyRef<HTMLDivElement>;
   onSnapBrokenEvent: () => void;
   isSnappedToBottom: boolean;

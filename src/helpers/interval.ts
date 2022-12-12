@@ -1,10 +1,11 @@
 import { useRef, useEffect } from "react";
 
-export const useInterval = (callback, interval, immediate) => {
+export const useInterval = (callback: () => void, interval: number, immediate: boolean) => {
   const ref = useRef();
 
   // keep reference to callback without restarting the interval
   useEffect(() => {
+    // @ts-expect-error: Type?
     ref.current = callback;
   }, [callback]);
 
