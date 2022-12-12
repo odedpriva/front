@@ -3,6 +3,7 @@ import styles from './Filters.module.sass';
 import { Button, Grid, Modal, Box, Typography, Backdrop, Fade, Divider, debounce } from "@mui/material";
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { SyntaxHighlighter } from "../UI/SyntaxHighlighter";
 import filterUIExample1 from "./assets/filter-ui-example-1.png"
 import filterUIExample2 from "./assets/filter-ui-example-2.png"
@@ -108,6 +109,10 @@ export const QueryForm: React.FC<QueryFormProps> = ({ validateQuery, reopenConne
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
 
+  const downloadPcap = () => {
+    fetch('http://localhost:8898/pcaps/merge')
+  }
+
   const handleSubmit = (e) => {
     reopenConnection();
     e.preventDefault();
@@ -167,6 +172,23 @@ export const QueryForm: React.FC<QueryFormProps> = ({ validateQuery, reopenConne
             onClick={handleOpenModal}
           >
             <MenuBookIcon fontSize="inherit"></MenuBookIcon>
+          </Button>
+          <Button
+            title="Download PCAP Snapshot"
+            variant="contained"
+            color="primary"
+            style={{
+              margin: "2px 0px 0px 10px",
+              minWidth: "26px",
+              backgroundColor: variables.blueColor,
+              fontWeight: 600,
+              borderRadius: "4px",
+              color: "#fff",
+              textTransform: "none",
+            }}
+            href="http://localhost:8898/pcaps/merge"
+          >
+            <SaveAltIcon fontSize="inherit"></SaveAltIcon>
           </Button>
         </Grid>
       </Grid>
