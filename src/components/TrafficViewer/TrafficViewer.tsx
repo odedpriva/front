@@ -221,6 +221,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
       if (!e?.data) return;
       const entry = JSON.parse(e.data);
       const key = `${entry.worker}/${entry.id}`;
+
       setEntriesBuffer(
         entriesState => [...entriesState,
           <EntryItem
@@ -237,8 +238,8 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
 
   useInterval(async () => {
     setEntries(entriesBuffer);
-    if (!focusedEntryId && entries.length > 0) {
-      setFocusedEntryId(entries[0].id);
+    if (!focusedEntryId && entriesBuffer.length > 0) {
+      setFocusedEntryId(entriesBuffer[0].key);
     }
   }, 1000, true);
 
