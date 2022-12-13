@@ -8,12 +8,10 @@ import { SyntaxHighlighter } from "../UI/SyntaxHighlighter";
 import filterUIExample1 from "./assets/filter-ui-example-1.png"
 import filterUIExample2 from "./assets/filter-ui-example-2.png"
 import variables from '../../variables.module.scss';
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import queryAtom from "../../recoil/query";
 import useKeyPress from "../../hooks/useKeyPress"
 import shortcutsKeyboard from "../../configs/shortcutsKeyboard"
-import TrafficViewerApiAtom from "../../recoil/TrafficViewerApi/atom";
-import TrafficViewerApi from "../TrafficViewer/TrafficViewerApi";
 
 
 interface FiltersProps {
@@ -22,15 +20,13 @@ interface FiltersProps {
 
 export const Filters: React.FC<FiltersProps> = ({ reopenConnection }) => {
   const [query, setQuery] = useRecoilState(queryAtom);
-  // @ts-expect-error: TODO: Recoild how to type?
-  const api: TrafficViewerApi = useRecoilValue(TrafficViewerApiAtom)
 
   return <div className={styles.container}>
     <QueryForm
       query={query}
       reopenConnection={reopenConnection}
       onQueryChange={(query) => { setQuery(query?.trim()); }}
-      validateQuery={api?.validateQuery} />
+    />
   </div>;
 };
 
@@ -40,7 +36,6 @@ interface QueryFormProps {
   reopenConnection?: () => void;
   query: string
   onQueryChange?: (query: string) => void
-  validateQuery: (query: string) => Promise<{ valid: boolean, message: string }>;
   onValidationChanged?: (event: OnQueryChange) => void
 }
 
@@ -58,28 +53,29 @@ export const modalStyle = {
   color: '#000',
 };
 
-export const CodeEditorWrap: FC<QueryFormProps> = ({ query, onQueryChange, validateQuery, onValidationChanged }) => {
+export const CodeEditorWrap: FC<QueryFormProps> = ({ query, onQueryChange, onValidationChanged }) => {
   const [queryBackgroundColor, setQueryBackgroundColor] = useState("#f5f5f5");
+
   const handleQueryChange = useMemo(
     () =>
       debounce(async (query: string) => {
         if (!query) {
           setQueryBackgroundColor("#f5f5f5");
-          onValidationChanged && onValidationChanged({ query: query, message: "", valid: true })
+          onValidationChanged && onValidationChanged({ query: query, message: "", valid: true });
         } else {
-          const data = await validateQuery(query);
-          if (!data) {
-            return;
-          }
-          if (data.valid) {
-            setQueryBackgroundColor("#d2fad2");
-          } else {
-            setQueryBackgroundColor("#fad6dc");
-          }
-          onValidationChanged && onValidationChanged({ query: query, message: data.message, valid: data.valid })
+          fetch(`http://localhost:8898/query/validate?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+              if (data.valid) {
+                setQueryBackgroundColor("#d2fad2");
+              } else {
+                setQueryBackgroundColor("#fad6dc");
+              }
+              onValidationChanged && onValidationChanged({ query: query, message: data.message, valid: data.valid })
+            });
         }
       }, 500),
-    [onValidationChanged, validateQuery]
+    [onValidationChanged]
   ) as (query: string) => void;
 
   useEffect(() => {
@@ -100,7 +96,7 @@ export const CodeEditorWrap: FC<QueryFormProps> = ({ query, onQueryChange, valid
   />
 }
 
-export const QueryForm: React.FC<QueryFormProps> = ({ validateQuery, reopenConnection, query, onQueryChange, onValidationChanged }) => {
+export const QueryForm: React.FC<QueryFormProps> = ({ reopenConnection, query, onQueryChange, onValidationChanged }) => {
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -134,7 +130,7 @@ export const QueryForm: React.FC<QueryFormProps> = ({ validateQuery, reopenConne
           }}
         >
           <label>
-            <CodeEditorWrap validateQuery={validateQuery} query={query} onQueryChange={onQueryChange} onValidationChanged={onValidationChanged} />
+            <CodeEditorWrap query={query} onQueryChange={onQueryChange} onValidationChanged={onValidationChanged} />
           </label>
         </Grid>
         <Grid item xs={4}>

@@ -5,10 +5,8 @@ import makeStyles from '@mui/styles/makeStyles';
 import Protocol, { ProtocolInterface } from "../UI/Protocol/Protocol"
 import Queryable from "../UI/Queryable/Queryable";
 import { toast } from "react-toastify";
-import { RecoilState, useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import focusedEntryIdAtom from "../../recoil/focusedEntryId";
-import TrafficViewerApi from "../TrafficViewer/TrafficViewerApi";
-import TrafficViewerApiAtom from "../../recoil/TrafficViewerApi/atom";
 import queryAtom from "../../recoil/query/atom";
 import useWindowDimensions, { useRequestTextByWidth } from "../../hooks/WindowDimensionsHook";
 import { TOAST_CONTAINER_ID } from "../../configs/Consts";
@@ -125,7 +123,6 @@ const EntrySummary: React.FC<EntrySummaryProps> = ({ entry, namespace }) => {
 export const EntryDetailed: React.FC = () => {
 
   const focusedEntryId = useRecoilValue(focusedEntryIdAtom);
-  const trafficViewerApi = useRecoilValue(TrafficViewerApiAtom as RecoilState<TrafficViewerApi>)
   const query = useRecoilValue(queryAtom);
   const [isLoading, setIsLoading] = useState(false);
   const [entryData, setEntryData] = useRecoilState(entryDataAtom)
@@ -136,8 +133,9 @@ export const EntryDetailed: React.FC = () => {
     setIsLoading(true);
     (async () => {
       try {
-        const entryData = await trafficViewerApi.getItem(focusedEntryId, query);
-        setEntryData(entryData);
+        fetch(`http://localhost:8898/item/${focusedEntryId}?q=${encodeURIComponent(query)}`)
+          .then(response => response.json())
+          .then(data => setEntryData(data));
       } catch (error) {
         if (error.response?.data?.type) {
           toast[error.response.data.type](`Entry[${focusedEntryId}]: ${error.response.data.msg}`, {

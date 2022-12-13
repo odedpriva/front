@@ -1,50 +1,67 @@
 import style from './StatusBar.module.sass';
 import React, { useState } from "react";
-import warningIcon from "./assets/warning_icon.svg";
-import failIcon from "./assets/failed.svg";
-import successIcon from "./assets/success.svg";
-import { useRecoilValue } from "recoil";
-import targettingStatusAtom, { targettingStatusDetails } from "../../../recoil/targettingStatus";
-import Tooltip from "../Tooltip/Tooltip";
+import { useInterval } from "../../../helpers/interval";
 
 const pluralize = (noun: string, amount: number) => {
   return `${noun}${amount !== 1 ? 's' : ''}`
 }
 
-interface StatusBarProps {
-  isDemoBannerView: boolean;
-  disabled?: boolean;
+const uniqueNamespaces = (targets: Target[]) => {
+  return [...new Set(targets.map(pod => `[${pod.namespace}]`))];
 }
 
-export const StatusBar: React.FC<StatusBarProps> = ({ isDemoBannerView, disabled }) => {
-  const targettingStatus = useRecoilValue(targettingStatusAtom);
-  const [expandedBar, setExpandedBar] = useState(false);
-  const { uniqueNamespaces, amountOfPods, amountOfTargettedPods, amountOfUntargettedPods } = useRecoilValue(targettingStatusDetails);
-  return <div style={{ opacity: disabled ? 0.4 : 1 }} className={`${isDemoBannerView ? `${style.banner}` : ''} ${style.statusBar} ${(expandedBar && !disabled ? `${style.expandedStatusBar}` : "")}`} onMouseOver={() => setExpandedBar(true)} onMouseLeave={() => setExpandedBar(false)} data-cy="expandedStatusBar">
+interface Target {
+  name: string;
+  namespace: string;
+}
+
+interface StatusBarContentProps {
+  expandedBar: boolean;
+  setExpandedBar: (v: boolean) => void;
+  targets: Target[];
+}
+
+const StatusBarContent: React.FC<StatusBarContentProps> = ({
+  expandedBar,
+  setExpandedBar,
+  targets,
+}) => {
+  return <div className={`${style.statusBar} ${(expandedBar ? `${style.expandedStatusBar}` : "")}`} onMouseOver={() => setExpandedBar(true)} onMouseLeave={() => setExpandedBar(false)} data-cy="expandedStatusBar">
     <div className={style.podsCount}>
-      {!disabled && targettingStatus.some(pod => !pod.isTargetted) && <img src={warningIcon} alt="warning" />}
-      {disabled && <Tooltip title={"Targetting status is not updated when streaming is paused"} isSimple><img src={warningIcon} alt="warning" /></Tooltip>}
       <span className={style.podsCountText} data-cy="podsCountText">
-        {`Targetting ${amountOfUntargettedPods > 0 ? amountOfTargettedPods + " / " + amountOfPods : amountOfPods} ${pluralize('pod', amountOfPods)} in ${pluralize('namespace', uniqueNamespaces.length)} ${uniqueNamespaces.join(", ")}`}
+        {`Targetting ${targets.length} ${pluralize('pod', targets.length)} in ${pluralize('namespace', uniqueNamespaces(targets).length)} ${uniqueNamespaces(targets).join(", ")}`}
       </span>
     </div>
-    {expandedBar && !disabled && <div style={{ marginTop: 20 }}>
+    {expandedBar && <div style={{ marginTop: 20 }}>
       <table>
         <thead>
           <tr>
-            <th style={{ width: "40%" }}>Pod name</th>
-            <th style={{ width: "40%" }}>Namespace</th>
-            <th style={{ width: "20%", textAlign: "center" }}>Targetting</th>
+            <th style={{ width: "70%" }}>Pod name</th>
+            <th style={{ width: "30%" }}>Namespace</th>
           </tr>
         </thead>
         <tbody>
-          {targettingStatus.map(pod => <tr key={pod.name}>
-            <td style={{ width: "40%" }}>{pod.name}</td>
-            <td style={{ width: "40%" }}>{pod.namespace}</td>
-            <td style={{ width: "20%", textAlign: "center" }}>{pod.isTargetted ? <img style={{ height: 20 }} alt="status" src={successIcon} /> : <img style={{ height: 20 }} alt="status" src={failIcon} />}</td>
+          {targets.map(pod => <tr key={pod.name}>
+            <td style={{ width: "70%" }}>{pod.name}</td>
+            <td style={{ width: "30%" }}>{pod.namespace}</td>
           </tr>)}
         </tbody>
       </table>
     </div>}
   </div>;
+}
+
+export const StatusBar: React.FC = () => {
+  const [expandedBar, setExpandedBar] = useState(false);
+  const [targets, setTargets] = useState<Target[]>([]);
+
+  useInterval(async () => {
+    fetch('http://localhost:8898/pods/targetted')
+      .then(response => response.json())
+      .then(data => setTargets(data.targets));
+  }, 5000, true);
+
+  return <>
+    {targets && <StatusBarContent expandedBar={expandedBar} setExpandedBar={setExpandedBar} targets={targets} />}
+  </>;
 }

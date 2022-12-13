@@ -40,7 +40,7 @@ export const EntriesList: React.FC<EntriesListProps> = ({
     fetch('http://localhost:8898/pcaps/total-tcp-streams')
       .then(response => response.json())
       .then(data => setTotalTcpStreams(data.total));
-  }, 1000, true);
+  }, 3000, true);
 
   return <React.Fragment>
     <div className={styles.list}>

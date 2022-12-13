@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Button } from "@mui/material";
-import Api, { KubesharkWebsocketURL } from "../../../helpers/api";
+import { KubesharkWebsocketURL } from "../../../helpers/api";
 import debounce from 'lodash/debounce';
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { useCommonStyles } from "../../../helpers/commonStyle"
 import serviceMapModalOpenAtom from "../../../recoil/serviceMapModalOpen";
 import { TrafficViewer } from "../../TrafficViewer/TrafficViewer"
@@ -14,16 +14,12 @@ import trafficStatsIcon from "./assets/trafficStats.svg";
 import trafficStatsModalOpenAtom from "../../../recoil/trafficStatsModalOpen";
 import { REPLAY_ENABLED } from "../../../consts";
 
-const api = Api.getInstance();
-
 export const TrafficPage: React.FC = () => {
   const commonClasses = useCommonStyles();
-  const [serviceMapModalOpen, setServiceMapModalOpen] = useRecoilState(serviceMapModalOpenAtom);
-  const [openOasModal, setOpenOasModal] = useRecoilState(oasModalOpenAtom);
-  const [trafficStatsModalOpen, setTrafficStatsModalOpen] = useRecoilState(trafficStatsModalOpenAtom);
+  const setServiceMapModalOpen = useSetRecoilState(serviceMapModalOpenAtom);
+  const setOpenOasModal = useSetRecoilState(oasModalOpenAtom);
+  const setTrafficStatsModalOpen = useSetRecoilState(trafficStatsModalOpenAtom);
   const [shouldCloseWebSocket, setShouldCloseWebSocket] = useState(false);
-
-  const trafficViewerApi = { ...api }
 
   const handleOpenOasModal = () => {
     setShouldCloseWebSocket(true)
@@ -73,7 +69,7 @@ export const TrafficPage: React.FC = () => {
   return (
     <>
       <TrafficViewer webSocketUrl={KubesharkWebsocketURL} shouldCloseWebSocket={shouldCloseWebSocket} setShouldCloseWebSocket={setShouldCloseWebSocket}
-        trafficViewerApiProp={trafficViewerApi} actionButtons={actionButtons} isShowStatusBar={!(openOasModal || serviceMapModalOpen || trafficStatsModalOpen)} isDemoBannerView={false} entryDetailedConfig={{
+        actionButtons={actionButtons} entryDetailedConfig={{
           isReplayEnabled: REPLAY_ENABLED
         }} />
     </>

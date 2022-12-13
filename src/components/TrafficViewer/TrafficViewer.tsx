@@ -9,13 +9,10 @@ import playIcon from "./assets/run.svg";
 import pauseIcon from "./assets/pause.svg";
 import variables from '../../variables.module.scss';
 import { ToastContainer } from 'react-toastify';
-import { RecoilRoot, RecoilState, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { RecoilRoot, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import focusedEntryIdAtom from "../../recoil/focusedEntryId";
 import queryAtom from "../../recoil/query";
-import trafficViewerApiAtom from "../../recoil/TrafficViewerApi"
-import TrafficViewerApi from "./TrafficViewerApi";
 import { StatusBar } from "../UI/StatusBar/StatusBar";
-import targettingStatusAtom from "../../recoil/targettingStatus/atom";
 import { TOAST_CONTAINER_ID } from "../../configs/Consts";
 import { DEFAULT_LEFTOFF, DEFAULT_FETCH, DEFAULT_FETCH_TIMEOUT_MS } from '../../hooks/useWS';
 import ReplayRequestModalContainer from "../modals/ReplayRequestModal/ReplayRequestModal";
@@ -46,21 +43,16 @@ const useLayoutStyles = makeStyles(() => ({
 
 interface TrafficViewerProps {
   api?: unknown
-  trafficViewerApiProp: TrafficViewerApi,
   actionButtons?: JSX.Element,
-  isShowStatusBar?: boolean,
   webSocketUrl: string,
   shouldCloseWebSocket: boolean,
   setShouldCloseWebSocket: (flag: boolean) => void,
-  isDemoBannerView: boolean,
   entryDetailedConfig: EntryDetailedConfig
 }
 
 export const TrafficViewer: React.FC<TrafficViewerProps> = ({
-  trafficViewerApiProp,
   webSocketUrl,
   actionButtons,
-  isShowStatusBar, isDemoBannerView,
   shouldCloseWebSocket, setShouldCloseWebSocket,
   entryDetailedConfig }) => {
 
@@ -70,8 +62,6 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
   const [focusedEntryId, setFocusedEntryId] = useRecoilState(focusedEntryIdAtom);
   const setEntryDetailedConfigAtom = useSetRecoilState(entryDetailedConfigAtom)
   const query = useRecoilValue(queryAtom);
-  const setTrafficViewerApiState = useSetRecoilState(trafficViewerApiAtom as RecoilState<TrafficViewerApi>)
-  const [targettingStatus, setTargettingStatus] = useRecoilState(targettingStatusAtom);
   const [isSnappedToBottom, setIsSnappedToBottom] = useState(true);
   const [wsReadyState, setWsReadyState] = useState(0);
   const scrollableRef = useRef(null);
@@ -140,18 +130,6 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
   const openEmptyWebSocket = useCallback(() => {
     openWebSocket(DEFAULT_LEFTOFF, query, true, DEFAULT_FETCH, DEFAULT_FETCH_TIMEOUT_MS);
   }, [openWebSocket, query])
-
-  useEffect(() => {
-    setTrafficViewerApiState({ ...trafficViewerApiProp, webSocket: { close: closeWebSocket } });
-    (async () => {
-      try {
-        const targetStatusResponse = await trafficViewerApiProp.targetStatus();
-        setTargettingStatus(targetStatusResponse);
-      } catch (error) {
-        console.error(error);
-      }
-    })()
-  }, [trafficViewerApiProp, closeWebSocket, setTargettingStatus, setTrafficViewerApiState]);
 
   const toggleConnection = () => {
     if (!closeWebSocket()) {
@@ -247,7 +225,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
 
   return (
     <div className={TrafficViewerStyles.TrafficPage}>
-      {targettingStatus && isShowStatusBar && <StatusBar disabled={ws?.current?.readyState !== WebSocket.OPEN} isDemoBannerView={isDemoBannerView} />}
+      <StatusBar />
       <div className={TrafficViewerStyles.TrafficPageHeader}>
         <div className={TrafficViewerStyles.TrafficPageStreamStatus}>
           <img id="pause-icon"

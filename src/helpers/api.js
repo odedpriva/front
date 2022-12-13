@@ -31,10 +31,6 @@ export default class Api {
     return response.data;
   }
 
-  targetStatus = async () => {
-    const response = await client.get("/status/target");
-    return response.data;
-  }
   getWorkerConfig = async () => {
     const response = await this.client.get("/config/worker");
     return response.data;
@@ -44,11 +40,6 @@ export default class Api {
     const response = await this.client.post("/config/worker", {
       targettedNamespaces: config
     });
-    return response.data;
-  }
-
-  getItem = async (id, query) => {
-    const response = await client.get(`/item/${id}?q=${encodeURIComponent(query)}`);
     return response.data;
   }
 
@@ -74,29 +65,6 @@ export default class Api {
 
   gelAlloasServicesInOneSpec = async () => {
     const response = await this.client.get("/oas/all");
-    return response.data;
-  }
-
-  validateQuery = async (query) => {
-    if (source) {
-      source.cancel();
-    }
-    source = CancelToken.source();
-
-    const form = new FormData();
-    form.append('query', query)
-    const response = await client.post(`/query/validate`, form, {
-      cancelToken: source.token
-    }).catch(function (thrown) {
-      if (!axios.isCancel(thrown)) {
-        console.error('Validate error', thrown.message);
-      }
-    });
-
-    if (!response) {
-      return null;
-    }
-
     return response.data;
   }
 
