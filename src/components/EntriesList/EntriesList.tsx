@@ -34,13 +34,17 @@ export const EntriesList: React.FC<EntriesListProps> = ({
   const isWsConnectionClosed = ws?.current?.readyState !== WebSocket.OPEN;
   const [totalTcpStreams, setTotalTcpStreams] = useState(0);
 
-  const [startTime] = useState(0);
+  const [timeNow, setTimeNow] = useState(new Date());
 
   useInterval(async () => {
     fetch('http://localhost:8898/pcaps/total-tcp-streams')
       .then(response => response.json())
       .then(data => setTotalTcpStreams(data.total));
   }, 3000, true);
+
+  useInterval(async () => {
+    setTimeNow(new Date());
+  }, 1000, true);
 
   return <React.Fragment>
     <div className={styles.list}>
@@ -67,12 +71,16 @@ export const EntriesList: React.FC<EntriesListProps> = ({
         <div>Showing <b id="item-count">{entries.length}</b> items from a total of <b
           id="total-tcp-streams">{totalTcpStreams}</b> TCP streams
         </div>
-        {startTime !== 0 && <div>First traffic entry time <span style={{
-          marginRight: 5,
-          fontWeight: 600,
-          fontSize: 13
-        }}>{Moment(startTime).utc().format('MM/DD/YYYY, h:mm:ss.SSS A')}</span>
-        </div>}
+        <div>
+          UTC:
+          <span style={{
+            marginLeft: 5,
+            marginRight: 5,
+            fontWeight: 600
+          }}>
+            {Moment(timeNow).utc().format('MM/DD/YYYY, h:mm:ss.SSS A')}
+          </span>
+        </div>
       </div>
     </div>
   </React.Fragment>;
