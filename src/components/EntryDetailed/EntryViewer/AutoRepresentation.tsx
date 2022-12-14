@@ -1,14 +1,8 @@
 import React, { useState, useCallback, useEffect, useMemo } from "react"
-import { useRecoilValue, useSetRecoilState } from "recoil"
-import entryDataAtom from "../../../recoil/entryData"
 import SectionsRepresentation from "./SectionsRepresentation";
 import { ReactComponent as ReplayIcon } from './replay.svg';
 import styles from './EntryViewer.module.sass';
 import { Tabs } from "../../UI";
-import replayRequestModalOpenAtom from "../../../recoil/replayRequestModalOpen";
-import entryDetailedConfigAtom, { EntryDetailedConfig } from "../../../recoil/entryDetailedConfig";
-
-const enabledProtocolsForReplay = ["http"]
 
 export enum TabsEnum {
   Request = 0,
@@ -16,20 +10,20 @@ export enum TabsEnum {
 }
 
 interface AutoRepresentationProps {
+  id: string;
+  worker: string;
   representation: string;
   color: string;
   openedTab?: TabsEnum;
-  isDisplayReplay?: boolean;
 }
 
-export const AutoRepresentation: React.FC<AutoRepresentationProps> = ({ representation, color, openedTab = TabsEnum.Request, isDisplayReplay = false }) => {
-  const entryData = useRecoilValue(entryDataAtom)
-  const { isReplayEnabled } = useRecoilValue<EntryDetailedConfig>(entryDetailedConfigAtom)
-  const setIsOpenRequestModal = useSetRecoilState(replayRequestModalOpenAtom)
-  const isReplayDisplayed = useCallback(() => {
-    return enabledProtocolsForReplay.find(x => x === entryData.protocol.name) && isDisplayReplay && isReplayEnabled
-  }, [entryData.protocol.name, isDisplayReplay, isReplayEnabled])
+const replayTcpStream = (id: string, worker: string) => {
+  fetch(`http://localhost:8898/pcaps/replay/${worker}/${id}`)
+    .then(response => response.json())
+    .catch(data => console.error(data));
+}
 
+export const AutoRepresentation: React.FC<AutoRepresentationProps> = ({ id, worker, representation, color, openedTab = TabsEnum.Request }) => {
   const { request, response } = JSON.parse(representation);
 
   const TABS = useMemo(() => {
@@ -71,7 +65,7 @@ export const AutoRepresentation: React.FC<AutoRepresentationProps> = ({ represen
     {<div className={styles.body}>
       <div className={styles.bodyHeader}>
         <Tabs tabs={TABS} currentTab={currentTab} color={color} onChange={setCurrentTab} leftAligned />
-        {isReplayDisplayed() && <span title="Replay Request"><ReplayIcon fill={color} stroke={color} style={{ marginLeft: "10px", cursor: "pointer", height: "22px" }} onClick={() => setIsOpenRequestModal(true)} /></span>}
+        <span title="Replay this TCP stream"><ReplayIcon fill={color} stroke={color} style={{ marginLeft: "10px", cursor: "pointer", height: "22px" }} onClick={() => replayTcpStream(id, worker)} /></span>
       </div>
       {getOpenedTabIndex() === TabsEnum.Request && <React.Fragment>
         <SectionsRepresentation data={request} color={color} />

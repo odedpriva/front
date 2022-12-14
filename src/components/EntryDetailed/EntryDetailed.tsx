@@ -157,7 +157,12 @@ export const EntryDetailed: React.FC = () => {
     {entryData && <React.Fragment>
       <EntryTitle protocol={entryData.protocol} data={entryData.data} elapsedTime={entryData.data.elapsedTime} />
       <EntrySummary entry={entryData.base} namespace={entryData.data.namespace} />
-      <EntryViewer representation={entryData.representation} color={entryData.protocol.backgroundColor} />
+      <EntryViewer
+        id={entryData.id}
+        worker={entryData.worker}
+        representation={entryData.representation}
+        color={entryData.protocol.backgroundColor}
+      />
     </React.Fragment>}
   </LoadingWrapper>
 };

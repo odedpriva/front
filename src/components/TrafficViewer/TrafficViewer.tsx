@@ -15,8 +15,6 @@ import queryAtom from "../../recoil/query";
 import { StatusBar } from "../UI/StatusBar/StatusBar";
 import { TOAST_CONTAINER_ID } from "../../configs/Consts";
 import { DEFAULT_LEFTOFF, DEFAULT_FETCH, DEFAULT_FETCH_TIMEOUT_MS } from '../../hooks/useWS';
-import ReplayRequestModalContainer from "../modals/ReplayRequestModal/ReplayRequestModal";
-import replayRequestModalOpenAtom from "../../recoil/replayRequestModalOpen";
 import entryDetailedConfigAtom, { EntryDetailedConfig } from "../../recoil/entryDetailedConfig";
 import { EntryItem } from "../EntryListItem/EntryListItem";
 import { useInterval } from "../../helpers/interval";
@@ -65,8 +63,6 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
   const [isSnappedToBottom, setIsSnappedToBottom] = useState(true);
   const [wsReadyState, setWsReadyState] = useState(0);
   const scrollableRef = useRef(null);
-  const isOpenReplayModal = useRecoilValue(replayRequestModalOpenAtom)
-
 
   const ws = useRef(null);
 
@@ -83,10 +79,6 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
       setShouldCloseWebSocket(false);
     }
   }, [shouldCloseWebSocket, setShouldCloseWebSocket, closeWebSocket])
-
-  useEffect(() => {
-    isOpenReplayModal && setShouldCloseWebSocket(true)
-  }, [isOpenReplayModal, setShouldCloseWebSocket])
 
   const sendQueryWhenWsOpen = useCallback((leftOff: string, query: string, fetch: number, fetchTimeoutMs: number) => {
     setTimeout(() => {
@@ -287,7 +279,6 @@ const TrafficViewerContainer: React.FC<TrafficViewerProps> = (props) => {
       pauseOnFocusLoss
       draggable
       pauseOnHover />
-    <ReplayRequestModalContainer />
   </RecoilRoot>
 }
 
