@@ -108,9 +108,12 @@ interface EntrySummaryProps {
 
 const EntrySummary: React.FC<EntrySummaryProps> = ({ entry, namespace }) => {
   const key = `${entry.worker}/${entry.id}`;
+  const tcpKey = `${entry.worker}/${entry.id.split('-')[0]}`;
+
   return <EntryItem
     key={key}
     id={key}
+    tcpKey={tcpKey}
     entry={entry}
     style={{}}
     headingMode={true}

@@ -11,6 +11,7 @@ import variables from '../../variables.module.scss';
 import { ToastContainer } from 'react-toastify';
 import { RecoilRoot, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import focusedEntryIdAtom from "../../recoil/focusedEntryId";
+import focusedTcpKeyAtom from "../../recoil/focusedTcpKey";
 import queryAtom from "../../recoil/query";
 import { StatusBar } from "../UI/StatusBar/StatusBar";
 import { TOAST_CONTAINER_ID } from "../../configs/Consts";
@@ -58,6 +59,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
   const [entries, setEntries] = useState([] as typeof EntryItem[]);
   const [entriesBuffer, setEntriesBuffer] = useState([] as typeof EntryItem[]);
   const [focusedEntryId, setFocusedEntryId] = useRecoilState(focusedEntryIdAtom);
+  const setFocusedTcpKey = useSetRecoilState(focusedTcpKeyAtom)
   const setEntryDetailedConfigAtom = useSetRecoilState(entryDetailedConfigAtom)
   const query = useRecoilValue(queryAtom);
   const [isSnappedToBottom, setIsSnappedToBottom] = useState(true);
@@ -191,6 +193,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
       if (!e?.data) return;
       const entry = JSON.parse(e.data);
       const key = `${entry.worker}/${entry.id}`;
+      const tcpKey = `${entry.worker}/${entry.id.split('-')[0]}`;
 
       setEntriesBuffer(
         // @ts-expect-error: Type?
@@ -198,6 +201,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
           <EntryItem
             key={key}
             id={key}
+            tcpKey={tcpKey}
             entry={entry}
             style={{}}
             headingMode={false}
@@ -212,6 +216,8 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
     if (!focusedEntryId && entriesBuffer.length > 0) {
       // @ts-expect-error: Type?
       setFocusedEntryId(entriesBuffer[0].key);
+      // @ts-expect-error: Type?
+      setFocusedTcpKey(entriesBuffer[0].tcpKey);
     }
   }, 1000, true);
 

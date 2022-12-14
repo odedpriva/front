@@ -15,6 +15,7 @@ import outgoingIconFailure from "./assets/outgoing-traffic-failure.svg"
 import outgoingIconNeutral from "./assets/outgoing-traffic-neutral.svg"
 import { useRecoilState } from "recoil";
 import focusedEntryIdAtom from "../../recoil/focusedEntryId";
+import focusedTcpKeyAtom from "../../recoil/focusedTcpKey";
 
 interface TCPInterface {
   ip: string
@@ -42,6 +43,7 @@ export interface Entry {
 
 interface EntryProps {
   id: string;
+  tcpKey: string;
   entry: Entry;
   style: unknown;
   headingMode: boolean;
@@ -56,9 +58,11 @@ enum CaptureTypes {
   Ebpf = "ebpf",
 }
 
-export const EntryItem: React.FC<EntryProps> = ({ id, entry, style, headingMode, namespace }) => {
+export const EntryItem: React.FC<EntryProps> = ({ id, tcpKey, entry, style, headingMode, namespace }) => {
   const [focusedEntryId, setFocusedEntryId] = useRecoilState(focusedEntryIdAtom);
-  const isSelected = focusedEntryId === id
+  const [focusedTcpKey, setFocusedTcpKey] = useRecoilState(focusedTcpKeyAtom);
+  const isSelected = focusedEntryId === id;
+  const isTcpSelected = focusedTcpKey === tcpKey;
 
   const classification = getClassification(entry.status)
   let ingoingIcon;
@@ -83,17 +87,20 @@ export const EntryItem: React.FC<EntryProps> = ({ id, entry, style, headingMode,
 
   const isStatusCodeEnabled = ((entry.proto.name === "http" && "status" in entry) || entry.status !== 0);
 
+  const borderStyle = !headingMode && !isSelected && isTcpSelected ? 'dashed' : 'solid';
+  const transparentBorder = !headingMode && isTcpSelected ? entry.proto.backgroundColor : 'transparent';
+
   return <React.Fragment>
     <div
       id={id}
-      className={`${styles.row}
-            ${isSelected ? styles.rowSelected : ""}`}
+      className={`${styles.row} ${isSelected ? styles.rowSelected : ""}`}
       onClick={() => {
         if (!setFocusedEntryId) return;
         setFocusedEntryId(id);
+        setFocusedTcpKey(tcpKey);
       }}
       style={{
-        border: isSelected && !headingMode ? `1px ${entry.proto.backgroundColor} solid` : "1px transparent solid",
+        border: isSelected && !headingMode ? `1px ${entry.proto.backgroundColor} ${borderStyle}` : `1px ${transparentBorder} ${borderStyle}`,
         position: !headingMode ? "absolute" : "unset",
         top: style['top'],
         marginTop: !headingMode ? style['marginTop'] : "10px",
