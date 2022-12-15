@@ -41,18 +41,10 @@ const useLayoutStyles = makeStyles(() => ({
 
 interface TrafficViewerProps {
   api?: unknown
-  actionButtons?: JSX.Element,
-  webSocketUrl: string,
-  shouldCloseWebSocket: boolean,
-  setShouldCloseWebSocket: (flag: boolean) => void,
   entryDetailedConfig: EntryDetailedConfig
 }
 
-export const TrafficViewer: React.FC<TrafficViewerProps> = ({
-  webSocketUrl,
-  actionButtons,
-  shouldCloseWebSocket, setShouldCloseWebSocket,
-  entryDetailedConfig }) => {
+export const TrafficViewer: React.FC<TrafficViewerProps> = ({entryDetailedConfig }) => {
 
   const classes = useLayoutStyles();
   const [entries, setEntries] = useState([] as typeof EntryItem[]);
@@ -67,19 +59,18 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
 
   const ws = useRef(null);
 
+  useEffect(() => {
+    let init = false;
+    if (!init) openWebSocket("")
+    return () => { init = true; }
+  },[]);
+
   const closeWebSocket = useCallback(() => {
     if (ws?.current?.readyState === WebSocket.OPEN) {
       ws.current.close();
       return true;
     }
   }, [])
-
-  useEffect(() => {
-    if (shouldCloseWebSocket) {
-      closeWebSocket()
-      setShouldCloseWebSocket(false);
-    }
-  }, [shouldCloseWebSocket, setShouldCloseWebSocket, closeWebSocket])
 
   const sendQueryWhenWsOpen = useCallback((query: string) => {
     setTimeout(() => {
@@ -98,7 +89,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
     setEntries([]);
 
     try {
-      ws.current = new WebSocket(webSocketUrl);
+      ws.current = new WebSocket("ws://localhost:8898/ws");
       sendQueryWhenWsOpen(query);
 
       ws.current.onopen = () => {
@@ -127,7 +118,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
     } catch (e) {
       console.error(e);
     }
-  }, [setFocusedEntryId, setEntries, ws, sendQueryWhenWsOpen, webSocketUrl])
+  }, [setFocusedEntryId, setEntries, ws, sendQueryWhenWsOpen])
 
   const openEmptyWebSocket = useCallback(() => {
     openWebSocket(query);
@@ -147,11 +138,6 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
     scrollableRef.current.jumpToBottom();
     setIsSnappedToBottom(true);
   }, [scrollableRef, setIsSnappedToBottom, closeWebSocket, openEmptyWebSocket])
-
-  useEffect(() => {
-    reopenConnection()
-    // eslint-disable-next-line
-  }, [webSocketUrl])
 
   useEffect(() => {
     return () => {
@@ -251,7 +237,6 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
             {getConnectionIndicator()}
           </div>
         </div>
-        {actionButtons}
       </div>
       {<div className={TrafficViewerStyles.TrafficPageContainer}>
         <div className={TrafficViewerStyles.TrafficPageListContainer}>
