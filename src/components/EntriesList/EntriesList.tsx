@@ -39,7 +39,10 @@ export const EntriesList: React.FC<EntriesListProps> = ({
   useInterval(async () => {
     fetch('http://localhost:8898/pcaps/total-tcp-streams')
       .then(response => response.json())
-      .then(data => setTotalTcpStreams(data.total));
+      .then(data => setTotalTcpStreams(data.total))
+      .catch(err => {
+        console.error(err);
+      });
   }, 3000, true);
 
   useInterval(async () => {

@@ -12,7 +12,7 @@ import { useRecoilState } from "recoil";
 import queryAtom from "../../recoil/query";
 import useKeyPress from "../../hooks/useKeyPress"
 import shortcutsKeyboard from "../../configs/shortcutsKeyboard"
-
+import { toast } from "react-toastify";
 
 interface FiltersProps {
   reopenConnection: () => void;
@@ -72,6 +72,12 @@ export const CodeEditorWrap: FC<QueryFormProps> = ({ query, onQueryChange, onVal
                 setQueryBackgroundColor("#fad6dc");
               }
               onValidationChanged && onValidationChanged({ query: query, message: data.message, valid: data.valid })
+            })
+            .catch(err => {
+              console.error(err);
+              toast.error(err.toString(), {
+                theme: "colored"
+              });
             });
         }
       }, 500),

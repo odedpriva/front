@@ -8,14 +8,11 @@ import { EntryDetailed } from "../EntryDetailed/EntryDetailed";
 import playIcon from "./assets/run.svg";
 import pauseIcon from "./assets/pause.svg";
 import variables from '../../variables.module.scss';
-import { ToastContainer } from 'react-toastify';
-import { RecoilRoot, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import focusedEntryIdAtom from "../../recoil/focusedEntryId";
 import focusedTcpKeyAtom from "../../recoil/focusedTcpKey";
 import queryAtom from "../../recoil/query";
 import { StatusBar } from "../UI/StatusBar/StatusBar";
-import { TOAST_CONTAINER_ID } from "../../configs/Consts";
-import entryDetailedConfigAtom, { EntryDetailedConfig } from "../../recoil/entryDetailedConfig";
 import { EntryItem } from "../EntryListItem/EntryListItem";
 import { useInterval } from "../../helpers/interval";
 
@@ -41,17 +38,15 @@ const useLayoutStyles = makeStyles(() => ({
 
 interface TrafficViewerProps {
   api?: unknown
-  entryDetailedConfig: EntryDetailedConfig
 }
 
-export const TrafficViewer: React.FC<TrafficViewerProps> = ({entryDetailedConfig }) => {
+export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
 
   const classes = useLayoutStyles();
   const [entries, setEntries] = useState([] as typeof EntryItem[]);
   const [entriesBuffer, setEntriesBuffer] = useState([] as typeof EntryItem[]);
   const [focusedEntryId, setFocusedEntryId] = useRecoilState(focusedEntryIdAtom);
-  const setFocusedTcpKey = useSetRecoilState(focusedTcpKeyAtom)
-  const setEntryDetailedConfigAtom = useSetRecoilState(entryDetailedConfigAtom)
+  const setFocusedTcpKey = useSetRecoilState(focusedTcpKeyAtom);
   const query = useRecoilValue(queryAtom);
   const [isSnappedToBottom, setIsSnappedToBottom] = useState(true);
   const [wsReadyState, setWsReadyState] = useState(0);
@@ -63,7 +58,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({entryDetailedConfig
     let init = false;
     if (!init) openWebSocket(query);
     return () => { init = true; }
-  },[]);
+  }, []);
 
   const closeWebSocket = useCallback(() => {
     if (ws?.current?.readyState === WebSocket.OPEN) {
@@ -136,10 +131,6 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({entryDetailedConfig
       }
     };
   }, []);
-
-  useEffect(() => {
-    setEntryDetailedConfigAtom(entryDetailedConfig)
-  }, [entryDetailedConfig, setEntryDetailedConfigAtom])
 
   const getConnectionIndicator = () => {
     switch (wsReadyState) {
@@ -253,22 +244,3 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({entryDetailedConfig
     </div>
   );
 };
-
-const MemorizedTrafficViewer = React.memo(TrafficViewer)
-const TrafficViewerContainer: React.FC<TrafficViewerProps> = (props) => {
-  return <RecoilRoot>
-    <MemorizedTrafficViewer  {...props} />
-    <ToastContainer enableMultiContainer containerId={TOAST_CONTAINER_ID}
-      position="bottom-right"
-      autoClose={5000}
-      hideProgressBar={false}
-      newestOnTop={false}
-      closeOnClick
-      rtl={false}
-      pauseOnFocusLoss
-      draggable
-      pauseOnHover />
-  </RecoilRoot>
-}
-
-export default TrafficViewerContainer

@@ -9,7 +9,6 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import focusedEntryIdAtom from "../../recoil/focusedEntryId";
 import queryAtom from "../../recoil/query/atom";
 import useWindowDimensions, { useRequestTextByWidth } from "../../hooks/WindowDimensionsHook";
-import { TOAST_CONTAINER_ID } from "../../configs/Consts";
 import entryDataAtom from "../../recoil/entryData";
 import { LoadingWrapper } from "../UI/withLoading/withLoading";
 
@@ -134,25 +133,18 @@ export const EntryDetailed: React.FC = () => {
     setEntryData(null);
     if (!focusedEntryId) return;
     setIsLoading(true);
-    (async () => {
-      try {
-        fetch(`http://localhost:8898/item/${focusedEntryId}?q=${encodeURIComponent(query)}`)
-          .then(response => response.json())
-          .then(data => setEntryData(data));
-      } catch (error) {
-        if (error.response?.data?.type) {
-          toast[error.response.data.type](`Entry[${focusedEntryId}]: ${error.response.data.msg}`, {
-            theme: "colored",
-            autoClose: error.response.data.autoClose,
-            progress: undefined,
-            containerId: TOAST_CONTAINER_ID
-          });
-        }
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    })();
+    fetch(`http://localhost:8898/item/${focusedEntryId}?q=${encodeURIComponent(query)}`)
+      .then(response => response.json())
+      .then(data => setEntryData(data))
+      .catch(err => {
+        console.error(err);
+        toast[err.response.data.type](`Entry[${focusedEntryId}]: ${err.response.data.msg}`, {
+          theme: "colored",
+          autoClose: err.response.data.autoClose,
+          progress: undefined,
+        });
+      })
+      .finally(() => setIsLoading(false));
     // eslint-disable-next-line
   }, [focusedEntryId]);
 

@@ -29,7 +29,7 @@ const StatusBarContent: React.FC<StatusBarContentProps> = ({
   return <div className={`${style.statusBar} ${(expandedBar ? `${style.expandedStatusBar}` : "")}`} onMouseOver={() => setExpandedBar(true)} onMouseLeave={() => setExpandedBar(false)} data-cy="expandedStatusBar">
     <div className={style.podsCount}>
       <span className={style.podsCountText} data-cy="podsCountText">
-        {`Targetting ${targets.length} ${pluralize('pod', targets.length)} in ${pluralize('namespace', uniqueNamespaces(targets).length)} ${uniqueNamespaces(targets).join(", ")}`}
+        {`Targetting ${targets.length} ${pluralize('pod', targets.length)} ${targets.length ? "in" : ""} ${targets.length ? pluralize('namespace', uniqueNamespaces(targets).length) : ""} ${uniqueNamespaces(targets).join(", ")}`}
       </span>
     </div>
     {expandedBar && <div style={{ marginTop: 20 }}>
@@ -58,7 +58,8 @@ export const StatusBar: React.FC = () => {
   useInterval(async () => {
     fetch('http://localhost:8898/pods/targetted')
       .then(response => response.json())
-      .then(data => setTargets(data.targets));
+      .then(data => setTargets(data.targets))
+      .catch(err => console.error(err));
   }, 5000, true);
 
   return <>
