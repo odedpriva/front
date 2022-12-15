@@ -4,8 +4,6 @@ const hubHostPort = `${process.env.REACT_APP_HUB_HOST ? process.env.REACT_APP_HU
 
 export const KubesharkWebsocketURL = window.location.protocol === 'https:' ? `wss://${hubHostPort}/ws` : `ws://${hubHostPort}/ws`;
 
-const CancelToken = axios.CancelToken;
-
 const apiURL = window.location.protocol === 'https:' ? `https://${hubHostPort}/` : `http://${hubHostPort}/`;
 
 let client = null
@@ -45,11 +43,6 @@ export default class Api {
 
   replayRequest = async (requestData) => {
     const response = await client.post(`/replay/`, requestData);
-    return response.data;
-  }
-
-  getAuthStatus = async () => {
-    const response = await client.get("/status/auth");
     return response.data;
   }
 

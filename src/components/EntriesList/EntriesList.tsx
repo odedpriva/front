@@ -14,7 +14,7 @@ interface EntriesListProps {
   onSnapBrokenEvent: () => void;
   isSnappedToBottom: boolean;
   setIsSnappedToBottom: (state: boolean) => void;
-  openWebSocket: (leftOff: string, query: string, resetEntries: boolean, fetch: number, fetchTimeoutMs: number) => void;
+  openWebSocket: (query: string) => void;
   scrollableRef: React.MutableRefObject<ScrollableFeedVirtualized>;
   ws: React.MutableRefObject<WebSocket>;
 }
@@ -58,7 +58,7 @@ export const EntriesList: React.FC<EntriesListProps> = ({
           className={`${styles.btnLive} ${isSnappedToBottom && !isWsConnectionClosed ? styles.hideButton : styles.showButton}`}
           onClick={() => {
             if (isWsConnectionClosed) {
-              openWebSocket("", query, false, 0, 0);
+              openWebSocket(query);
             }
             scrollableRef.current.jumpToBottom();
             setIsSnappedToBottom(true);

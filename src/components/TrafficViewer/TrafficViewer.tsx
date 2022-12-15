@@ -15,7 +15,6 @@ import focusedTcpKeyAtom from "../../recoil/focusedTcpKey";
 import queryAtom from "../../recoil/query";
 import { StatusBar } from "../UI/StatusBar/StatusBar";
 import { TOAST_CONTAINER_ID } from "../../configs/Consts";
-import { DEFAULT_LEFTOFF, DEFAULT_FETCH, DEFAULT_FETCH_TIMEOUT_MS } from '../../hooks/useWS';
 import entryDetailedConfigAtom, { EntryDetailedConfig } from "../../recoil/entryDetailedConfig";
 import { EntryItem } from "../EntryListItem/EntryListItem";
 import { useInterval } from "../../helpers/interval";
@@ -82,26 +81,25 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
     }
   }, [shouldCloseWebSocket, setShouldCloseWebSocket, closeWebSocket])
 
-  const sendQueryWhenWsOpen = useCallback((leftOff: string, query: string, fetch: number, fetchTimeoutMs: number) => {
+  const sendQueryWhenWsOpen = useCallback((query: string) => {
     setTimeout(() => {
       if (ws?.current?.readyState === WebSocket.OPEN) {
         ws.current.send(query);
       } else {
-        sendQueryWhenWsOpen(leftOff, query, fetch, fetchTimeoutMs);
+        sendQueryWhenWsOpen(query);
       }
     }, 500)
   }, [])
 
   const listEntry = useRef(null);
-  const openWebSocket = useCallback((leftOff: string, query: string, resetEntries: boolean, fetch: number, fetchTimeoutMs: number) => {
-    if (resetEntries) {
-      setFocusedEntryId(null);
-      setEntriesBuffer([]);
-      setEntries([]);
-    }
+  const openWebSocket = useCallback((query: string) => {
+    setFocusedEntryId(null);
+    setEntriesBuffer([]);
+    setEntries([]);
+
     try {
       ws.current = new WebSocket(webSocketUrl);
-      sendQueryWhenWsOpen(leftOff, query, fetch, fetchTimeoutMs);
+      sendQueryWhenWsOpen(query);
 
       ws.current.onopen = () => {
         setWsReadyState(ws?.current?.readyState);
@@ -114,6 +112,16 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
         console.error("WebSocket error:", event);
         if (ws?.current?.readyState === WebSocket.OPEN) {
           ws.current.close();
+        } else {
+          setTimeout(() => {
+            if (ws?.current?.readyState === WebSocket.OPEN) {
+              ws.current.send(query);
+            } else {
+              setTimeout(() => {
+                openWebSocket(query);
+              }, 1000)
+            }
+          }, 500)
         }
       }
     } catch (e) {
@@ -122,7 +130,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({
   }, [setFocusedEntryId, setEntries, ws, sendQueryWhenWsOpen, webSocketUrl])
 
   const openEmptyWebSocket = useCallback(() => {
-    openWebSocket(DEFAULT_LEFTOFF, query, true, DEFAULT_FETCH, DEFAULT_FETCH_TIMEOUT_MS);
+    openWebSocket(query);
   }, [openWebSocket, query])
 
   const toggleConnection = () => {

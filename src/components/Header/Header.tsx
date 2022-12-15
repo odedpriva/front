@@ -1,5 +1,4 @@
 import React from "react";
-import { AuthPresentation } from "../AuthPresentation/AuthPresentation";
 import logo from './assets/Kubeshark-logo.svg';
 import './Header.sass';
 import * as UI from "../UI"
@@ -14,7 +13,6 @@ export const Header: React.FC = () => {
     </div>
     <div style={{ display: "flex", alignItems: "center" }}>
       <UI.InformationIcon />
-      <AuthPresentation />
     </div>
   </div>;
 }
