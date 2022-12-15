@@ -134,14 +134,18 @@ export const EntryDetailed: React.FC = () => {
     if (!focusedEntryId) return;
     setIsLoading(true);
     fetch(`http://localhost:8898/item/${focusedEntryId}?q=${encodeURIComponent(query)}`)
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw Error(`Fetch item, query: "${query}", reason: "${response.statusText}"`);
+        }
+
+        return response.json();
+      })
       .then(data => setEntryData(data))
       .catch(err => {
         console.error(err);
-        toast[err.response.data.type](`Entry[${focusedEntryId}]: ${err.response.data.msg}`, {
-          theme: "colored",
-          autoClose: err.response.data.autoClose,
-          progress: undefined,
+        toast.error(err.toString(), {
+          theme: "colored"
         });
       })
       .finally(() => setIsLoading(false));

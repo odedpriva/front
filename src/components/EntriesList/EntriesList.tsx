@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import styles from './EntriesList.module.sass';
 import ScrollableFeedVirtualized from "react-scrollable-feed-virtualized";
 import down from "./assets/downImg.svg";
-import { useRecoilValue } from "recoil";
-import queryAtom from "../../recoil/query";
 import Moment from "moment";
 import { useInterval } from "../../helpers/interval";
 import { EntryItem } from "../EntryListItem/EntryListItem";
@@ -14,9 +12,7 @@ interface EntriesListProps {
   onSnapBrokenEvent: () => void;
   isSnappedToBottom: boolean;
   setIsSnappedToBottom: (state: boolean) => void;
-  openWebSocket: (query: string) => void;
   scrollableRef: React.MutableRefObject<ScrollableFeedVirtualized>;
-  ws: React.MutableRefObject<WebSocket>;
 }
 
 export const EntriesList: React.FC<EntriesListProps> = ({
@@ -25,13 +21,8 @@ export const EntriesList: React.FC<EntriesListProps> = ({
   onSnapBrokenEvent,
   isSnappedToBottom,
   setIsSnappedToBottom,
-  openWebSocket,
   scrollableRef,
-  ws
 }) => {
-
-  const query = useRecoilValue(queryAtom);
-  const isWsConnectionClosed = ws?.current?.readyState !== WebSocket.OPEN;
   const [totalTcpStreams, setTotalTcpStreams] = useState(0);
 
   const [timeNow, setTimeNow] = useState(new Date());
@@ -58,11 +49,8 @@ export const EntriesList: React.FC<EntriesListProps> = ({
         </ScrollableFeedVirtualized>
         <button type="button"
           title="Snap to bottom"
-          className={`${styles.btnLive} ${isSnappedToBottom && !isWsConnectionClosed ? styles.hideButton : styles.showButton}`}
+          className={`${styles.btnLive} ${isSnappedToBottom ? styles.hideButton : styles.showButton}`}
           onClick={() => {
-            if (isWsConnectionClosed) {
-              openWebSocket(query);
-            }
             scrollableRef.current.jumpToBottom();
             setIsSnappedToBottom(true);
           }}>

@@ -8,13 +8,13 @@ import { EntryDetailed } from "../EntryDetailed/EntryDetailed";
 import playIcon from "./assets/run.svg";
 import pauseIcon from "./assets/pause.svg";
 import variables from '../../variables.module.scss';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import focusedEntryIdAtom from "../../recoil/focusedEntryId";
 import focusedTcpKeyAtom from "../../recoil/focusedTcpKey";
-import queryAtom from "../../recoil/query";
 import { StatusBar } from "../UI/StatusBar/StatusBar";
 import { EntryItem } from "../EntryListItem/EntryListItem";
 import { useInterval } from "../../helpers/interval";
+import { toast } from "react-toastify";
 
 const useLayoutStyles = makeStyles(() => ({
   details: {
@@ -47,82 +47,105 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
   const [entriesBuffer, setEntriesBuffer] = useState([] as typeof EntryItem[]);
   const [focusedEntryId, setFocusedEntryId] = useRecoilState(focusedEntryIdAtom);
   const setFocusedTcpKey = useSetRecoilState(focusedTcpKeyAtom);
-  const query = useRecoilValue(queryAtom);
+  const [query, setQuery] = useState("");
   const [isSnappedToBottom, setIsSnappedToBottom] = useState(true);
   const [wsReadyState, setWsReadyState] = useState(0);
-  const scrollableRef = useRef(null);
 
+  const scrollableRef = useRef(null);
   const ws = useRef(null);
+  const queryRef = useRef(null);
+  queryRef.current = query;
 
   useEffect(() => {
     let init = false;
-    if (!init) openWebSocket(query);
+    if (!init) openWebSocket();
     return () => { init = true; }
   }, []);
 
   const closeWebSocket = useCallback(() => {
-    if (ws?.current?.readyState === WebSocket.OPEN) {
-      ws.current.close();
-      return true;
-    }
-  }, [])
+    ws.current.close(1000);
+  }, [ws]);
 
-  const sendQueryWhenWsOpen = useCallback((query: string) => {
+  const sendQueryWhenWsOpen = () => {
     setTimeout(() => {
       if (ws?.current?.readyState === WebSocket.OPEN) {
-        ws.current.send(query);
+        ws.current.send(queryRef.current);
       } else {
-        sendQueryWhenWsOpen(query);
+        sendQueryWhenWsOpen();
       }
-    }, 500)
-  }, [])
+    }, 500);
+  };
 
   const listEntry = useRef(null);
-  const openWebSocket = useCallback((query: string) => {
+  const openWebSocket = () => {
     setFocusedEntryId(null);
     setEntriesBuffer([]);
     setEntries([]);
 
     try {
       ws.current = new WebSocket("ws://localhost:8898/ws");
-      sendQueryWhenWsOpen(query);
+      sendQueryWhenWsOpen();
 
       ws.current.onopen = () => {
         setWsReadyState(ws?.current?.readyState);
+        toast.success("Connected to Hub.", {
+          theme: "colored",
+          autoClose: 1000,
+        });
       }
 
-      ws.current.onclose = () => {
+      ws.current.onclose = (e) => {
+        console.log(e.code);
         setWsReadyState(ws?.current?.readyState);
+        let delay = 3000;
+        let msg = "Trying to reconnect...";
+        if (e.code === 1006) {
+          toast.warning("Workers are down!", {
+            theme: "colored",
+            autoClose: 1000,
+          });
+        } else if (e.code === 1000) {
+          delay = 100;
+          msg = "Connecting with the new filter..."
+        }
+
+        toast.info(msg, {
+          theme: "colored",
+          autoClose: 1000,
+        });
+        setTimeout(() => {
+          openWebSocket();
+        }, delay);
       }
-      ws.current.onerror = (event) => {
-        console.error("WebSocket error:", event);
+
+      ws.current.onerror = (err) => {
+        console.error("WebSocket error:", err);
+        toast.error("Hub is down!", {
+          theme: "colored",
+          autoClose: 1000,
+        });
         if (ws?.current?.readyState === WebSocket.OPEN) {
           ws.current.close();
-        } else {
-          setTimeout(() => {
-            openWebSocket(query);
-          }, 1000);
         }
       }
     } catch (e) {
       console.error(e);
     }
-  }, [setFocusedEntryId, setEntries, ws, sendQueryWhenWsOpen])
+  };
 
   const toggleConnection = useCallback(async () => {
-    if (!closeWebSocket()) {
-      openWebSocket(query);
-      scrollableRef.current.jumpToBottom();
-      setIsSnappedToBottom(true);
+    if (ws?.current?.readyState === WebSocket.OPEN) {
+      closeWebSocket();
     }
-  }, [scrollableRef, setIsSnappedToBottom, closeWebSocket, openWebSocket, query])
+    scrollableRef.current.jumpToBottom();
+    setIsSnappedToBottom(true);
+  }, [scrollableRef, setIsSnappedToBottom, closeWebSocket]);
 
   const reopenConnection = useCallback(async () => {
     closeWebSocket();
-    openWebSocket(query);
     scrollableRef.current.jumpToBottom();
     setIsSnappedToBottom(true);
-  }, [scrollableRef, setIsSnappedToBottom, closeWebSocket, openWebSocket, query])
+  }, [scrollableRef, setIsSnappedToBottom, closeWebSocket]);
 
   useEffect(() => {
     return () => {
@@ -158,9 +181,6 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
 
   const onSnapBrokenEvent = () => {
     setIsSnappedToBottom(false);
-    if (ws?.current?.readyState === WebSocket.OPEN) {
-      ws.current.close();
-    }
   }
 
   if (ws.current && !ws.current.onmessage) {
@@ -223,6 +243,8 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
         <div className={TrafficViewerStyles.TrafficPageListContainer}>
           <Filters
             reopenConnection={reopenConnection}
+            query={query}
+            onQueryChange={(query) => { setQuery(query?.trim()); }}
           />
           <div className={styles.container}>
             <EntriesList
@@ -231,9 +253,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
               onSnapBrokenEvent={onSnapBrokenEvent}
               isSnappedToBottom={isSnappedToBottom}
               setIsSnappedToBottom={setIsSnappedToBottom}
-              openWebSocket={openWebSocket}
               scrollableRef={scrollableRef}
-              ws={ws}
             />
           </div>
         </div>

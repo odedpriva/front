@@ -8,24 +8,22 @@ import { SyntaxHighlighter } from "../UI/SyntaxHighlighter";
 import filterUIExample1 from "./assets/filter-ui-example-1.png"
 import filterUIExample2 from "./assets/filter-ui-example-2.png"
 import variables from '../../variables.module.scss';
-import { useRecoilState } from "recoil";
-import queryAtom from "../../recoil/query";
 import useKeyPress from "../../hooks/useKeyPress"
 import shortcutsKeyboard from "../../configs/shortcutsKeyboard"
 import { toast } from "react-toastify";
 
 interface FiltersProps {
   reopenConnection: () => void;
+  query: string;
+  onQueryChange?: (query: string) => void
 }
 
-export const Filters: React.FC<FiltersProps> = ({ reopenConnection }) => {
-  const [query, setQuery] = useRecoilState(queryAtom);
-
+export const Filters: React.FC<FiltersProps> = ({ reopenConnection, query, onQueryChange }) => {
   return <div className={styles.container}>
     <QueryForm
       query={query}
       reopenConnection={reopenConnection}
-      onQueryChange={(query) => { setQuery(query?.trim()); }}
+      onQueryChange={onQueryChange}
     />
   </div>;
 };
@@ -80,7 +78,7 @@ export const CodeEditorWrap: FC<QueryFormProps> = ({ query, onQueryChange, onVal
               });
             });
         }
-      }, 500),
+      }, 100),
     [onValidationChanged]
   ) as (query: string) => void;
 

@@ -20,7 +20,17 @@ interface AutoRepresentationProps {
 
 const replayTcpStream = (id: string, worker: string) => {
   fetch(`http://localhost:8898/pcaps/replay/${worker}/${id}`)
-    .then(response => response.json())
+    .then(response => {
+      if (response.status === 200) {
+        toast.info("TCP replay was successful.", {
+          theme: "colored"
+        });
+      } else {
+        toast.error("TCP replay was failed!", {
+          theme: "colored"
+        });
+      }
+    })
     .catch(err => {
       console.error(err);
       toast.error(err.toString(), {
