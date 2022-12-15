@@ -2,9 +2,7 @@ import './App.sass';
 import React from "react";
 import { Header } from "./components/Header/Header";
 import { TrafficPage } from "./components/Pages/TrafficPage/TrafficPage";
-import { ServiceMapModal } from './components/modals/ServiceMapModal/ServiceMapModal';
 import { useRecoilState } from "recoil";
-import serviceMapModalOpenAtom from "./recoil/serviceMapModalOpen";
 import trafficStatsModalOpenAtom from "./recoil/trafficStatsModalOpen";
 import Api from './helpers/api';
 import { ThemeProvider, StyledEngineProvider, createTheme } from '@mui/material';
@@ -14,7 +12,6 @@ const api = Api.getInstance()
 
 const App: React.FC = () => {
 
-  const [serviceMapModalOpen, setServiceMapModalOpen] = useRecoilState(serviceMapModalOpenAtom);
   const [trafficStatsModalOpen, setTrafficStatsModalOpen] = useRecoilState(trafficStatsModalOpenAtom);
 
   return (
@@ -23,12 +20,6 @@ const App: React.FC = () => {
         <div className="kubesharkApp">
           <Header />
           <TrafficPage />
-          <ServiceMapModal
-            isOpen={serviceMapModalOpen}
-            onOpen={() => setServiceMapModalOpen(true)}
-            onClose={() => setServiceMapModalOpen(false)}
-            getServiceMapDataApi={api.serviceMapData}
-          />
           <TrafficStatsModal isOpen={trafficStatsModalOpen} onClose={() => setTrafficStatsModalOpen(false)} getTrafficStatsDataApi={api.getTrafficStats} />
         </div>
       </ThemeProvider>

@@ -24,23 +24,6 @@ export default class Api {
     source = null;
   }
 
-  serviceMapData = async () => {
-    const response = await client.get(`/servicemap/get`);
-    return response.data;
-  }
-
-  getWorkerConfig = async () => {
-    const response = await this.client.get("/config/worker");
-    return response.data;
-  }
-
-  setWorkerConfig = async (config) => {
-    const response = await this.client.post("/config/worker", {
-      targettedNamespaces: config
-    });
-    return response.data;
-  }
-
   getAxiosClient = () => {
     const headers = {
       Accept: "application/json"

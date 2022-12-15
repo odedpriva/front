@@ -5,9 +5,7 @@ import Checkbox from "./Checkbox/Checkbox"
 import { StatusBar } from "./StatusBar/StatusBar";
 import CustomModal from "./CustomModal/CustomModal";
 import { InformationIcon, Link } from "./InformationIcon/InformationIcon";
-import SelectList from "./SelectList/SelectList";
-import NoDataMessage from "./NoDataMessage/NoDataMessage";
 import withLoading from "./withLoading/withLoading";
 
-export { LoadingOverlay, Tabs, Tooltip, Checkbox, CustomModal, InformationIcon, SelectList, NoDataMessage, withLoading, Link };
+export { LoadingOverlay, Tabs, Tooltip, Checkbox, CustomModal, InformationIcon, withLoading, Link };
 export { StatusBar }
