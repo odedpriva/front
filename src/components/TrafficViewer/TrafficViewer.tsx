@@ -61,7 +61,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({entryDetailedConfig
 
   useEffect(() => {
     let init = false;
-    if (!init) openWebSocket("")
+    if (!init) openWebSocket(query);
     return () => { init = true; }
   },[]);
 
@@ -120,24 +120,20 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({entryDetailedConfig
     }
   }, [setFocusedEntryId, setEntries, ws, sendQueryWhenWsOpen])
 
-  const openEmptyWebSocket = useCallback(() => {
-    openWebSocket(query);
-  }, [openWebSocket, query])
-
-  const toggleConnection = () => {
+  const toggleConnection = useCallback(async () => {
     if (!closeWebSocket()) {
-      openEmptyWebSocket();
+      openWebSocket(query);
       scrollableRef.current.jumpToBottom();
       setIsSnappedToBottom(true);
     }
-  }
+  }, [scrollableRef, setIsSnappedToBottom, closeWebSocket, openWebSocket, query])
 
   const reopenConnection = useCallback(async () => {
-    closeWebSocket()
-    openEmptyWebSocket();
+    closeWebSocket();
+    openWebSocket(query);
     scrollableRef.current.jumpToBottom();
     setIsSnappedToBottom(true);
-  }, [scrollableRef, setIsSnappedToBottom, closeWebSocket, openEmptyWebSocket])
+  }, [scrollableRef, setIsSnappedToBottom, closeWebSocket, openWebSocket, query])
 
   useEffect(() => {
     return () => {
