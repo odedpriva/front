@@ -7,9 +7,7 @@ import { useCommonStyles } from "../../../helpers/commonStyle"
 import serviceMapModalOpenAtom from "../../../recoil/serviceMapModalOpen";
 import { TrafficViewer } from "../../TrafficViewer/TrafficViewer"
 import "../../../index.sass"
-import oasModalOpenAtom from "../../../recoil/oasModalOpen/atom";
 import serviceMap from "./assets/serviceMap.svg";
-import services from "./assets/services.svg";
 import trafficStatsIcon from "./assets/trafficStats.svg";
 import trafficStatsModalOpenAtom from "../../../recoil/trafficStatsModalOpen";
 import { REPLAY_ENABLED } from "../../../consts";
@@ -17,14 +15,8 @@ import { REPLAY_ENABLED } from "../../../consts";
 export const TrafficPage: React.FC = () => {
   const commonClasses = useCommonStyles();
   const setServiceMapModalOpen = useSetRecoilState(serviceMapModalOpenAtom);
-  const setOpenOasModal = useSetRecoilState(oasModalOpenAtom);
   const setTrafficStatsModalOpen = useSetRecoilState(trafficStatsModalOpenAtom);
   const [shouldCloseWebSocket, setShouldCloseWebSocket] = useState(false);
-
-  const handleOpenOasModal = () => {
-    setShouldCloseWebSocket(true)
-    setOpenOasModal(true);
-  }
 
   const handleOpenStatsModal = () => {
     setShouldCloseWebSocket(true)
@@ -37,15 +29,6 @@ export const TrafficPage: React.FC = () => {
   }, 500);
 
   const actionButtons = <div style={{ display: 'flex', height: "100%" }}>
-    <Button
-      startIcon={<img className="custom" src={services} alt="services" />}
-      size="large"
-      variant="contained"
-      className={commonClasses.outlinedButton + " " + commonClasses.imagedButton}
-      style={{ marginRight: 25, textTransform: 'unset' }}
-      onClick={handleOpenOasModal}>
-      Service Catalog
-    </Button>
     <Button
       startIcon={<img src={serviceMap} className="custom" alt="service-map" style={{ marginRight: "8%" }} />}
       size="large"

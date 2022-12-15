@@ -1,5 +1,4 @@
 import LoadingOverlay from "./LoadingOverlay/LoadingOverlay";
-import { Select } from "./Select/Select";
 import Tabs from "./Tabs/Tabs";
 import Tooltip from "./Tooltip/Tooltip";
 import Checkbox from "./Checkbox/Checkbox"
@@ -10,5 +9,5 @@ import SelectList from "./SelectList/SelectList";
 import NoDataMessage from "./NoDataMessage/NoDataMessage";
 import withLoading from "./withLoading/withLoading";
 
-export { LoadingOverlay, Select, Tabs, Tooltip, Checkbox, CustomModal, InformationIcon, SelectList, NoDataMessage, withLoading, Link };
+export { LoadingOverlay, Tabs, Tooltip, Checkbox, CustomModal, InformationIcon, SelectList, NoDataMessage, withLoading, Link };
 export { StatusBar }

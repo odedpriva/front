@@ -41,26 +41,6 @@ export default class Api {
     return response.data;
   }
 
-  replayRequest = async (requestData) => {
-    const response = await client.post(`/replay/`, requestData);
-    return response.data;
-  }
-
-  getOasServices = async () => {
-    const response = await client.get("/oas/");
-    return response.data;
-  }
-
-  getOasByService = async (selectedService) => {
-    const response = await client.get(`/oas/${selectedService}`);
-    return response.data;
-  }
-
-  gelAlloasServicesInOneSpec = async () => {
-    const response = await this.client.get("/oas/all");
-    return response.data;
-  }
-
   getAxiosClient = () => {
     const headers = {
       Accept: "application/json"

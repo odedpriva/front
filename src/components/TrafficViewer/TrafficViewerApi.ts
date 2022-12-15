@@ -8,7 +8,6 @@ export interface ResponseModel {
 }
 
 type TrafficViewerApi = {
-  replayRequest: (request: { method: string, url: string, data: string, headers: unknown }) => Promise<ResponseModel>,
   webSocket: {
     close: () => void
   }
