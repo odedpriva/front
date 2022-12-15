@@ -105,14 +105,8 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({entryDetailedConfig
           ws.current.close();
         } else {
           setTimeout(() => {
-            if (ws?.current?.readyState === WebSocket.OPEN) {
-              ws.current.send(query);
-            } else {
-              setTimeout(() => {
-                openWebSocket(query);
-              }, 1000)
-            }
-          }, 500)
+            openWebSocket(query);
+          }, 1000);
         }
       }
     } catch (e) {
