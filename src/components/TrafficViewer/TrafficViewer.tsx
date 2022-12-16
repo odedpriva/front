@@ -12,7 +12,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import focusedEntryIdAtom from "../../recoil/focusedEntryId";
 import focusedTcpKeyAtom from "../../recoil/focusedTcpKey";
 import { StatusBar } from "../UI/StatusBar/StatusBar";
-import { EntryItem } from "../EntryListItem/EntryListItem";
+import { Entry } from "../EntryListItem/EntryListItem";
 import { useInterval } from "../../helpers/interval";
 import queryAtom from "../../recoil/query";
 import queryBuildAtom from "../../recoil/queryBuild";
@@ -46,8 +46,8 @@ interface TrafficViewerProps {
 export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
 
   const classes = useLayoutStyles();
-  const [entries, setEntries] = useState([] as typeof EntryItem[]);
-  const [entriesBuffer, setEntriesBuffer] = useState([] as typeof EntryItem[]);
+  const [entries, setEntries] = useState([] as Entry[]);
+  const [entriesBuffer, setEntriesBuffer] = useState([] as Entry[]);
   const [focusedEntryId, setFocusedEntryId] = useRecoilState(focusedEntryIdAtom);
   const setFocusedTcpKey = useSetRecoilState(focusedTcpKeyAtom);
   const query = useRecoilValue(queryAtom);
@@ -190,21 +190,9 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
     ws.current.onmessage = (e) => {
       if (!e?.data) return;
       const entry = JSON.parse(e.data);
-      const key = `${entry.worker}/${entry.id}`;
-      const tcpKey = `${entry.worker}/${entry.id.split('-')[0]}`;
 
       setEntriesBuffer(
-        // @ts-expect-error: Type?
-        entriesState => [...entriesState,
-          <EntryItem
-            key={key}
-            id={key}
-            tcpKey={tcpKey}
-            entry={entry}
-            style={{}}
-            headingMode={false}
-          />
-        ]
+        entriesState => [...entriesState, entry]
       );
     }
   }
@@ -212,10 +200,11 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
   useInterval(async () => {
     setEntries(entriesBuffer);
     if (!focusedEntryId && entriesBuffer.length > 0) {
-      // @ts-expect-error: Type?
-      setFocusedEntryId(entriesBuffer[0].key);
-      // @ts-expect-error: Type?
-      setFocusedTcpKey(entriesBuffer[0].tcpKey);
+      const entry = entriesBuffer[0];
+      const key = `${entry.worker}/${entry.id}`;
+      const tcpKey = `${entry.worker}/${entry.id.split('-')[0]}`;
+      setFocusedEntryId(key);
+      setFocusedTcpKey(tcpKey);
     }
   }, 1000, true);
 

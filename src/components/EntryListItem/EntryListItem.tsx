@@ -18,25 +18,25 @@ import focusedEntryIdAtom from "../../recoil/focusedEntryId";
 import focusedTcpKeyAtom from "../../recoil/focusedTcpKey";
 
 interface TCPInterface {
-  ip: string
-  port: string
-  name: string
+  ip: string;
+  port: string;
+  name: string;
 }
 
 export interface Entry {
-  proto: ProtocolInterface,
-  capture: string,
-  method?: string,
-  methodQuery?: string,
-  summary: string,
-  summaryQuery: string,
-  id: string,
-  worker: string,
+  proto: ProtocolInterface;
+  capture: string;
+  method?: string;
+  methodQuery?: string;
+  summary: string;
+  summaryQuery: string;
+  id: string;
+  worker: string;
   status?: number;
   statusQuery?: string;
   timestamp: Date;
-  src: TCPInterface,
-  dst: TCPInterface,
+  src: TCPInterface;
+  dst: TCPInterface;
   isOutgoing?: boolean;
   latency: number;
 }

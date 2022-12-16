@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import styles from './EntriesList.module.sass';
 import ScrollableFeedVirtualized from "react-scrollable-feed-virtualized";
 import down from "./assets/downImg.svg";
 import Moment from "moment";
 import { useInterval } from "../../helpers/interval";
-import { EntryItem } from "../EntryListItem/EntryListItem";
+import { EntryItem, Entry } from "../EntryListItem/EntryListItem";
 import { HubBaseUrl } from "../../consts";
 
 interface EntriesListProps {
-  entries: typeof EntryItem[];
+  entries: Entry[];
   listEntryREF: React.LegacyRef<HTMLDivElement>;
   onSnapBrokenEvent: () => void;
   isSnappedToBottom: boolean;
@@ -41,12 +41,28 @@ export const EntriesList: React.FC<EntriesListProps> = ({
     setTimeNow(new Date());
   }, 1000, true);
 
+  const memoizedEntries = useMemo(() => {
+    return entries;
+  }, [entries]);
+
   return <React.Fragment>
     <div className={styles.list}>
       <div id="list" ref={listEntryREF} className={styles.list}>
         <ScrollableFeedVirtualized ref={scrollableRef} itemHeight={48} marginTop={10} onSnapBroken={onSnapBrokenEvent}>
           {false /* It's because the first child is ignored by ScrollableFeedVirtualized */}
-          {entries}
+          {memoizedEntries.map(entry => {
+            const key = `${entry.worker}/${entry.id}`;
+            const tcpKey = `${entry.worker}/${entry.id.split('-')[0]}`;
+
+            return <EntryItem
+              key={key}
+              id={key}
+              tcpKey={tcpKey}
+              entry={entry}
+              style={{}}
+              headingMode={false}
+            />
+          })}
         </ScrollableFeedVirtualized>
         <button type="button"
           title="Snap to bottom"
