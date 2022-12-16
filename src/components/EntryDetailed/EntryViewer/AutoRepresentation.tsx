@@ -4,6 +4,7 @@ import { ReactComponent as ReplayIcon } from './replay.svg';
 import styles from './EntryViewer.module.sass';
 import { Tabs } from "../../UI";
 import { toast } from "react-toastify";
+import { HubBaseUrl } from "../../../consts";
 
 export enum TabsEnum {
   Request = 0,
@@ -19,7 +20,7 @@ interface AutoRepresentationProps {
 }
 
 const replayTcpStream = (id: string, worker: string) => {
-  fetch(`http://localhost:8898/pcaps/replay/${worker}/${id}`)
+  fetch(`${HubBaseUrl}/pcaps/replay/${worker}/${id}`)
     .then(response => {
       if (response.status === 200) {
         toast.info("TCP replay was successful.", {

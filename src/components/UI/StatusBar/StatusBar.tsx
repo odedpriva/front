@@ -1,6 +1,7 @@
 import style from './StatusBar.module.sass';
 import React, { useState } from "react";
 import { useInterval } from "../../../helpers/interval";
+import { HubBaseUrl } from "../../../consts";
 
 const pluralize = (noun: string, amount: number) => {
   return `${noun}${amount !== 1 ? 's' : ''}`
@@ -56,7 +57,7 @@ export const StatusBar: React.FC = () => {
   const [targets, setTargets] = useState<Target[]>([]);
 
   useInterval(async () => {
-    fetch('http://localhost:8898/pods/targetted')
+    fetch(`${HubBaseUrl}/pods/targetted`)
       .then(response => response.json())
       .then(data => setTargets(data.targets))
       .catch(err => console.error(err));

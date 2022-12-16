@@ -11,6 +11,7 @@ import queryAtom from "../../recoil/query";
 import useWindowDimensions, { useRequestTextByWidth } from "../../hooks/WindowDimensionsHook";
 import entryDataAtom from "../../recoil/entryData";
 import { LoadingWrapper } from "../UI/withLoading/withLoading";
+import { HubBaseUrl } from "../../consts";
 
 const useStyles = makeStyles(() => ({
   entryTitle: {
@@ -133,7 +134,7 @@ export const EntryDetailed: React.FC = () => {
     setEntryData(null);
     if (!focusedEntryId) return;
     setIsLoading(true);
-    fetch(`http://localhost:8898/item/${focusedEntryId}?q=${encodeURIComponent(query)}`)
+    fetch(`${HubBaseUrl}/item/${focusedEntryId}?q=${encodeURIComponent(query)}`)
       .then(response => {
         if (!response.ok) {
           throw Error(`Fetch item, query: "${query}", reason: "${response.statusText}"`);

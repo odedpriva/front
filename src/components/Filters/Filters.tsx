@@ -14,6 +14,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import queryAtom from "../../recoil/query";
 import queryBuildAtom from "../../recoil/queryBuild";
 import { toast } from "react-toastify";
+import { HubBaseUrl } from "../../consts";
 
 interface FiltersProps {
   reopenConnection: () => void;
@@ -63,7 +64,7 @@ export const CodeEditorWrap: FC<QueryFormProps> = ({ onQueryChange, onValidation
           setQueryBackgroundColor("#f5f5f5");
           onValidationChanged && onValidationChanged({ query: query, message: "", valid: true });
         } else {
-          fetch(`http://localhost:8898/query/validate?q=${encodeURIComponent(query)}`)
+          fetch(`${HubBaseUrl}/query/validate?q=${encodeURIComponent(query)}`)
             .then(response => response.json())
             .then(data => {
               if (data.valid) {
@@ -188,7 +189,7 @@ export const QueryForm: React.FC<QueryFormProps> = ({ reopenConnection, onQueryC
               color: "#fff",
               textTransform: "none",
             }}
-            href="http://localhost:8898/pcaps/merge"
+            href={`${HubBaseUrl}/pcaps/merge`}
           >
             <SaveAltIcon fontSize="inherit"></SaveAltIcon>
           </Button>

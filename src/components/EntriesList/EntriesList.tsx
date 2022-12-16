@@ -5,6 +5,7 @@ import down from "./assets/downImg.svg";
 import Moment from "moment";
 import { useInterval } from "../../helpers/interval";
 import { EntryItem } from "../EntryListItem/EntryListItem";
+import { HubBaseUrl } from "../../consts";
 
 interface EntriesListProps {
   entries: typeof EntryItem[];
@@ -28,7 +29,7 @@ export const EntriesList: React.FC<EntriesListProps> = ({
   const [timeNow, setTimeNow] = useState(new Date());
 
   useInterval(async () => {
-    fetch('http://localhost:8898/pcaps/total-tcp-streams')
+    fetch(`${HubBaseUrl}/pcaps/total-tcp-streams`)
       .then(response => response.json())
       .then(data => setTotalTcpStreams(data.total))
       .catch(err => {

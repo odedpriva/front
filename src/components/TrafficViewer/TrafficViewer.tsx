@@ -17,6 +17,7 @@ import { useInterval } from "../../helpers/interval";
 import queryAtom from "../../recoil/query";
 import queryBuildAtom from "../../recoil/queryBuild";
 import { toast } from "react-toastify";
+import { HubWsUrl } from "../../consts"
 
 const useLayoutStyles = makeStyles(() => ({
   details: {
@@ -86,7 +87,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
     setEntries([]);
 
     try {
-      ws.current = new WebSocket("ws://localhost:8898/ws");
+      ws.current = new WebSocket(HubWsUrl);
       sendQueryWhenWsOpen();
 
       ws.current.onopen = () => {
