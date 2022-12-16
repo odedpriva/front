@@ -8,7 +8,7 @@ import { EntryDetailed } from "../EntryDetailed/EntryDetailed";
 import playIcon from "./assets/run.svg";
 import pauseIcon from "./assets/pause.svg";
 import variables from '../../variables.module.scss';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import focusedEntryIdAtom from "../../recoil/focusedEntryId";
 import focusedTcpKeyAtom from "../../recoil/focusedTcpKey";
 import { StatusBar } from "../UI/StatusBar/StatusBar";
@@ -47,13 +47,15 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
 
   const classes = useLayoutStyles();
   const [entries, setEntries] = useState([] as Entry[]);
-  const [entriesBuffer, setEntriesBuffer] = useState([] as Entry[]);
-  const [focusedEntryId, setFocusedEntryId] = useRecoilState(focusedEntryIdAtom);
+  const [triggerState, triggerSetEntries] = useState(false);
+  const setFocusedEntryId = useSetRecoilState(focusedEntryIdAtom);
   const setFocusedTcpKey = useSetRecoilState(focusedTcpKeyAtom);
   const query = useRecoilValue(queryAtom);
   const setQueryBuild = useSetRecoilState(queryBuildAtom);
   const [isSnappedToBottom, setIsSnappedToBottom] = useState(true);
   const [wsReadyState, setWsReadyState] = useState(0);
+
+  const entriesBuffer: Entry[] = [];
 
   const scrollableRef = useRef(null);
   const ws = useRef(null);
@@ -83,7 +85,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
   const listEntry = useRef(null);
   const openWebSocket = () => {
     setFocusedEntryId(null);
-    setEntriesBuffer([]);
+    entriesBuffer.length = 0;
     setEntries([]);
 
     try {
@@ -191,20 +193,22 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
       if (!e?.data) return;
       const entry = JSON.parse(e.data);
 
-      setEntriesBuffer(
-        entriesState => [...entriesState, entry]
-      );
+      if (entriesBuffer.length === 0) {
+        const [key, tcpKey] = KeyAndTcpKeyFromEntry(entry);
+        setFocusedEntryId(key);
+        setFocusedTcpKey(tcpKey);
+      }
+      entriesBuffer.push(entry);
     }
   }
 
-  useInterval(async () => {
+  useEffect(() => {
     setEntries(entriesBuffer);
-    if (!focusedEntryId && entriesBuffer.length > 0) {
-      const [key, tcpKey] = KeyAndTcpKeyFromEntry(entriesBuffer[0]);
-      setFocusedEntryId(key);
-      setFocusedTcpKey(tcpKey);
-    }
-  }, 1000, true);
+  }, [triggerState, setEntries]);
+
+  useInterval(async () => {
+    triggerSetEntries(true);
+  }, 500, true);
 
   return (
     <div className={TrafficViewerStyles.TrafficPage}>
