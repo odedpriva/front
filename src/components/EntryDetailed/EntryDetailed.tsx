@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import EntryViewer from "./EntryViewer/EntryViewer";
-import { Entry, EntryItem } from "../EntryListItem/EntryListItem";
+import { EntryItem } from "../EntryListItem/EntryListItem";
 import makeStyles from '@mui/styles/makeStyles';
 import Protocol, { ProtocolInterface } from "../UI/Protocol/Protocol"
 import Queryable from "../UI/Queryable/Queryable";
@@ -12,6 +12,7 @@ import useWindowDimensions, { useRequestTextByWidth } from "../../hooks/WindowDi
 import entryDataAtom from "../../recoil/entryData";
 import { LoadingWrapper } from "../UI/withLoading/withLoading";
 import { HubBaseUrl } from "../../consts";
+import { Entry, KeyAndTcpKeyFromEntry } from "../EntryListItem/Entry";
 
 const useStyles = makeStyles(() => ({
   entryTitle: {
@@ -107,8 +108,7 @@ interface EntrySummaryProps {
 }
 
 const EntrySummary: React.FC<EntrySummaryProps> = ({ entry, namespace }) => {
-  const key = `${entry.worker}/${entry.id}`;
-  const tcpKey = `${entry.worker}/${entry.id.split('-')[0]}`;
+  const [key ,tcpKey] = KeyAndTcpKeyFromEntry(entry);
 
   return <EntryItem
     key={key}

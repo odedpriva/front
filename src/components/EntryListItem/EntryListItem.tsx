@@ -3,7 +3,7 @@ import Moment from 'moment';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import styles from './EntryListItem.module.sass';
 import StatusCode, { getClassification, StatusCodeClassification } from "../UI/StatusCode/StatusCode";
-import Protocol, { ProtocolInterface } from "../UI/Protocol/Protocol"
+import Protocol from "../UI/Protocol/Protocol"
 import eBPFLogo from "./assets/lock.svg";
 import { Summary } from "../UI/Summary/Summary";
 import Queryable from "../UI/Queryable/Queryable";
@@ -16,30 +16,7 @@ import outgoingIconNeutral from "./assets/outgoing-traffic-neutral.svg"
 import { useRecoilState } from "recoil";
 import focusedEntryIdAtom from "../../recoil/focusedEntryId";
 import focusedTcpKeyAtom from "../../recoil/focusedTcpKey";
-
-interface TCPInterface {
-  ip: string;
-  port: string;
-  name: string;
-}
-
-export interface Entry {
-  proto: ProtocolInterface;
-  capture: string;
-  method?: string;
-  methodQuery?: string;
-  summary: string;
-  summaryQuery: string;
-  id: string;
-  worker: string;
-  status?: number;
-  statusQuery?: string;
-  timestamp: Date;
-  src: TCPInterface;
-  dst: TCPInterface;
-  isOutgoing?: boolean;
-  latency: number;
-}
+import { Entry, CaptureTypes } from "./Entry";
 
 interface EntryProps {
   id: string;
@@ -48,14 +25,6 @@ interface EntryProps {
   style: unknown;
   headingMode: boolean;
   namespace?: string;
-}
-
-enum CaptureTypes {
-  UndefinedCapture = "",
-  Pcap = "pcap",
-  Envoy = "envoy",
-  Linkerd = "linkerd",
-  Ebpf = "ebpf",
 }
 
 export const EntryItem: React.FC<EntryProps> = ({ id, tcpKey, entry, style, headingMode, namespace }) => {

@@ -12,12 +12,12 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import focusedEntryIdAtom from "../../recoil/focusedEntryId";
 import focusedTcpKeyAtom from "../../recoil/focusedTcpKey";
 import { StatusBar } from "../UI/StatusBar/StatusBar";
-import { Entry } from "../EntryListItem/EntryListItem";
 import { useInterval } from "../../helpers/interval";
 import queryAtom from "../../recoil/query";
 import queryBuildAtom from "../../recoil/queryBuild";
 import { toast } from "react-toastify";
 import { HubWsUrl } from "../../consts"
+import { Entry, KeyAndTcpKeyFromEntry } from "../EntryListItem/Entry";
 
 const useLayoutStyles = makeStyles(() => ({
   details: {
@@ -200,9 +200,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
   useInterval(async () => {
     setEntries(entriesBuffer);
     if (!focusedEntryId && entriesBuffer.length > 0) {
-      const entry = entriesBuffer[0];
-      const key = `${entry.worker}/${entry.id}`;
-      const tcpKey = `${entry.worker}/${entry.id.split('-')[0]}`;
+      const [key, tcpKey] = KeyAndTcpKeyFromEntry(entriesBuffer[0]);
       setFocusedEntryId(key);
       setFocusedTcpKey(tcpKey);
     }
