@@ -7,7 +7,7 @@ import Queryable from "../UI/Queryable/Queryable";
 import { toast } from "react-toastify";
 import { useRecoilState, useRecoilValue } from "recoil";
 import focusedEntryIdAtom from "../../recoil/focusedEntryId";
-import queryAtom from "../../recoil/query/atom";
+import queryAtom from "../../recoil/query";
 import useWindowDimensions, { useRequestTextByWidth } from "../../hooks/WindowDimensionsHook";
 import entryDataAtom from "../../recoil/entryData";
 import { LoadingWrapper } from "../UI/withLoading/withLoading";

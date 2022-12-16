@@ -10,18 +10,19 @@ import filterUIExample2 from "./assets/filter-ui-example-2.png"
 import variables from '../../variables.module.scss';
 import useKeyPress from "../../hooks/useKeyPress"
 import shortcutsKeyboard from "../../configs/shortcutsKeyboard"
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import queryAtom from "../../recoil/query";
+import queryBuildAtom from "../../recoil/queryBuild";
 import { toast } from "react-toastify";
 
 interface FiltersProps {
   reopenConnection: () => void;
-  query: string;
   onQueryChange?: (query: string) => void
 }
 
-export const Filters: React.FC<FiltersProps> = ({ reopenConnection, query, onQueryChange }) => {
+export const Filters: React.FC<FiltersProps> = ({ reopenConnection, onQueryChange }) => {
   return <div className={styles.container}>
     <QueryForm
-      query={query}
       reopenConnection={reopenConnection}
       onQueryChange={onQueryChange}
     />
@@ -32,8 +33,7 @@ type OnQueryChange = { valid: boolean, message: string, query: string }
 
 interface QueryFormProps {
   reopenConnection?: () => void;
-  query: string
-  onQueryChange?: (query: string) => void
+  onQueryChange?: (q: string) => void
   onValidationChanged?: (event: OnQueryChange) => void
 }
 
@@ -51,8 +51,10 @@ export const modalStyle = {
   color: '#000',
 };
 
-export const CodeEditorWrap: FC<QueryFormProps> = ({ query, onQueryChange, onValidationChanged }) => {
+export const CodeEditorWrap: FC<QueryFormProps> = ({ onQueryChange, onValidationChanged }) => {
   const [queryBackgroundColor, setQueryBackgroundColor] = useState("#f5f5f5");
+
+  const queryBuild = useRecoilValue(queryBuildAtom);
 
   const handleQueryChange = useMemo(
     () =>
@@ -83,11 +85,11 @@ export const CodeEditorWrap: FC<QueryFormProps> = ({ query, onQueryChange, onVal
   ) as (query: string) => void;
 
   useEffect(() => {
-    handleQueryChange(query);
-  }, [query, handleQueryChange]);
+    handleQueryChange(queryBuild);
+  }, [queryBuild, handleQueryChange]);
 
   return <CodeEditor
-    value={query}
+    value={queryBuild}
     language="py"
     placeholder="Kubeshark Filter Syntax"
     onChange={(event) => onQueryChange(event.target.value)}
@@ -100,16 +102,20 @@ export const CodeEditorWrap: FC<QueryFormProps> = ({ query, onQueryChange, onVal
   />
 }
 
-export const QueryForm: React.FC<QueryFormProps> = ({ reopenConnection, query, onQueryChange, onValidationChanged }) => {
+export const QueryForm: React.FC<QueryFormProps> = ({ reopenConnection, onQueryChange, onValidationChanged }) => {
 
   const formRef = useRef<HTMLFormElement>(null);
 
   const [openModal, setOpenModal] = useState(false);
 
+  const queryBuild = useRecoilValue(queryBuildAtom);
+  const setQuery = useSetRecoilState(queryAtom);
+
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
 
   const handleSubmit = (e) => {
+    setQuery(queryBuild);
     reopenConnection();
     e.preventDefault();
   }
@@ -134,7 +140,7 @@ export const QueryForm: React.FC<QueryFormProps> = ({ reopenConnection, query, o
           }}
         >
           <label>
-            <CodeEditorWrap query={query} onQueryChange={onQueryChange} onValidationChanged={onValidationChanged} />
+            <CodeEditorWrap onQueryChange={onQueryChange} onValidationChanged={onValidationChanged} />
           </label>
         </Grid>
         <Grid item xs={4}>

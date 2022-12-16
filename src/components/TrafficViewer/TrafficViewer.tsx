@@ -8,12 +8,14 @@ import { EntryDetailed } from "../EntryDetailed/EntryDetailed";
 import playIcon from "./assets/run.svg";
 import pauseIcon from "./assets/pause.svg";
 import variables from '../../variables.module.scss';
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import focusedEntryIdAtom from "../../recoil/focusedEntryId";
 import focusedTcpKeyAtom from "../../recoil/focusedTcpKey";
 import { StatusBar } from "../UI/StatusBar/StatusBar";
 import { EntryItem } from "../EntryListItem/EntryListItem";
 import { useInterval } from "../../helpers/interval";
+import queryAtom from "../../recoil/query";
+import queryBuildAtom from "../../recoil/queryBuild";
 import { toast } from "react-toastify";
 
 const useLayoutStyles = makeStyles(() => ({
@@ -47,7 +49,8 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
   const [entriesBuffer, setEntriesBuffer] = useState([] as typeof EntryItem[]);
   const [focusedEntryId, setFocusedEntryId] = useRecoilState(focusedEntryIdAtom);
   const setFocusedTcpKey = useSetRecoilState(focusedTcpKeyAtom);
-  const [query, setQuery] = useState("");
+  const query = useRecoilValue(queryAtom);
+  const setQueryBuild = useSetRecoilState(queryBuildAtom);
   const [isSnappedToBottom, setIsSnappedToBottom] = useState(true);
   const [wsReadyState, setWsReadyState] = useState(0);
 
@@ -95,7 +98,6 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
       }
 
       ws.current.onclose = (e) => {
-        console.log(e.code);
         setWsReadyState(ws?.current?.readyState);
         let delay = 3000;
         let msg = "Trying to reconnect...";
@@ -243,8 +245,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
         <div className={TrafficViewerStyles.TrafficPageListContainer}>
           <Filters
             reopenConnection={reopenConnection}
-            query={query}
-            onQueryChange={(query) => { setQuery(query?.trim()); }}
+            onQueryChange={(q) => { setQueryBuild(q?.trim()); }}
           />
           <div className={styles.container}>
             <EntriesList

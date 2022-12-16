@@ -3,7 +3,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import QueryableStyle from './Queryable.module.sass';
 import { useRecoilState } from "recoil";
-import queryAtom from "../../../recoil/query";
+import queryBuildAtom from "../../../recoil/queryBuild";
 
 interface Props {
   query: string,
@@ -19,7 +19,7 @@ interface Props {
 const Queryable: React.FC<Props> = ({ query, style, iconStyle, className, useTooltip = true, tooltipStyle = null, displayIconOnMouseOver = false, flipped = false, children }) => {
   const [showAddedNotification, setAdded] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
-  const [queryState, setQuery] = useRecoilState(queryAtom);
+  const [queryBuild, setQuerytemp] = useRecoilState(queryBuildAtom);
 
   const onCopy = () => {
     setAdded(true)
@@ -28,7 +28,7 @@ const Queryable: React.FC<Props> = ({ query, style, iconStyle, className, useToo
   useEffect(() => {
     let timer;
     if (showAddedNotification) {
-      setQuery(queryState ? `${queryState} and ${query}` : query);
+      setQuerytemp(queryBuild ? `${queryBuild} and ${query}` : query);
       timer = setTimeout(() => {
         setAdded(false);
       }, 1000);
@@ -36,7 +36,7 @@ const Queryable: React.FC<Props> = ({ query, style, iconStyle, className, useToo
     return () => clearTimeout(timer);
 
     // eslint-disable-next-line
-  }, [showAddedNotification, query, setQuery]);
+  }, [showAddedNotification, query, setQuerytemp]);
 
   const addButton = query ? <CopyToClipboard text={query} onCopy={onCopy}>
     <span
