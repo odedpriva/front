@@ -15,6 +15,7 @@ import queryAtom from "../../recoil/query";
 import queryBuildAtom from "../../recoil/queryBuild";
 import { toast } from "react-toastify";
 import { HubBaseUrl } from "../../consts";
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface FiltersProps {
   reopenConnection: () => void;
@@ -115,8 +116,16 @@ export const QueryForm: React.FC<QueryFormProps> = ({ reopenConnection, onQueryC
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const handleSubmit = (e) => {
     setQuery(queryBuild);
+    if (queryBuild) {
+      navigate({ pathname: location.pathname, search: `q=${encodeURIComponent(queryBuild)}` });
+    } else {
+      navigate({ pathname: location.pathname, search: "" });
+    }
     reopenConnection();
     e.preventDefault();
   }

@@ -8,7 +8,7 @@ import { EntryDetailed } from "../EntryDetailed/EntryDetailed";
 import playIcon from "./assets/run.svg";
 import pauseIcon from "./assets/pause.svg";
 import variables from '../../variables.module.scss';
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import focusedEntryIdAtom from "../../recoil/focusedEntryId";
 import focusedTcpKeyAtom from "../../recoil/focusedTcpKey";
 import { StatusBar } from "../UI/StatusBar/StatusBar";
@@ -18,6 +18,7 @@ import queryBuildAtom from "../../recoil/queryBuild";
 import { toast } from "react-toastify";
 import { HubWsUrl } from "../../consts"
 import { Entry, KeyAndTcpKeyFromEntry } from "../EntryListItem/Entry";
+import { useSearchParams } from "react-router-dom";
 
 const useLayoutStyles = makeStyles(() => ({
   details: {
@@ -47,15 +48,15 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
 
   const classes = useLayoutStyles();
   const [entries, setEntries] = useState([] as Entry[]);
-  const [triggerState, triggerSetEntries] = useState(false);
   const setFocusedEntryId = useSetRecoilState(focusedEntryIdAtom);
   const setFocusedTcpKey = useSetRecoilState(focusedTcpKeyAtom);
-  const query = useRecoilValue(queryAtom);
+  const [query, setQuery] = useRecoilState(queryAtom);
   const setQueryBuild = useSetRecoilState(queryBuildAtom);
   const [isSnappedToBottom, setIsSnappedToBottom] = useState(true);
   const [wsReadyState, setWsReadyState] = useState(0);
+  const [searchParams] = useSearchParams();
 
-  const entriesBuffer: Entry[] = [];
+  const entriesBuffer = useRef([] as Entry[]);
 
   const scrollableRef = useRef(null);
   const ws = useRef(null);
@@ -63,6 +64,12 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
   queryRef.current = query;
 
   useEffect(() => {
+    const querySearchParam = searchParams.get("q");
+    if (querySearchParam) {
+      setQueryBuild(querySearchParam);
+      setQuery(querySearchParam);
+    }
+
     let init = false;
     if (!init) openWebSocket();
     return () => { init = true; }
@@ -85,7 +92,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
   const listEntry = useRef(null);
   const openWebSocket = () => {
     setFocusedEntryId(null);
-    entriesBuffer.length = 0;
+    entriesBuffer.current.length = 0;
     setEntries([]);
 
     try {
@@ -118,6 +125,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
           theme: "colored",
           autoClose: 1000,
         });
+
         setTimeout(() => {
           openWebSocket();
         }, delay);
@@ -193,21 +201,18 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
       if (!e?.data) return;
       const entry = JSON.parse(e.data);
 
-      if (entriesBuffer.length === 0) {
+      if (entriesBuffer.current.length === 0) {
         const [key, tcpKey] = KeyAndTcpKeyFromEntry(entry);
         setFocusedEntryId(key);
         setFocusedTcpKey(tcpKey);
       }
-      entriesBuffer.push(entry);
+
+      entriesBuffer.current.push(entry);
     }
   }
 
-  useEffect(() => {
-    setEntries(entriesBuffer);
-  }, [triggerState, setEntries]);
-
   useInterval(async () => {
-    triggerSetEntries(true);
+    setEntries(entriesBuffer.current);
   }, 500, true);
 
   return (
