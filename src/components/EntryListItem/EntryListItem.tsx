@@ -4,7 +4,7 @@ import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import styles from './EntryListItem.module.sass';
 import StatusCode, { getClassification, StatusCodeClassification } from "../UI/StatusCode/StatusCode";
 import Protocol from "../UI/Protocol/Protocol"
-import eBPFLogo from "./assets/lock.svg";
+import padlock from "./assets/lock.svg";
 import { Summary } from "../UI/Summary/Summary";
 import Queryable from "../UI/Queryable/Queryable";
 import ingoingIconSuccess from "./assets/ingoing-traffic-success.svg"
@@ -16,7 +16,7 @@ import outgoingIconNeutral from "./assets/outgoing-traffic-neutral.svg"
 import { useRecoilState } from "recoil";
 import focusedEntryIdAtom from "../../recoil/focusedEntryId";
 import focusedTcpKeyAtom from "../../recoil/focusedTcpKey";
-import { Entry, CaptureTypes } from "./Entry";
+import { Entry } from "./Entry";
 
 interface EntryProps {
   id: string;
@@ -80,17 +80,16 @@ export const EntryItem: React.FC<EntryProps> = ({ id, tcpKey, entry, style, head
         protocol={entry.proto}
         horizontal={false}
       /> : null}
-      {/* TODO: Update the code below once we have api.Pcap, api.Envoy and api.Linkerd distinction in the backend */}
-      {entry.capture === CaptureTypes.Ebpf ? <div className={styles.capture}>
+      {entry.tls && <div className={styles.padlock}>
         <Queryable
-          query={`capture == "${entry.capture}"`}
+          query={`tls == "${entry.tls}"`}
           displayIconOnMouseOver={true}
           flipped={false}
           style={{ position: "absolute" }}
         >
-          <img src={eBPFLogo} alt="eBPF" />
+          <img src={padlock} alt="Transport Layer Security (TLS)" />
         </Queryable>
-      </div> : null}
+      </div>}
       {isStatusCodeEnabled && <div>
         <StatusCode statusCode={entry.status} statusQuery={entry.statusQuery} />
       </div>}

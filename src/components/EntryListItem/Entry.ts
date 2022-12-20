@@ -8,7 +8,7 @@ interface TCPInterface {
 
 export interface Entry {
   proto: ProtocolInterface;
-  capture: string;
+  tls: boolean;
   method?: string;
   methodQuery?: string;
   summary: string;
@@ -24,18 +24,10 @@ export interface Entry {
   latency: number;
 }
 
-enum CaptureTypes {
-  UndefinedCapture = "",
-  Pcap = "pcap",
-  Envoy = "envoy",
-  Linkerd = "linkerd",
-  Ebpf = "ebpf",
-}
-
 function KeyAndTcpKeyFromEntry(entry: Entry): [string, string] {
   const key = `${entry.worker}/${entry.id}`;
   const tcpKey = `${entry.worker}/${entry.id.split('-')[0]}`;
   return [key, tcpKey];
 }
 
-export { CaptureTypes , KeyAndTcpKeyFromEntry }
+export { KeyAndTcpKeyFromEntry }
