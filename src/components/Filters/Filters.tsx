@@ -3,7 +3,7 @@ import styles from './Filters.module.sass';
 import { Button, Grid, Modal, Box, Typography, Backdrop, Fade, Divider, debounce } from "@mui/material";
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import SaveIcon from '@mui/icons-material/Save';
 import { SyntaxHighlighter } from "../UI/SyntaxHighlighter";
 import filterUIExample1 from "./assets/filter-ui-example-1.png"
 import filterUIExample2 from "./assets/filter-ui-example-2.png"
@@ -197,7 +197,7 @@ export const QueryForm: React.FC<QueryFormProps> = ({ reopenConnection, onQueryC
             }}
             href={`${HubBaseUrl}/pcaps/merge`}
           >
-            <SaveAltIcon fontSize="inherit"></SaveAltIcon>
+            <SaveIcon fontSize="inherit"></SaveIcon>
           </Button>
         </Grid>
       </Grid>
