@@ -15,10 +15,11 @@ import { StatusBar } from "../UI/StatusBar/StatusBar";
 import { useInterval } from "../../helpers/interval";
 import queryAtom from "../../recoil/query";
 import queryBuildAtom from "../../recoil/queryBuild";
+import queryBackgroundColorAtom from "../../recoil/queryBackgroundColor";
 import { toast } from "react-toastify";
 import { HubWsUrl } from "../../consts"
 import { Entry, KeyAndTcpKeyFromEntry } from "../EntryListItem/Entry";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const useLayoutStyles = makeStyles(() => ({
   details: {
@@ -44,6 +45,8 @@ interface TrafficViewerProps {
   api?: unknown
 }
 
+const DEFAULT_QUERY = "timestamp >= now()";
+
 export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
 
   const classes = useLayoutStyles();
@@ -52,6 +55,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
   const setFocusedTcpKey = useSetRecoilState(focusedTcpKeyAtom);
   const [query, setQuery] = useRecoilState(queryAtom);
   const setQueryBuild = useSetRecoilState(queryBuildAtom);
+  const setQueryBackgroundColor = useSetRecoilState(queryBackgroundColorAtom);
   const [isSnappedToBottom, setIsSnappedToBottom] = useState(true);
   const [wsReadyState, setWsReadyState] = useState(0);
   const [searchParams] = useSearchParams();
@@ -63,11 +67,18 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
   const queryRef = useRef(null);
   queryRef.current = query;
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const querySearchParam = searchParams.get("q");
-    if (querySearchParam) {
+    if (querySearchParam !== null) {
       setQueryBuild(querySearchParam);
       setQuery(querySearchParam);
+    } else {
+      setQueryBuild(DEFAULT_QUERY);
+      setQuery(DEFAULT_QUERY);
+      navigate({ pathname: location.pathname, search: `q=${encodeURIComponent(DEFAULT_QUERY)}` });
+      setQueryBackgroundColor("#f6fad2");
     }
 
     let init = false;

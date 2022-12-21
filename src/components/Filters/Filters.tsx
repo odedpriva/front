@@ -10,9 +10,10 @@ import filterUIExample2 from "./assets/filter-ui-example-2.png"
 import variables from '../../variables.module.scss';
 import useKeyPress from "../../hooks/useKeyPress"
 import shortcutsKeyboard from "../../configs/shortcutsKeyboard"
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import queryAtom from "../../recoil/query";
 import queryBuildAtom from "../../recoil/queryBuild";
+import queryBackgroundColorAtom from "../../recoil/queryBackgroundColor";
 import { toast } from "react-toastify";
 import { HubBaseUrl } from "../../consts";
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -54,7 +55,7 @@ export const modalStyle = {
 };
 
 export const CodeEditorWrap: FC<QueryFormProps> = ({ onQueryChange, onValidationChanged }) => {
-  const [queryBackgroundColor, setQueryBackgroundColor] = useState("#f5f5f5");
+  const [queryBackgroundColor, setQueryBackgroundColor] = useRecoilState(queryBackgroundColorAtom);
 
   const queryBuild = useRecoilValue(queryBuildAtom);
 
@@ -121,11 +122,7 @@ export const QueryForm: React.FC<QueryFormProps> = ({ reopenConnection, onQueryC
 
   const handleSubmit = (e) => {
     setQuery(queryBuild);
-    if (queryBuild) {
-      navigate({ pathname: location.pathname, search: `q=${encodeURIComponent(queryBuild)}` });
-    } else {
-      navigate({ pathname: location.pathname, search: "" });
-    }
+    navigate({ pathname: location.pathname, search: `q=${encodeURIComponent(queryBuild)}` });
     reopenConnection();
     e.preventDefault();
   }
