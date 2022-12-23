@@ -6,7 +6,7 @@ import Moment from "moment";
 import { useInterval } from "../../helpers/interval";
 import { EntryItem } from "../EntryListItem/EntryListItem";
 import { HubBaseUrl } from "../../consts";
-import { Entry, KeyAndTcpKeyFromEntry } from "../EntryListItem/Entry";
+import { Entry } from "../EntryListItem/Entry";
 
 interface EntriesListProps {
   entries: Entry[];
@@ -52,12 +52,10 @@ export const EntriesList: React.FC<EntriesListProps> = ({
         <ScrollableFeedVirtualized ref={scrollableRef} itemHeight={48} marginTop={10} onSnapBroken={onSnapBrokenEvent}>
           {false /* It's because the first child is ignored by ScrollableFeedVirtualized */}
           {memoizedEntries.map(entry => {
-            const [key, tcpKey] = KeyAndTcpKeyFromEntry(entry);
-
             return <EntryItem
-              key={key}
-              id={key}
-              tcpKey={tcpKey}
+              key={entry.id}
+              id={entry.id}
+              stream={entry.stream}
               entry={entry}
               style={{}}
               headingMode={false}

@@ -7,27 +7,21 @@ interface TCPInterface {
 }
 
 export interface Entry {
+  id: string;
+  index?: number;
+  stream: string;
+  worker: string;
   proto: ProtocolInterface;
   tls: boolean;
   method?: string;
   methodQuery?: string;
   summary: string;
   summaryQuery: string;
-  id: string;
-  worker: string;
   status?: number;
   statusQuery?: string;
   timestamp: Date;
   src: TCPInterface;
   dst: TCPInterface;
-  isOutgoing?: boolean;
+  outgoing: boolean;
   latency: number;
 }
-
-function KeyAndTcpKeyFromEntry(entry: Entry): [string, string] {
-  const key = `${entry.worker}/${entry.id}`;
-  const tcpKey = `${entry.worker}/${entry.id.split('-')[0]}`;
-  return [key, tcpKey];
-}
-
-export { KeyAndTcpKeyFromEntry }

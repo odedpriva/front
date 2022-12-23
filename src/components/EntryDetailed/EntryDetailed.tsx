@@ -6,13 +6,13 @@ import Protocol, { ProtocolInterface } from "../UI/Protocol/Protocol"
 import Queryable from "../UI/Queryable/Queryable";
 import { toast } from "react-toastify";
 import { useRecoilState, useRecoilValue } from "recoil";
-import focusedEntryIdAtom from "../../recoil/focusedEntryId";
+import focusedItemAtom from "../../recoil/focusedItem";
 import queryAtom from "../../recoil/query";
 import useWindowDimensions, { useRequestTextByWidth } from "../../hooks/WindowDimensionsHook";
 import entryDataAtom from "../../recoil/entryData";
 import { LoadingWrapper } from "../UI/withLoading/withLoading";
 import { HubBaseUrl } from "../../consts";
-import { Entry, KeyAndTcpKeyFromEntry } from "../EntryListItem/Entry";
+import { Entry } from "../EntryListItem/Entry";
 
 const useStyles = makeStyles(() => ({
   entryTitle: {
@@ -108,12 +108,10 @@ interface EntrySummaryProps {
 }
 
 const EntrySummary: React.FC<EntrySummaryProps> = ({ entry, namespace }) => {
-  const [key ,tcpKey] = KeyAndTcpKeyFromEntry(entry);
-
   return <EntryItem
-    key={key}
-    id={key}
-    tcpKey={tcpKey}
+    key={entry.id}
+    id={entry.id}
+    stream={entry.stream}
     entry={entry}
     style={{}}
     headingMode={true}
@@ -125,16 +123,16 @@ const EntrySummary: React.FC<EntrySummaryProps> = ({ entry, namespace }) => {
 
 export const EntryDetailed: React.FC = () => {
 
-  const focusedEntryId = useRecoilValue(focusedEntryIdAtom);
+  const focusedItem = useRecoilValue(focusedItemAtom);
   const query = useRecoilValue(queryAtom);
   const [isLoading, setIsLoading] = useState(false);
   const [entryData, setEntryData] = useRecoilState(entryDataAtom)
 
   useEffect(() => {
     setEntryData(null);
-    if (!focusedEntryId) return;
+    if (!focusedItem) return;
     setIsLoading(true);
-    fetch(`${HubBaseUrl}/item/${focusedEntryId}?q=${encodeURIComponent(query)}`)
+    fetch(`${HubBaseUrl}/item/${focusedItem}?q=${encodeURIComponent(query)}`)
       .then(response => {
         if (!response.ok) {
           throw Error(`Fetch item, query: "${query}", reason: "${response.statusText}"`);
@@ -151,15 +149,15 @@ export const EntryDetailed: React.FC = () => {
       })
       .finally(() => setIsLoading(false));
     // eslint-disable-next-line
-  }, [focusedEntryId]);
+  }, [focusedItem]);
 
   return <LoadingWrapper isLoading={isLoading} loaderMargin={50} loaderHeight={60}>
     {entryData && <React.Fragment>
       <EntryTitle protocol={entryData.protocol} data={entryData.data} elapsedTime={entryData.data.elapsedTime} />
       <EntrySummary entry={entryData.base} namespace={entryData.data.namespace} />
       <EntryViewer
-        id={entryData.id}
-        worker={entryData.worker}
+        id={entryData.data.id}
+        worker={entryData.data.worker}
         representation={entryData.representation}
         color={entryData.protocol.backgroundColor}
       />

@@ -9,8 +9,8 @@ import playIcon from "./assets/run.svg";
 import pauseIcon from "./assets/pause.svg";
 import variables from '../../variables.module.scss';
 import { useRecoilState, useSetRecoilState } from "recoil";
-import focusedEntryIdAtom from "../../recoil/focusedEntryId";
-import focusedTcpKeyAtom from "../../recoil/focusedTcpKey";
+import focusedItemAtom from "../../recoil/focusedItem";
+import focusedStreamAtom from "../../recoil/focusedStream";
 import { StatusBar } from "../UI/StatusBar/StatusBar";
 import { useInterval } from "../../helpers/interval";
 import queryAtom from "../../recoil/query";
@@ -18,7 +18,7 @@ import queryBuildAtom from "../../recoil/queryBuild";
 import queryBackgroundColorAtom from "../../recoil/queryBackgroundColor";
 import { toast } from "react-toastify";
 import { HubWsUrl } from "../../consts"
-import { Entry, KeyAndTcpKeyFromEntry } from "../EntryListItem/Entry";
+import { Entry } from "../EntryListItem/Entry";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 const useLayoutStyles = makeStyles(() => ({
@@ -51,8 +51,8 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
 
   const classes = useLayoutStyles();
   const [entries, setEntries] = useState([] as Entry[]);
-  const setFocusedEntryId = useSetRecoilState(focusedEntryIdAtom);
-  const setFocusedTcpKey = useSetRecoilState(focusedTcpKeyAtom);
+  const setFocusedItem = useSetRecoilState(focusedItemAtom);
+  const setFocusedStream = useSetRecoilState(focusedStreamAtom);
   const [query, setQuery] = useRecoilState(queryAtom);
   const setQueryBuild = useSetRecoilState(queryBuildAtom);
   const setQueryBackgroundColor = useSetRecoilState(queryBackgroundColorAtom);
@@ -102,7 +102,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
 
   const listEntry = useRef(null);
   const openWebSocket = () => {
-    setFocusedEntryId(null);
+    setFocusedItem(null);
     entriesBuffer.current.length = 0;
     setEntries([]);
 
@@ -213,9 +213,8 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
       const entry = JSON.parse(e.data);
 
       if (entriesBuffer.current.length === 0) {
-        const [key, tcpKey] = KeyAndTcpKeyFromEntry(entry);
-        setFocusedEntryId(key);
-        setFocusedTcpKey(tcpKey);
+        setFocusedItem(entry.id);
+        setFocusedStream(entry.stream);
       }
 
       entriesBuffer.current.push(entry);

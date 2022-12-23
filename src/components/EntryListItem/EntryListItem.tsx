@@ -14,24 +14,24 @@ import outgoingIconSuccess from "./assets/outgoing-traffic-success.svg"
 import outgoingIconFailure from "./assets/outgoing-traffic-failure.svg"
 import outgoingIconNeutral from "./assets/outgoing-traffic-neutral.svg"
 import { useRecoilState } from "recoil";
-import focusedEntryIdAtom from "../../recoil/focusedEntryId";
-import focusedTcpKeyAtom from "../../recoil/focusedTcpKey";
+import focusedItemAtom from "../../recoil/focusedItem";
+import focusedStreamAtom from "../../recoil/focusedStream";
 import { Entry } from "./Entry";
 
 interface EntryProps {
   id: string;
-  tcpKey: string;
+  stream: string;
   entry: Entry;
   style: unknown;
   headingMode: boolean;
   namespace?: string;
 }
 
-export const EntryItem: React.FC<EntryProps> = ({ id, tcpKey, entry, style, headingMode, namespace }) => {
-  const [focusedEntryId, setFocusedEntryId] = useRecoilState(focusedEntryIdAtom);
-  const [focusedTcpKey, setFocusedTcpKey] = useRecoilState(focusedTcpKeyAtom);
-  const isSelected = focusedEntryId === id;
-  const isTcpSelected = focusedTcpKey === tcpKey;
+export const EntryItem: React.FC<EntryProps> = ({ id, stream, entry, style, headingMode, namespace }) => {
+  const [focusedItem, setFocusedItem] = useRecoilState(focusedItemAtom);
+  const [focusedStream, setFocusedStream] = useRecoilState(focusedStreamAtom);
+  const isSelected = focusedItem === id;
+  const isTcpSelected = focusedStream === stream;
 
   const classification = getClassification(entry.status)
   let ingoingIcon;
@@ -64,9 +64,9 @@ export const EntryItem: React.FC<EntryProps> = ({ id, tcpKey, entry, style, head
       id={id}
       className={`${styles.row} ${isSelected ? styles.rowSelected : ""}`}
       onClick={() => {
-        if (!setFocusedEntryId) return;
-        setFocusedEntryId(id);
-        setFocusedTcpKey(tcpKey);
+        if (!setFocusedItem) return;
+        setFocusedItem(id);
+        setFocusedStream(stream);
       }}
       style={{
         border: isSelected && !headingMode ? `1px ${entry.proto.backgroundColor} ${borderStyle}` : `1px ${transparentBorder} ${borderStyle}`,
@@ -168,7 +168,7 @@ export const EntryItem: React.FC<EntryProps> = ({ id, tcpKey, entry, style, head
             {entry.src.port}
           </span>
         </Queryable>
-        {entry.isOutgoing ?
+        {entry.outgoing ?
           <Queryable
             query={`outgoing == true`}
             displayIconOnMouseOver={true}
