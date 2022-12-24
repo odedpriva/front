@@ -9,14 +9,12 @@ export enum TabsEnum {
 }
 
 interface AutoRepresentationProps {
-  id: string;
-  worker: string;
   representation: string;
   color: string;
   openedTab?: TabsEnum;
 }
 
-export const AutoRepresentation: React.FC<AutoRepresentationProps> = ({ id, worker, representation, color, openedTab = TabsEnum.Request }) => {
+export const AutoRepresentation: React.FC<AutoRepresentationProps> = ({ representation, color, openedTab = TabsEnum.Request }) => {
   const { request, response } = JSON.parse(representation);
 
   const TABS = useMemo(() => {
