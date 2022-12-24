@@ -13,6 +13,7 @@ import entryDataAtom from "../../recoil/entryData";
 import { LoadingWrapper } from "../UI/withLoading/withLoading";
 import { HubBaseUrl } from "../../consts";
 import { Entry } from "../EntryListItem/Entry";
+import { TcpStream } from "./TcpStream/TcpStream";
 
 const useStyles = makeStyles(() => ({
   entryTitle: {
@@ -155,6 +156,13 @@ export const EntryDetailed: React.FC = () => {
     {entryData && <React.Fragment>
       <EntryTitle protocol={entryData.protocol} data={entryData.data} elapsedTime={entryData.data.elapsedTime} />
       <EntrySummary entry={entryData.base} namespace={entryData.data.namespace} />
+      <TcpStream
+        index={entryData.data.index}
+        stream={entryData.data.stream}
+        worker={entryData.data.worker}
+        node={entryData.data.node}
+        color={entryData.protocol.backgroundColor}
+      />
       <EntryViewer
         id={entryData.data.id}
         worker={entryData.data.worker}

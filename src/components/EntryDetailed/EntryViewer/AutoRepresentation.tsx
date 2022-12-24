@@ -1,10 +1,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from "react"
 import SectionsRepresentation from "./SectionsRepresentation";
-import { ReactComponent as ReplayIcon } from './replay.svg';
 import styles from './EntryViewer.module.sass';
 import { Tabs } from "../../UI";
-import { toast } from "react-toastify";
-import { HubBaseUrl } from "../../../consts";
 
 export enum TabsEnum {
   Request = 0,
@@ -17,27 +14,6 @@ interface AutoRepresentationProps {
   representation: string;
   color: string;
   openedTab?: TabsEnum;
-}
-
-const replayTcpStream = (id: string, worker: string) => {
-  fetch(`${HubBaseUrl}/pcaps/replay/${worker}/${id}`)
-    .then(response => {
-      if (response.status === 200) {
-        toast.info("TCP replay was successful.", {
-          theme: "colored"
-        });
-      } else {
-        toast.error("TCP replay was failed!", {
-          theme: "colored"
-        });
-      }
-    })
-    .catch(err => {
-      console.error(err);
-      toast.error(err.toString(), {
-        theme: "colored"
-      });
-    });
 }
 
 export const AutoRepresentation: React.FC<AutoRepresentationProps> = ({ id, worker, representation, color, openedTab = TabsEnum.Request }) => {
@@ -82,7 +58,6 @@ export const AutoRepresentation: React.FC<AutoRepresentationProps> = ({ id, work
     {<div className={styles.body}>
       <div className={styles.bodyHeader}>
         <Tabs tabs={TABS} currentTab={currentTab} color={color} onChange={setCurrentTab} leftAligned />
-        <span title="Replay this TCP stream"><ReplayIcon fill={color} stroke={color} style={{ marginLeft: "10px", cursor: "pointer", height: "22px" }} onClick={() => replayTcpStream(id, worker)} /></span>
       </div>
       {getOpenedTabIndex() === TabsEnum.Request && <React.Fragment>
         <SectionsRepresentation data={request} color={color} />
