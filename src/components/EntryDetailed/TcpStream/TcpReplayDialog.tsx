@@ -25,7 +25,7 @@ export const TcpReplayDialog: React.FC<TcpReplayDialogProps> = ({ color, node, t
 
   const replayTcpStream = () => {
     setOpen(false);
-    fetch(`${HubBaseUrl}/pcaps/replay/${worker}/${stream}?count=${count}&delay=${delay}`)
+    fetch(`${HubBaseUrl}/pcaps/replay/${worker}/${stream}?count=${encodeURIComponent(count)}&delay=${encodeURIComponent(delay)}`)
       .then(response => {
         if (response.status === 200) {
           toast.info("TCP replay was successful.", {
