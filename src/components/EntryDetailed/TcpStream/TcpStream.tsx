@@ -4,6 +4,7 @@ import Queryable from "../../UI/Queryable/Queryable";
 import { Button } from "@mui/material";
 import { toast } from "react-toastify";
 import { HubBaseUrl } from "../../../consts";
+import useWindowDimensions, { useTcpStreamTextsByWidth } from "../../../hooks/WindowDimensionsHook";
 
 interface EntryProps {
   index: number;
@@ -36,104 +37,114 @@ export const TcpStream: React.FC<EntryProps> = ({ index, stream, worker, node, c
       });
   }
 
-  return <React.Fragment>
-    <div
-      className={`${styles.row}`}
-    >
-      <span
-        className={`${styles.title}`}
-      >
-        TCP Stream:
-      </span>
-      <Queryable
-        query={`worker == "${worker}" and stream == "${stream}"`}
-        displayIconOnMouseOver={true}
-        flipped={true}
-        iconStyle={{ marginRight: "20px" }}
-      >
-        <span
-          style={{ color: color }}
-          title={`TCP Stream in worker: ${worker}`}
-        >
-          {worker}/{stream}
-        </span>
-      </Queryable>
+  const { width } = useWindowDimensions();
+  const { tcpStream, indexText, nodeText, tcpReplay, downloadPcap } = useTcpStreamTextsByWidth(width)
 
-      <span
-        className={`${styles.title} ${styles.marginLeft40}`}
-      >
-        Index:
-      </span>
-      <Queryable
-        query={`index == ${index}`}
-        displayIconOnMouseOver={true}
-        flipped={true}
-        iconStyle={{ marginRight: "20px" }}
-      >
-        <a style={{ textDecoration: "none" }} href={`${HubBaseUrl}/item/${worker}/${stream}-${index}`}>
+  return <React.Fragment>
+    <div className={`${styles.row}`}>
+
+      <div className={`${styles.separator}`}>
+        <span
+          className={`${styles.title}`}
+        >
+          {tcpStream}
+        </span>
+        <Queryable
+          query={`worker == "${worker}" and stream == "${stream}"`}
+          displayIconOnMouseOver={true}
+          flipped={true}
+          iconStyle={{ marginRight: "20px" }}
+        >
+          <a
+            style={{ textDecoration: "none" }}
+            href={`${HubBaseUrl}/pcaps/download/${worker}/${stream}`}
+          >
+            <span
+              style={{ color: color }}
+              title={`TCP stream in the worker: ${worker}`}
+            >
+              {worker}/{stream}
+            </span>
+          </a>
+        </Queryable>
+      </div>
+
+      <div className={`${styles.separator}`}>
+        <span
+          className={`${styles.title} ${styles.marginLeft10}`}
+        >
+          {indexText}
+        </span>
+        <Queryable
+          query={`index == ${index}`}
+          displayIconOnMouseOver={true}
+          flipped={true}
+          iconStyle={{ marginRight: "20px" }}
+        >
+          <a
+            style={{ textDecoration: "none" }}
+            href={`${HubBaseUrl}/item/${worker}/${stream}-${index}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <span
+              style={{ color: color }}
+              title={`The index of the item in this TCP stream: ${stream}`}
+            >
+              {index}
+            </span>
+          </a>
+        </Queryable>
+      </div>
+
+      <div className={`${styles.separator} ${styles.nodeWrapper}`}>
+        <span
+          className={`${styles.title} ${styles.marginLeft10}`}
+        >
+          {nodeText}
+        </span>
+        <Queryable
+          query={`node == ${node}`}
+          displayIconOnMouseOver={true}
+          flipped={true}
+          iconStyle={{ marginRight: "20px" }}
+        >
           <span
             style={{ color: color }}
-            title={`The index of the item in the stream: ${stream}`}
+            title={`The node which this worker runs on: ${stream}`}
           >
-            {index}
+            {node}
           </span>
-        </a>
-      </Queryable>
+        </Queryable>
+      </div>
 
-      <span
-        className={`${styles.title} ${styles.marginLeft40}`}
-      >
-        Node:
-      </span>
-      <Queryable
-        query={`node == ${node}`}
-        displayIconOnMouseOver={true}
-        flipped={true}
-        iconStyle={{ marginRight: "20px" }}
-      >
-        <span
-          style={{ color: color }}
-          title={`The node that this worker runs on: ${stream}`}
+      <div className={`${styles.separator} ${styles.replayButtonWrapper}`}>
+        <Button
+          variant="contained"
+          className={`${styles.marginLeft10} ${styles.button}`}
+          style={{
+            backgroundColor: color,
+          }}
+          onClick={replayTcpStream}
+          title={`Replay this TCP stream to the default network interface of the node: ${node}`}
         >
-          {node}
-        </span>
-      </Queryable>
+          {tcpReplay}
+        </Button>
+      </div>
 
-      <Button
-        variant="contained"
-        className={`${styles.marginLeft80}`}
-        style={{
-          backgroundColor: color,
-          fontWeight: 600,
-          borderRadius: "4px",
-          color: "#fff",
-          textTransform: "none",
-          fontSize: "12px",
-          height: "24px",
-        }}
-        onClick={replayTcpStream}
-        title={`Replay this whole TCP stream to the default network interface of the node: ${node}`}
-      >
-        TCP Replay
-      </Button>
-
-      <Button
-        variant="contained"
-        style={{
-          margin: "0px 0px 0px 30px",
-          backgroundColor: color,
-          fontWeight: 600,
-          borderRadius: "4px",
-          color: "#fff",
-          textTransform: "none",
-          fontSize: "12px",
-          height: "24px",
-        }}
-        href={`${HubBaseUrl}/pcaps/download/${worker}/${stream}`}
-        title={`Download the this TCP stream in PCAP format: ${stream}`}
-      >
-        Download PCAP
-      </Button>
+      <div className={`${styles.separator} ${styles.pcapButtonWrapper}`}>
+        <Button
+          variant="contained"
+          className={`${styles.marginLeft10} ${styles.button}`}
+          style={{
+            backgroundColor: color,
+          }}
+          href={`${HubBaseUrl}/pcaps/download/${worker}/${stream}`}
+          title={`Download this TCP stream in PCAP format: ${stream}`}
+        >
+          {downloadPcap}
+        </Button>
+      </div>
 
     </div>
   </React.Fragment>

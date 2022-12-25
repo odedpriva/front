@@ -33,6 +33,46 @@ export function useRequestTextByWidth(windowWidth: number): InfoBannerTexts {
   return { requestText, responseText, elapsedTimeText }
 }
 
+interface TcpStreamTexts {
+  tcpStream: string;
+  indexText: string;
+  nodeText: string;
+  tcpReplay: string;
+  downloadPcap: string;
+}
+
+export function useTcpStreamTextsByWidth(windowWidth: number): TcpStreamTexts {
+
+  let tcpStream = "TCP Stream:"
+  let indexText = "Index:"
+  let nodeText = "Node:"
+  let tcpReplay = "TCP Replay"
+  let downloadPcap = "Download PCAP"
+
+  if (windowWidth < 1200) {
+    tcpStream = "S:"
+    indexText = "I:"
+    nodeText = "N:"
+    tcpReplay = "Replay"
+    downloadPcap = "PCAP"
+  } else if (windowWidth < 1590) {
+    tcpStream = "S:"
+    indexText = "I:"
+    nodeText = "N:"
+    tcpReplay = "Replay"
+    downloadPcap = "PCAP"
+  } else if (windowWidth < 1685) {
+    tcpStream = "Stream:"
+    tcpReplay = "Replay"
+    downloadPcap = "PCAP"
+  } else if (windowWidth < 1850) {
+    tcpReplay = "Replay"
+    downloadPcap = "PCAP"
+  }
+
+  return { tcpStream, indexText, nodeText, tcpReplay, downloadPcap }
+}
+
 export default function useWindowDimensions(): Record<string, number> {
   const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
 
