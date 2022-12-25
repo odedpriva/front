@@ -83,7 +83,7 @@ export const TcpStream: React.FC<EntryProps> = ({ index, stream, worker, node, c
           {nodeText}
         </span>
         <Queryable
-          query={`node == ${node}`}
+          query={`node == "${node}"`}
           displayIconOnMouseOver={true}
           flipped={true}
           iconStyle={{ marginRight: "20px" }}
