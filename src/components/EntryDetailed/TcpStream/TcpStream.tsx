@@ -62,7 +62,7 @@ export const TcpStream: React.FC<EntryProps> = ({ index, stream, worker, node, c
         >
           <a
             style={{ textDecoration: "none" }}
-            href={`${HubBaseUrl}/item/${worker}/${stream}-${index}`}
+            href={`${HubBaseUrl}/item/${worker}/${stream}-${index}?field=data`}
             target="_blank"
             rel="noreferrer"
           >
