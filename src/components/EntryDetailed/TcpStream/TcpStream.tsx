@@ -2,9 +2,9 @@ import React from "react";
 import styles from './TcpStream.module.sass';
 import Queryable from "../../UI/Queryable/Queryable";
 import { Button } from "@mui/material";
-import { toast } from "react-toastify";
 import { HubBaseUrl } from "../../../consts";
 import useWindowDimensions, { useTcpStreamTextsByWidth } from "../../../hooks/WindowDimensionsHook";
+import { TcpReplayDialog } from "./TcpReplayDialog";
 
 interface EntryProps {
   index: number;
@@ -15,27 +15,6 @@ interface EntryProps {
 }
 
 export const TcpStream: React.FC<EntryProps> = ({ index, stream, worker, node, color }) => {
-
-  const replayTcpStream = () => {
-    fetch(`${HubBaseUrl}/pcaps/replay/${worker}/${stream}`)
-      .then(response => {
-        if (response.status === 200) {
-          toast.info("TCP replay was successful.", {
-            theme: "colored"
-          });
-        } else {
-          toast.error("TCP replay was failed!", {
-            theme: "colored"
-          });
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        toast.error(err.toString(), {
-          theme: "colored"
-        });
-      });
-  }
 
   const { width } = useWindowDimensions();
   const { tcpStream, indexText, nodeText, tcpReplay, downloadPcap } = useTcpStreamTextsByWidth(width)
@@ -119,17 +98,13 @@ export const TcpStream: React.FC<EntryProps> = ({ index, stream, worker, node, c
       </div>
 
       <div className={`${styles.separator} ${styles.replayButtonWrapper}`}>
-        <Button
-          variant="contained"
-          className={`${styles.marginLeft10} ${styles.button}`}
-          style={{
-            backgroundColor: color,
-          }}
-          onClick={replayTcpStream}
-          title={`Replay this TCP stream to the default network interface of the node: ${node}`}
-        >
-          {tcpReplay}
-        </Button>
+        <TcpReplayDialog
+          color={color}
+          node={node}
+          tcpReplay={tcpReplay}
+          stream={stream}
+          worker={worker}
+        />
       </div>
 
       <div className={`${styles.separator} ${styles.pcapButtonWrapper}`}>
