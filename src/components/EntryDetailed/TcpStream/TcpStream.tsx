@@ -5,12 +5,13 @@ import { Button } from "@mui/material";
 import { HubBaseUrl } from "../../../consts";
 import useWindowDimensions, { useTcpStreamTextsByWidth } from "../../../hooks/WindowDimensionsHook";
 import { TcpReplayDialog } from "./TcpReplayDialog";
+import { Node } from "../../EntryListItem/Entry";
 
 interface EntryProps {
   index: number;
   stream: string;
   worker: string;
-  node: string;
+  node: Node;
   color: string;
 }
 
@@ -29,7 +30,7 @@ export const TcpStream: React.FC<EntryProps> = ({ index, stream, worker, node, c
           {tcpStream}
         </span>
         <Queryable
-          query={`worker == "${worker}" and stream == "${stream}"`}
+          query={`node.ip == "${node.ip}" and stream == "${stream}"`}
           displayIconOnMouseOver={true}
           flipped={true}
           iconStyle={{ marginRight: "20px" }}
@@ -83,7 +84,7 @@ export const TcpStream: React.FC<EntryProps> = ({ index, stream, worker, node, c
           {nodeText}
         </span>
         <Queryable
-          query={`node == "${node}"`}
+          query={`node.name == "${node.name}"`}
           displayIconOnMouseOver={true}
           flipped={true}
           iconStyle={{ marginRight: "20px" }}
@@ -92,7 +93,7 @@ export const TcpStream: React.FC<EntryProps> = ({ index, stream, worker, node, c
             style={{ color: color }}
             title={`The node which this worker runs on: ${stream}`}
           >
-            {node}
+            {node.name}
           </span>
         </Queryable>
       </div>
@@ -100,7 +101,7 @@ export const TcpStream: React.FC<EntryProps> = ({ index, stream, worker, node, c
       <div className={`${styles.separator} ${styles.replayButtonWrapper}`}>
         <TcpReplayDialog
           color={color}
-          node={node}
+          node={node.name}
           tcpReplay={tcpReplay}
           stream={stream}
           worker={worker}
