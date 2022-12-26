@@ -10,22 +10,30 @@ import filterUIExample2 from "./assets/filter-ui-example-2.png"
 import variables from '../../variables.module.scss';
 import useKeyPress from "../../hooks/useKeyPress"
 import shortcutsKeyboard from "../../configs/shortcutsKeyboard"
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import queryAtom from "../../recoil/query";
 import queryBuildAtom from "../../recoil/queryBuild";
 import queryBackgroundColorAtom from "../../recoil/queryBackgroundColor";
 import { toast } from "react-toastify";
 import { HubBaseUrl } from "../../consts";
 import { useNavigate, useLocation } from 'react-router-dom';
+import { Entry } from "../EntryListItem/Entry";
+import FileSaver from 'file-saver';
 
-interface FiltersProps {
-  reopenConnection: () => void;
-  onQueryChange?: (query: string) => void
+interface CodeEditorWrap {
+  reopenConnection?: () => void;
+  onQueryChange?: (q: string) => void
+  onValidationChanged?: (event: OnQueryChange) => void
 }
 
-export const Filters: React.FC<FiltersProps> = ({ reopenConnection, onQueryChange }) => {
+interface QueryFormProps extends CodeEditorWrap {
+  entries: Entry[];
+}
+
+export const Filters: React.FC<QueryFormProps> = ({ entries, reopenConnection, onQueryChange }) => {
   return <div className={styles.container}>
     <QueryForm
+      entries={entries}
       reopenConnection={reopenConnection}
       onQueryChange={onQueryChange}
     />
@@ -33,12 +41,6 @@ export const Filters: React.FC<FiltersProps> = ({ reopenConnection, onQueryChang
 };
 
 type OnQueryChange = { valid: boolean, message: string, query: string }
-
-interface QueryFormProps {
-  reopenConnection?: () => void;
-  onQueryChange?: (q: string) => void
-  onValidationChanged?: (event: OnQueryChange) => void
-}
 
 export const modalStyle = {
   position: 'absolute',
@@ -54,7 +56,7 @@ export const modalStyle = {
   color: '#000',
 };
 
-export const CodeEditorWrap: FC<QueryFormProps> = ({ onQueryChange, onValidationChanged }) => {
+export const CodeEditorWrap: FC<CodeEditorWrap> = ({ onQueryChange, onValidationChanged }) => {
   const [queryBackgroundColor, setQueryBackgroundColor] = useRecoilState(queryBackgroundColorAtom);
 
   const queryBuild = useRecoilValue(queryBuildAtom);
@@ -105,14 +107,23 @@ export const CodeEditorWrap: FC<QueryFormProps> = ({ onQueryChange, onValidation
   />
 }
 
-export const QueryForm: React.FC<QueryFormProps> = ({ reopenConnection, onQueryChange, onValidationChanged }) => {
+interface Pcaps {
+  [key: string]: string[]
+}
+
+interface DownloadPcapRequest {
+  query: string;
+  pcaps: Pcaps;
+}
+
+export const QueryForm: React.FC<QueryFormProps> = ({ entries, reopenConnection, onQueryChange, onValidationChanged }) => {
 
   const formRef = useRef<HTMLFormElement>(null);
 
   const [openModal, setOpenModal] = useState(false);
 
   const queryBuild = useRecoilValue(queryBuildAtom);
-  const setQuery = useSetRecoilState(queryAtom);
+  const [query, setQuery] = useRecoilState(queryAtom);
 
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
@@ -125,6 +136,35 @@ export const QueryForm: React.FC<QueryFormProps> = ({ reopenConnection, onQueryC
     navigate({ pathname: location.pathname, search: `q=${encodeURIComponent(queryBuild)}` });
     reopenConnection();
     e.preventDefault();
+  }
+
+  const downloadPcapSnapshot = () => {
+    const obj: DownloadPcapRequest = {query: query, pcaps: {}};
+    obj.query = query
+    for (const entry of entries) {
+      if (!obj.pcaps[entry.worker]) obj.pcaps[entry.worker] = []
+      obj.pcaps[entry.worker].push(entry.stream);
+    }
+
+    fetch(
+      `${HubBaseUrl}/pcaps/merge`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(obj)
+      },
+    )
+      .then((response) => {
+        const filename = response.headers
+          .get('Content-Disposition')
+          .split('=')[1];
+        return Promise.all([response.blob(), filename]);
+      })
+      .then(([blob, filename]) => {
+        FileSaver.saveAs(blob, filename);
+      })
   }
 
   useKeyPress(shortcutsKeyboard.ctrlEnter, handleSubmit, formRef.current);
@@ -183,7 +223,7 @@ export const QueryForm: React.FC<QueryFormProps> = ({ reopenConnection, onQueryC
             <MenuBookIcon fontSize="inherit"></MenuBookIcon>
           </Button>
           <Button
-            title="Download PCAP Snapshot"
+            title="Download the PCAP snapshot that matching the filter"
             variant="contained"
             color="primary"
             style={{
@@ -195,7 +235,7 @@ export const QueryForm: React.FC<QueryFormProps> = ({ reopenConnection, onQueryC
               color: "#fff",
               textTransform: "none",
             }}
-            href={`${HubBaseUrl}/pcaps/merge`}
+            onClick={downloadPcapSnapshot}
           >
             <SaveIcon fontSize="inherit"></SaveIcon>
           </Button>

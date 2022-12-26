@@ -251,6 +251,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
       {<div className={TrafficViewerStyles.TrafficPageContainer}>
         <div className={TrafficViewerStyles.TrafficPageListContainer}>
           <Filters
+            entries={entries}
             reopenConnection={reopenConnection}
             onQueryChange={(q) => { setQueryBuild(q?.trim()); }}
           />

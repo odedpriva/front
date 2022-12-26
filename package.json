@@ -41,6 +41,7 @@
     "ace-builds": "^1.6.0",
     "axios": "^0.27.2",
     "core-js": "^3.22.7",
+    "file-saver": "^2.0.5",
     "highlight.js": "^11.5.1",
     "json-beautify": "^1.1.1",
     "jsonpath": "^1.1.1",
