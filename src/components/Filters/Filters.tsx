@@ -7,7 +7,6 @@ import SaveIcon from '@mui/icons-material/Save';
 import { SyntaxHighlighter } from "../UI/SyntaxHighlighter";
 import filterUIExample1 from "./assets/filter-ui-example-1.png"
 import filterUIExample2 from "./assets/filter-ui-example-2.png"
-import variables from '../../variables.module.scss';
 import useKeyPress from "../../hooks/useKeyPress"
 import shortcutsKeyboard from "../../configs/shortcutsKeyboard"
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -194,14 +193,7 @@ export const QueryForm: React.FC<QueryFormProps> = ({ entries, reopenConnection,
           <Button
             type="submit"
             variant="contained"
-            style={{
-              margin: "2px 0px 0px 0px",
-              backgroundColor: variables.blueColor,
-              fontWeight: 600,
-              borderRadius: "4px",
-              color: "#fff",
-              textTransform: "none",
-            }}
+            className={`${styles.bigButton}`}
           >
             Apply
           </Button>
@@ -209,15 +201,7 @@ export const QueryForm: React.FC<QueryFormProps> = ({ entries, reopenConnection,
             title="Open Filtering Guide (Cheatsheet)"
             variant="contained"
             color="primary"
-            style={{
-              margin: "2px 0px 0px 10px",
-              minWidth: "26px",
-              backgroundColor: variables.blueColor,
-              fontWeight: 600,
-              borderRadius: "4px",
-              color: "#fff",
-              textTransform: "none",
-            }}
+            className={`${styles.smallButton}`}
             onClick={handleOpenModal}
           >
             <MenuBookIcon fontSize="inherit"></MenuBookIcon>
@@ -226,15 +210,7 @@ export const QueryForm: React.FC<QueryFormProps> = ({ entries, reopenConnection,
             title="Download the PCAP snapshot that matching the filter"
             variant="contained"
             color="primary"
-            style={{
-              margin: "2px 0px 0px 10px",
-              minWidth: "26px",
-              backgroundColor: variables.blueColor,
-              fontWeight: 600,
-              borderRadius: "4px",
-              color: "#fff",
-              textTransform: "none",
-            }}
+            className={`${styles.smallButton}`}
             onClick={downloadPcapSnapshot}
           >
             <SaveIcon fontSize="inherit"></SaveIcon>
