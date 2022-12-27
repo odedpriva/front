@@ -138,7 +138,7 @@ export const EntryItem: React.FC<EntryProps> = ({ id, stream, entry, style, head
             className={`${styles.tcpInfo} ${styles.ip}`}
             title="Namespace"
           >
-            {namespace}
+            {`[${namespace}]`}
           </span>
         </Queryable> : null}
         <Queryable
