@@ -86,8 +86,8 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
     return () => { init = true; }
   }, []);
 
-  const closeWebSocket = useCallback(() => {
-    ws.current.close(1000);
+  const closeWebSocket = useCallback((code: number) => {
+    ws.current.close(code);
   }, [ws]);
 
   const sendQueryWhenWsOpen = () => {
@@ -122,14 +122,23 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
         setWsReadyState(ws?.current?.readyState);
         let delay = 3000;
         let msg = "Trying to reconnect...";
-        if (e.code === 1006) {
+
+        // 4001 is a custom code, meaning don't try to reconnect.
+        switch (e.code) {
+        case 1000:
+          delay = 100;
+          msg = "Connecting with the new filter..."
+          break;
+        case 1006:
           toast.warning("Workers are down!", {
             theme: "colored",
             autoClose: 1000,
           });
-        } else if (e.code === 1000) {
-          delay = 100;
-          msg = "Connecting with the new filter..."
+          break;
+        case 4001:
+          return;
+        default:
+          break;
         }
 
         toast.info(msg, {
@@ -159,14 +168,16 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
 
   const toggleConnection = useCallback(async () => {
     if (ws?.current?.readyState === WebSocket.OPEN) {
-      closeWebSocket();
+      closeWebSocket(4001);
+    } else {
+      openWebSocket();
     }
     scrollableRef.current.jumpToBottom();
     setIsSnappedToBottom(true);
   }, [scrollableRef, setIsSnappedToBottom, closeWebSocket]);
 
   const reopenConnection = useCallback(async () => {
-    closeWebSocket();
+    closeWebSocket(1000);
     scrollableRef.current.jumpToBottom();
     setIsSnappedToBottom(true);
   }, [scrollableRef, setIsSnappedToBottom, closeWebSocket]);
