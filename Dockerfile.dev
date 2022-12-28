@@ -19,6 +19,8 @@ RUN npm install -g runtime-env-cra@0.2.4
 
 WORKDIR /usr/share/nginx/html
 
+COPY .env .
+
 EXPOSE 80
 
 CMD ["/bin/sh", "-c", "runtime-env-cra && nginx -g \"daemon off;\""]
