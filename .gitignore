@@ -122,5 +122,10 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# Editors/IDEs
 .vscode/
 build/
+
+# Temporary env files
+/public/runtime-env.js
+runtime-env.js

@@ -45,7 +45,7 @@ interface TrafficViewerProps {
   api?: unknown
 }
 
-const DEFAULT_QUERY = "timestamp >= now()";
+const DEFAULT_QUERY = window.__RUNTIME_CONFIG__.REACT_APP_DEFAULT_QUERY ? window.__RUNTIME_CONFIG__.REACT_APP_DEFAULT_QUERY : "timestamp >= now()" ;
 
 export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
 
