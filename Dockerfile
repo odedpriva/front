@@ -7,20 +7,13 @@ COPY . .
 RUN npm run build
 
 ARG TARGETARCH=amd64
-FROM ${TARGETARCH}/nginx:1.22.0-alpine
+FROM kubeshark/nginx-runtime-env-cra:${TARGETARCH}
 ENV NODE_ENV production
 
-RUN rm -rf /etc/nginx/conf.d
 COPY conf /etc/nginx
-
 COPY --from=builder /app/build /usr/share/nginx/html
 
-RUN apk add --update nodejs
-RUN apk add --update npm
-RUN npm install -g runtime-env-cra@0.2.4
-
 WORKDIR /usr/share/nginx/html
-
 COPY .env .
 
 EXPOSE 80
