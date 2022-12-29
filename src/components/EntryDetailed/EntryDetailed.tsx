@@ -162,6 +162,8 @@ export const EntryDetailed: React.FC = () => {
         worker={entryData.data.worker}
         node={entryData.data.node}
         color={entryData.protocol.backgroundColor}
+        ip={entryData.data.dst.ip}
+        port={entryData.data.dst.port}
       />
       <EntryViewer
         representation={entryData.representation}

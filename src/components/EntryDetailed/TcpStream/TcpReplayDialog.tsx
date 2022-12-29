@@ -16,16 +16,18 @@ export interface TcpReplayDialogProps {
   tcpReplay: string;
   stream: string;
   worker: string;
+  ip: string;
+  port: string;
 }
 
-export const TcpReplayDialog: React.FC<TcpReplayDialogProps> = ({ color, node, tcpReplay, stream, worker }) => {
+export const TcpReplayDialog: React.FC<TcpReplayDialogProps> = ({ color, node, tcpReplay, stream, worker, ip, port }) => {
   const [open, setOpen] = React.useState(false);
   const [count, setCount] = React.useState("1");
   const [delay, setDelay] = React.useState("100");
 
   const replayTcpStream = () => {
     setOpen(false);
-    fetch(`${HubBaseUrl}/pcaps/replay/${worker}/${stream}?count=${encodeURIComponent(count)}&delay=${encodeURIComponent(delay)}`)
+    fetch(`${HubBaseUrl}/pcaps/replay/${worker}/${stream}?count=${encodeURIComponent(count)}&delay=${encodeURIComponent(delay)}&host=${encodeURIComponent(ip)}&port=${encodeURIComponent(port)}`)
       .then(response => {
         if (response.status === 200) {
           toast.info("TCP replay was successful.", {
@@ -71,6 +73,8 @@ export const TcpReplayDialog: React.FC<TcpReplayDialogProps> = ({ color, node, t
         <DialogContent>
           <DialogContentText>
             This action will replay the TCP stream <b>{stream}</b> on the node <b>{node}</b>.
+            It will only replay the payload of client packets by establishing a brand
+            new TCP connection to the TCP server at destination IP: <b>{ip}</b> and port: <b>{port}</b>.
           </DialogContentText>
           <DialogContentText style={{marginTop: "20px"}}>
             Please set how many times it will be replayed:

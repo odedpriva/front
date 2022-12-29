@@ -13,9 +13,11 @@ interface EntryProps {
   worker: string;
   node: Node;
   color: string;
+  ip: string;
+  port: string;
 }
 
-export const TcpStream: React.FC<EntryProps> = ({ index, stream, worker, node, color }) => {
+export const TcpStream: React.FC<EntryProps> = ({ index, stream, worker, node, color, ip, port }) => {
 
   const { width } = useWindowDimensions();
   const { tcpStream, indexText, nodeText, tcpReplay, downloadPcap } = useTcpStreamTextsByWidth(width)
@@ -105,6 +107,8 @@ export const TcpStream: React.FC<EntryProps> = ({ index, stream, worker, node, c
           tcpReplay={tcpReplay}
           stream={stream}
           worker={worker}
+          ip={ip}
+          port={port}
         />
       </div>
 
