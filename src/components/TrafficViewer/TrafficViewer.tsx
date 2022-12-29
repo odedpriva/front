@@ -42,15 +42,16 @@ const useLayoutStyles = makeStyles(() => ({
 }));
 
 interface TrafficViewerProps {
-  api?: unknown
+  entries: Entry[];
+  setEntries: React.Dispatch<React.SetStateAction<Entry[]>>;
+  actionButtons?: JSX.Element,
 }
 
 const DEFAULT_QUERY = window.__RUNTIME_CONFIG__.REACT_APP_DEFAULT_FILTER ? window.__RUNTIME_CONFIG__.REACT_APP_DEFAULT_FILTER.trim() : "timestamp >= now()" ;
 
-export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
+export const TrafficViewer: React.FC<TrafficViewerProps> = ({ entries, setEntries, actionButtons }) => {
 
   const classes = useLayoutStyles();
-  const [entries, setEntries] = useState([] as Entry[]);
   const setFocusedItem = useSetRecoilState(focusedItemAtom);
   const setFocusedStream = useSetRecoilState(focusedStreamAtom);
   const [query, setQuery] = useRecoilState(queryAtom);
@@ -258,6 +259,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = () => {
             {getConnectionIndicator()}
           </div>
         </div>
+        {actionButtons}
       </div>
       {<div className={TrafficViewerStyles.TrafficPageContainer}>
         <div className={TrafficViewerStyles.TrafficPageListContainer}>
