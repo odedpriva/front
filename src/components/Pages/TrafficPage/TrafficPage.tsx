@@ -5,10 +5,8 @@ import { Entry } from "../../EntryListItem/Entry";
 import { useCommonStyles } from "../../../helpers/commonStyle"
 import { useSetRecoilState } from "recoil";
 import serviceMapModalOpenAtom from "../../../recoil/serviceMapModalOpen";
-import trafficStatsModalOpenAtom from "../../../recoil/trafficStatsModalOpen";
 import { Button } from "@mui/material";
 import serviceMapIcon from "../../../assets/serviceMap.svg";
-import trafficStatsIcon from "../../../assets/trafficStats.svg";
 
 interface TrafficPageProps {
   entries: Entry[];
@@ -19,14 +17,9 @@ interface TrafficPageProps {
 export const TrafficPage: React.FC<TrafficPageProps> = ({ entries, setEntries, setLastUpdated }) => {
   const commonClasses = useCommonStyles();
   const setServiceMapModalOpen = useSetRecoilState(serviceMapModalOpenAtom);
-  const setTrafficStatsModalOpen = useSetRecoilState(trafficStatsModalOpenAtom);
 
   const handleServiceMapModal = () => {
     setServiceMapModalOpen(true);
-  }
-
-  const handleOpenStatsModal = () => {
-    setTrafficStatsModalOpen(true);
   }
 
   const actionButtons = <div style={{ display: 'flex', height: "100%" }}>
@@ -38,15 +31,6 @@ export const TrafficPage: React.FC<TrafficPageProps> = ({ entries, setEntries, s
       onClick={handleServiceMapModal}
       style={{ marginRight: 25, textTransform: 'unset' }}>
       Service Map
-    </Button>
-    <Button
-      startIcon={<img className="custom" src={trafficStatsIcon} alt="stats" />}
-      size="large"
-      variant="contained"
-      className={commonClasses.outlinedButton + " " + commonClasses.imagedButton}
-      style={{ textTransform: 'unset' }}
-      onClick={handleOpenStatsModal}>
-      Traffic Stats
     </Button>
   </div>
 
