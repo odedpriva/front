@@ -44,12 +44,13 @@ const useLayoutStyles = makeStyles(() => ({
 interface TrafficViewerProps {
   entries: Entry[];
   setEntries: React.Dispatch<React.SetStateAction<Entry[]>>;
+  setLastUpdated: React.Dispatch<React.SetStateAction<number>>;
   actionButtons?: JSX.Element,
 }
 
 const DEFAULT_QUERY = window.__RUNTIME_CONFIG__.REACT_APP_DEFAULT_FILTER ? window.__RUNTIME_CONFIG__.REACT_APP_DEFAULT_FILTER.trim() : "timestamp >= now()" ;
 
-export const TrafficViewer: React.FC<TrafficViewerProps> = ({ entries, setEntries, actionButtons }) => {
+export const TrafficViewer: React.FC<TrafficViewerProps> = ({ entries, setEntries, setLastUpdated, actionButtons }) => {
 
   const classes = useLayoutStyles();
   const setFocusedItem = useSetRecoilState(focusedItemAtom);
@@ -106,6 +107,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({ entries, setEntrie
     setFocusedItem(null);
     entriesBuffer.current.length = 0;
     setEntries([]);
+    setLastUpdated(Date.now());
 
     try {
       ws.current = new WebSocket(HubWsUrl);
@@ -235,6 +237,7 @@ export const TrafficViewer: React.FC<TrafficViewerProps> = ({ entries, setEntrie
 
   useInterval(async () => {
     setEntries(entriesBuffer.current);
+    setLastUpdated(Date.now());
   }, 500, true);
 
   return (

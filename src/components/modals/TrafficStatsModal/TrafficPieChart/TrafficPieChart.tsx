@@ -6,20 +6,27 @@ import variables from '../../../../variables.module.scss';
 
 interface TrafficPieChartProps {
   entries: Entry[];
+  lastUpdated: number;
 }
 
-export const TrafficPieChart: React.FC<TrafficPieChartProps> = ({ entries }) => {
+export const TrafficPieChart: React.FC<TrafficPieChartProps> = ({ entries, lastUpdated }) => {
 
   const [protoData, setProtoData] = useState([]);
   const [statusData, setStatusData] = useState([]);
   const [methodData, setMethodData] = useState([]);
+  const [lastEntriesLength, setLastEntriesLength] = useState(0);
 
   useEffect(() => {
+    if (entries.length === lastEntriesLength) {
+      return;
+    }
+    setLastEntriesLength(entries.length);
+
     const protoMap = {};
     const statusMap = {};
     const methodMap = {};
 
-    const _protoData = []
+    const _protoData = [];
     const _statusData = [];
     const _methodData = [];
 
@@ -58,7 +65,7 @@ export const TrafficPieChart: React.FC<TrafficPieChartProps> = ({ entries }) => 
           name: `Protocol: ${key}`,
           ...protoMap[key],
         }
-      )
+      );
     }
 
     for (const key in statusMap) {
@@ -67,7 +74,7 @@ export const TrafficPieChart: React.FC<TrafficPieChartProps> = ({ entries }) => 
           name: `Status Code: ${key}`,
           ...statusMap[key],
         }
-      )
+      );
     }
 
     for (const key in methodMap) {
@@ -76,13 +83,13 @@ export const TrafficPieChart: React.FC<TrafficPieChartProps> = ({ entries }) => 
           name: `Method: ${key}`,
           ...methodMap[key],
         }
-      )
+      );
     }
 
     setProtoData(_protoData);
     setStatusData(_statusData);
     setMethodData(_methodData);
-  }, [entries])
+  }, [entries, lastUpdated]);
 
   return (
     <div>

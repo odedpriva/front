@@ -21,11 +21,12 @@ const modalStyle = {
 
 interface TrafficStatsModalProps {
   entries: Entry[];
+  lastUpdated: number;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const TrafficStatsModal: React.FC<TrafficStatsModalProps> = ({ entries, isOpen, onClose }) => {
+export const TrafficStatsModal: React.FC<TrafficStatsModalProps> = ({ entries, lastUpdated, isOpen, onClose }) => {
   return (
     <Modal
       aria-labelledby="transition-modal-title"
@@ -45,7 +46,7 @@ export const TrafficStatsModal: React.FC<TrafficStatsModalProps> = ({ entries, i
           </div>
           <div className={styles.mainContainer}>
             <div>
-              <TrafficPieChart entries={entries} />
+              <TrafficPieChart entries={entries} lastUpdated={lastUpdated} />
             </div>
           </div>
         </Box>
