@@ -29,7 +29,7 @@ export const TrafficPage: React.FC<TrafficPageProps> = ({ entries, setEntries, s
       variant="contained"
       className={commonClasses.outlinedButton + " " + commonClasses.imagedButton}
       onClick={handleServiceMapModal}
-      style={{ marginRight: 25, textTransform: 'unset' }}>
+      style={{ textTransform: 'unset' }}>
       Service Map
     </Button>
   </div>
