@@ -37,7 +37,6 @@ export const ServiceMapModal: React.FC<ServiceMapModalProps> = ({ entries, lastU
   const [lastEntriesLength, setLastEntriesLength] = useState(0);
 
   useEffect(() => {
-    console.log(entries);
     if (entries.length === lastEntriesLength) {
       return;
     }
@@ -110,9 +109,6 @@ export const ServiceMapModal: React.FC<ServiceMapModalProps> = ({ entries, lastU
         edges.push(edge);
       }
     });
-
-    console.log(nodes);
-    console.log(edges);
 
     setGraphData({
       nodes: nodes,
