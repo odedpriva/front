@@ -139,7 +139,7 @@ export const ServiceMapModal: React.FC<ServiceMapModalProps> = ({ entries, lastU
           </div>
           <div className={styles.headerContainer}>
             <div className={styles.headerSection}>
-              <span className={styles.title}>Weighted Service Communication Map</span>
+              <span className={styles.title}>Service Map</span>
             </div>
           </div>
 
