@@ -5,4 +5,4 @@ const HubWSProto = window.__RUNTIME_CONFIG__.REACT_APP_HUB_WS_PROTO.trim() ? win
 const HubBaseUrl = `${HubProto}://${HubHost}:${HubPort}`
 const HubWsUrl = `${HubWSProto}://${HubHost}:${HubPort}/ws`
 
-export { HubHost, HubPort, HubBaseUrl, HubWsUrl }
+export { HubHost, HubPort, HubProto, HubWSProto, HubBaseUrl, HubWsUrl }
