@@ -36,7 +36,7 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: |
-            kubeshark/front
+            odedpriva/front
           tags: |
             type=raw,value=${{ steps.version.outputs.tag }}
             type=raw,value=latest,enable=${{ !endsWith(github.ref, 'canary') }}
@@ -77,7 +77,7 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: |
-            kubeshark/front
+            odedpriva/front
           tags: |
             type=raw,value=${{ steps.version.outputs.tag }}
             type=raw,value=latest,enable=${{ !endsWith(github.ref, 'canary') }}
