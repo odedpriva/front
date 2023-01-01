@@ -1,4 +1,4 @@
-export {};
+export { };
 
 declare global {
   interface Window {
@@ -7,6 +7,8 @@ declare global {
       REACT_APP_DEFAULT_FILTER: string;
       REACT_APP_HUB_HOST: string;
       REACT_APP_HUB_PORT: string;
+      REACT_APP_HUB_POROTO: string;
+      REACT_APP_HUB_WS_PROTO: string;
     };
   }
 }
