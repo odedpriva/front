@@ -133,7 +133,7 @@ export const EntryDetailed: React.FC = () => {
     setEntryData(null);
     if (!focusedItem) return;
     setIsLoading(true);
-    fetch(`${HubBaseUrl}/item/${focusedItem}?q=${encodeURIComponent(query)}`)
+    fetch(`${HubBaseUrl}/item/${focusedItem}?q=${encodeURIComponent(query)}`, { credentials: "include" })
       .then(response => {
         if (!response.ok) {
           throw Error(`Fetch item, query: "${query}", reason: "${response.statusText}"`);

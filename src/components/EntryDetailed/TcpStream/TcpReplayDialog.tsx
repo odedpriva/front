@@ -27,7 +27,7 @@ export const TcpReplayDialog: React.FC<TcpReplayDialogProps> = ({ color, node, t
 
   const replayTcpStream = () => {
     setOpen(false);
-    fetch(`${HubBaseUrl}/pcaps/replay/${worker}/${stream}?count=${encodeURIComponent(count)}&delay=${encodeURIComponent(delay)}&host=${encodeURIComponent(ip)}&port=${encodeURIComponent(port)}`)
+    fetch(`${HubBaseUrl}/pcaps/replay/${worker}/${stream}?count=${encodeURIComponent(count)}&delay=${encodeURIComponent(delay)}&host=${encodeURIComponent(ip)}&port=${encodeURIComponent(port)}`, { credentials: "include" })
       .then(response => {
         if (response.status === 200) {
           toast.info("TCP replay was successful.", {
@@ -68,15 +68,15 @@ export const TcpReplayDialog: React.FC<TcpReplayDialogProps> = ({ color, node, t
       >
         {tcpReplay}
       </Button>
-      <Dialog open={open} onClose={handleClose} style={{color: color}}>
-        <DialogTitle style={{fontWeight: "bold", color: color}}>TCP Replay</DialogTitle>
+      <Dialog open={open} onClose={handleClose} style={{ color: color }}>
+        <DialogTitle style={{ fontWeight: "bold", color: color }}>TCP Replay</DialogTitle>
         <DialogContent>
           <DialogContentText>
             This action will replay the TCP stream <b>{stream}</b> on the node <b>{node}</b>.
             It will only replay the payload of client packets by establishing a brand
             new TCP connection to the TCP server at destination IP: <b>{ip}</b> and port: <b>{port}</b>.
           </DialogContentText>
-          <DialogContentText style={{marginTop: "20px"}}>
+          <DialogContentText style={{ marginTop: "20px" }}>
             Please set how many times it will be replayed:
           </DialogContentText>
           <TextField
@@ -92,7 +92,7 @@ export const TcpReplayDialog: React.FC<TcpReplayDialogProps> = ({ color, node, t
             required={true}
             onChange={(event) => setCount(event.target.value)}
           />
-          <DialogContentText style={{marginTop: "20px"}}>
+          <DialogContentText style={{ marginTop: "20px" }}>
             The delay between the replayed packets:
           </DialogContentText>
           <TextField

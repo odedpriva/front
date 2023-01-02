@@ -67,7 +67,7 @@ export const CodeEditorWrap: FC<CodeEditorWrap> = ({ onQueryChange, onValidation
           setQueryBackgroundColor("#f5f5f5");
           onValidationChanged && onValidationChanged({ query: query, message: "", valid: true });
         } else {
-          fetch(`${HubBaseUrl}/query/validate?q=${encodeURIComponent(query)}`)
+          fetch(`${HubBaseUrl}/query/validate?q=${encodeURIComponent(query)}`, { credentials: "include" })
             .then(response => response.json())
             .then(data => {
               if (data.valid) {
@@ -138,7 +138,7 @@ export const QueryForm: React.FC<QueryFormProps> = ({ entries, reopenConnection,
   }
 
   const downloadPcapSnapshot = () => {
-    const obj: DownloadPcapRequest = {query: query, pcaps: {}};
+    const obj: DownloadPcapRequest = { query: query, pcaps: {} };
     obj.query = query
     for (const entry of entries) {
       if (!obj.pcaps[entry.worker]) obj.pcaps[entry.worker] = []
@@ -152,8 +152,9 @@ export const QueryForm: React.FC<QueryFormProps> = ({ entries, reopenConnection,
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(obj)
-      },
+        body: JSON.stringify(obj),
+        credentials: "include",
+      }
     )
       .then((response) => {
         const filename = response.headers

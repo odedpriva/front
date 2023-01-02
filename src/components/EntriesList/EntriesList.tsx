@@ -30,7 +30,7 @@ export const EntriesList: React.FC<EntriesListProps> = ({
   const [timeNow, setTimeNow] = useState(new Date());
 
   useInterval(async () => {
-    fetch(`${HubBaseUrl}/pcaps/total-tcp-streams`)
+    fetch(`${HubBaseUrl}/pcaps/total-tcp-streams`, { credentials: "include" })
       .then(response => response.json())
       .then(data => setTotalTcpStreams(data.total))
       .catch(err => {

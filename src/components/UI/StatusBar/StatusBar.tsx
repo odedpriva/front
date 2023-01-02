@@ -57,7 +57,7 @@ export const StatusBar: React.FC = () => {
   const [targets, setTargets] = useState<Target[]>([]);
 
   useInterval(async () => {
-    fetch(`${HubBaseUrl}/pods/targetted`)
+    fetch(`${HubBaseUrl}/pods/targetted`, { credentials: "include" })
       .then(response => response.json())
       .then(data => setTargets(data.targets))
       .catch(err => console.error(err));
