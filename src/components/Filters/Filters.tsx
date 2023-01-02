@@ -153,8 +153,8 @@ export const QueryForm: React.FC<QueryFormProps> = ({ entries, reopenConnection,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(obj),
-        credentials: "include",
-      }
+        credentials: "include"
+      },
     )
       .then((response) => {
         const filename = response.headers
